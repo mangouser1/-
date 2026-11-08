@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#14263c">
-<meta name="mangobattle-version" content="0.14.1">
+<meta name="mangobattle-version" content="0.14.2">
 <meta name="mangoos-app" content="mangobattle">
 <script id="mango-auth-origin-normalizer">
 /* MangoOS may display stored HTML apps through iframe.srcdoc. In that context
@@ -238,7 +238,7 @@ body.three-ready .avatar-fallback{display:none}
 @media (pointer:coarse),(max-width:760px){
  .creative-touch-controls{display:block}
  .creative-bottom-hud{display:none}
- .touch-build-strip{top:76px;bottom:auto;left:50%;width:min(360px,calc(100vw - 20px));max-width:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;align-items:stretch}
+ .touch-build-strip{top:auto;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;width:min(360px,calc(100vw - 20px));max-width:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;align-items:stretch}
  .touch-build-strip button{min-width:0;width:100%;height:36px;padding:4px 3px;font-size:10px}
  .touch-build-strip button.touch-place{min-width:0}
  .touch-look-hint{right:16px;top:54%;font-size:8px}
@@ -252,7 +252,7 @@ body.three-ready .avatar-fallback{display:none}
  .touch-joystick-thumb{width:43px;height:43px}.touch-sprint{left:65px;min-height:34px;min-width:48px}
  .touch-right-cluster{right:9px;bottom:calc(14px + env(safe-area-inset-bottom));grid-template-columns:repeat(2,58px);gap:6px}
  .touch-button{min-width:56px;min-height:45px;font-size:10px}.touch-jump{min-height:60px}.touch-look-hint{right:72px;font-size:8px}
- .touch-build-strip{bottom:calc(140px + env(safe-area-inset-bottom));max-width:calc(100vw - 24px);gap:4px;flex-wrap:wrap;justify-content:center}
+ .touch-build-strip{bottom:calc(92px + env(safe-area-inset-bottom));max-width:calc(100vw - 24px);gap:4px;flex-wrap:wrap;justify-content:center}
  .touch-build-strip button{min-width:37px;height:34px;font-size:9px;padding:4px 6px}
 }
 @media (orientation:portrait) and (max-width:760px){.touch-look-hint{top:42%;right:72px}}
@@ -292,6 +292,26 @@ body.three-ready .avatar-fallback{display:none}
 .creative-pause-input{width:100%;background:#0a1422;color:#fff;border:1px solid #ffffff44;border-radius:4px;padding:10px;margin:5px 0 7px}
 .creative-ready-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#36d78b;margin-right:6px}
 @media(max-width:760px){.creative-top-hud{left:8px;right:8px;top:8px}.creative-hud-block{padding:7px 9px}.creative-hud-title{font-size:12px}.creative-hud-sub{font-size:9px}.creative-hud-right{gap:5px}.creative-hud-pill{font-size:9px;padding:7px 9px}.creative-bottom-hud{left:8px;right:8px;bottom:8px;align-items:stretch;flex-direction:column-reverse;gap:6px}.creative-controls-card{max-width:100%;font-size:9px;padding:6px 9px;line-height:1.45}.creative-build-card{max-width:100%;justify-content:center;padding:7px;gap:4px}.creative-action{padding:8px 9px;font-size:10px}.creative-build-select{width:100%;justify-content:center}.creative-build-select button{flex:1;min-width:0}.creative-edit-panel{right:8px;top:76px;width:190px}.creative-status{top:66px;font-size:9px}.creative-pause-panel{grid-template-columns:54px 1fr;width:min(420px,100vw)}.creative-pause-rail button{width:38px;height:38px}}
+
+
+/* v0.14.2: Fortnite-like, remappable controls and mobile HUD sizing */
+.mb-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0 8px}
+.mb-control-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border:1px solid var(--line,#ffffff22);border-radius:7px;background:var(--surface,#ffffff08);font-size:11px;min-width:0}
+.mb-control-row span{color:var(--text,#e9f1f8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mb-control-row button,.mb-control-actions button{border:1px solid #5da9e8;background:#153d61;color:#fff;border-radius:6px;padding:7px 10px;min-width:76px;font-size:10px;font-weight:800;cursor:pointer}
+.mb-control-row button.capture{background:#c58a21;border-color:#ffd36f;color:#172334;animation:mbKeyPulse .8s infinite alternate}
+.mb-control-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:8px 0 16px;font-size:10px;color:var(--muted,#aab9c8)}
+@keyframes mbKeyPulse{from{box-shadow:0 0 0 0 #ffd36f22}to{box-shadow:0 0 0 4px #ffd36f55}}
+#creativeTouchControls{--mb-touch-scale:1}
+.touch-joystick{width:calc(124px * var(--mb-touch-scale,1));height:calc(124px * var(--mb-touch-scale,1))}
+.touch-joystick-thumb{width:calc(48px * var(--mb-touch-scale,1));height:calc(48px * var(--mb-touch-scale,1))}
+.touch-button{min-width:calc(58px * var(--mb-touch-scale,1));min-height:calc(48px * var(--mb-touch-scale,1));font-size:calc(10px * var(--mb-touch-scale,1))}
+.touch-build-strip button{min-width:calc(41px * var(--mb-touch-scale,1));height:calc(38px * var(--mb-touch-scale,1));font-size:calc(10px * var(--mb-touch-scale,1))}
+#creativeTouchControls[data-layout="compact"] .touch-build-strip{gap:3px}
+#creativeTouchControls[data-layout="compact"] .touch-look-hint{display:none}
+#creativeTouchControls[data-layout="large"] .touch-look-hint{display:none}
+#creativeTouchControls[data-layout="large"] .touch-build-strip button{font-size:calc(11px * var(--mb-touch-scale,1));}
+@media(max-width:560px){.mb-control-grid{grid-template-columns:1fr}.mb-control-row{font-size:12px}.mb-control-row button{min-width:100px}}
 
 </style>
 <script>
@@ -408,6 +428,32 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
 </div><div class="fb-config-actions"><button class="primary" id="saveFirebaseBtn">保存して接続</button><button id="clearFirebaseBtn">設定を消去</button></div><p class="fb-config-note">必要な設定：Firebase Authenticationで匿名認証とGoogleプロバイダを有効化し、Realtime Databaseのルールに同梱の database.rules.json を貼り付けて公開してください。GitHub Pagesで公開する場合は、URLが https://アカウント名.github.io/リポジトリ名/ なら、承認済みドメインに「アカウント名.github.io」だけを追加します（https://とパスは不要）。MangoOSのローカルサーバーから起動する場合は localhost を追加してください。file:// 直開きは使えません。</p></details>
 <div class="dialog-actions"><button data-close="partyOverlay">閉じる</button></div></div></div>
 <div id="settingsOverlay" class="overlay"><div class="dialog graphics-dialog"><button class="close" data-close="settingsOverlay">×</button><div class="section-kicker">ゲーム設定</div><h2>設定</h2><p>クリエイティブ島とロビーの描画設定です。変更はすぐに反映され、この端末に保存されます。</p>
+ <h3 class="graphics-section-title">操作設定（PC）</h3>
+ <p class="graphics-help">Fortnite風の初期配置です。各ボタンを押してから割り当てたいキーを押すと変更できます。マウスサイドボタン4・5、ゲームパッドにも対応します。ゲームパッド：左スティック移動／右スティック視点／Aジャンプ／Bしゃがみ／LSダッシュ／X建築／Y編集／LBピース切替／RB回転／RT設置。</p>
+ <div class="mb-control-grid" id="mbControlGrid">
+  <div class="mb-control-row"><span>前進</span><button type="button" data-control-binding="forward">W</button></div>
+  <div class="mb-control-row"><span>後退</span><button type="button" data-control-binding="backward">S</button></div>
+  <div class="mb-control-row"><span>左移動</span><button type="button" data-control-binding="left">A</button></div>
+  <div class="mb-control-row"><span>右移動</span><button type="button" data-control-binding="right">D</button></div>
+  <div class="mb-control-row"><span>ジャンプ</span><button type="button" data-control-binding="jump">Space</button></div>
+  <div class="mb-control-row"><span>ダッシュ</span><button type="button" data-control-binding="sprint">Left Shift</button></div>
+  <div class="mb-control-row"><span>しゃがみ</span><button type="button" data-control-binding="crouch">Left Ctrl</button></div>
+  <div class="mb-control-row"><span>壁</span><button type="button" data-control-binding="wall">Q / Mouse4</button></div>
+  <div class="mb-control-row"><span>床</span><button type="button" data-control-binding="floor">X / Mouse5</button></div>
+  <div class="mb-control-row"><span>階段</span><button type="button" data-control-binding="stair">C</button></div>
+  <div class="mb-control-row"><span>屋根</span><button type="button" data-control-binding="roof">V</button></div>
+  <div class="mb-control-row"><span>編集</span><button type="button" data-control-binding="edit">F</button></div>
+  <div class="mb-control-row"><span>回転</span><button type="button" data-control-binding="rotate">R</button></div>
+  <div class="mb-control-row"><span>建築ON/OFF</span><button type="button" data-control-binding="buildToggle">B</button></div>
+  <div class="mb-control-row"><span>選択建築を削除</span><button type="button" data-control-binding="delete">Delete</button></div>
+ </div>
+ <div class="mb-control-actions"><button type="button" id="mbResetControls">Fortnite風の初期配置に戻す</button><span id="mbControlCaptureStatus" aria-live="polite">ボタンを押してキーを割り当て</span></div>
+ <h3 class="graphics-section-title">タッチHUD</h3>
+ <div class="graphic-settings-grid">
+  <div class="graphic-setting"><label for="touchHudPreset">HUDレイアウト</label><select id="touchHudPreset" class="input"><option value="builder">ビルダー（建築優先）</option><option value="compact">コンパクト</option><option value="large">大きいボタン</option></select></div>
+  <div class="graphic-setting"><label for="touchHudScale">ボタンサイズ</label><select id="touchHudScale" class="input"><option value="0.85">小さめ</option><option value="1">標準</option><option value="1.15">大きめ</option><option value="1.3">最大</option></select></div>
+ </div>
+ <div class="graphics-separator"></div>
  <h3 class="graphics-section-title">グラフィックス</h3>
  <div class="graphic-settings-grid">
   <div class="graphic-setting"><label for="qualitySelect">全体の画質</label><select id="qualitySelect" class="input"><option value="verylow">最低</option><option value="low">低</option><option value="medium">中</option><option value="high">高</option><option value="ultra">最高</option><option value="custom">カスタム</option></select></div>
@@ -453,11 +499,11 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
  <div class="creative-center-crosshair" aria-hidden="true"></div>
  <div class="creative-edit-panel" id="creativeEditPanel"><h3>建築編集</h3><p id="creativeEditHint">編集する建築物をクリックして選択してください。</p><div class="creative-edit-options"><button data-wall-variant="door">ドア</button><button data-wall-variant="window">窓</button><button data-wall-variant="full">壁に戻す</button><button id="creativeEditRotate">回転</button><button id="creativeEditDelete" style="grid-column:1/-1;background:#9d3038">選択した建築を削除</button></div></div>
  <div class="creative-bottom-hud">
-  <div class="creative-controls-card"><b>移動</b>　W A S D　／　<b>ジャンプ</b>　Space　／　<b>走る</b>　Shift　／　<b>しゃがみ</b>　Ctrl<br><b>建築</b>　Q 壁・X 床・C 階段・V 屋根　／　<b>回転</b>　R　／　<b>編集</b>　F<br>マウス移動で視点操作・左クリックで設置/選択。Mouse4=壁・Mouse5=床。Escでメニュー。</div>
+  <div class="creative-controls-card" id="creativeControlsSummary"><b>移動</b>　W A S D　／　<b>ジャンプ</b>　Space　／　<b>ダッシュ</b>　Shift　／　<b>しゃがみ</b>　Ctrl<br><b>建築</b>　Q/Mouse4 壁・X/Mouse5 床・C 階段・V 屋根　／　<b>回転</b>　R　／　<b>編集</b>　F<br>マウスで視点・左クリックで設置/選択・右クリックで編集リセット。ゲームパッド：左スティック移動／右スティック視点／Aジャンプ。Escでメニュー。</div>
   <div class="creative-build-card">
    <button class="creative-action active" id="creativeBuildToggle">建築 ON</button>
    <button class="creative-action" id="creativeEditToggle">編集 OFF (F)</button>
-   <div class="creative-build-select"><button class="creative-action active" data-creative-build="wall">Q 壁</button><button class="creative-action" data-creative-build="floor">X 床</button><button class="creative-action" data-creative-build="stair">C 階段</button><button class="creative-action" data-creative-build="roof">V 屋根</button></div>
+   <div class="creative-build-select"><button class="creative-action active" data-creative-build="wall">Q / M4 壁</button><button class="creative-action" data-creative-build="floor">X / M5 床</button><button class="creative-action" data-creative-build="stair">C 階段</button><button class="creative-action" data-creative-build="roof">V 屋根</button></div>
    <button class="creative-action" id="creativeRotate">回転 R</button>
    <button class="creative-action" id="creativeDelete">削除</button>
    <button class="creative-action" id="creativeExit">ロビーへ</button>
@@ -490,6 +536,28 @@ try { THREE=await import('three'); GLTFLoader=(await import('https://cdn.jsdeliv
 catch(err){ threeImportError=err; console.warn('3Dライブラリを読み込めません。簡易表示で起動します。',err); GLTFLoader=class{load(url,onLoad,onProgress,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}parse(data,path,onLoad,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}}; }
 const $=s=>document.querySelector(s); const sceneHost=$('#scene');
 let renderer,scene,camera,clock,hero,mixer,heroBaseY=0,heroActions={},sceneMode='boot',loaded=0,totalAssets=1,assetFailures=0,quality='high',frame=0;
+const MB_CONTROLS_KEY='mb_fortnite_style_controls_v1';
+const MB_CONTROLS_DEFAULTS={
+ forward:['KeyW'],backward:['KeyS'],left:['KeyA'],right:['KeyD'],
+ jump:['Space'],sprint:['ShiftLeft'],crouch:['ControlLeft'],
+ wall:['KeyQ','Mouse4'],floor:['KeyX','Mouse5'],stair:['KeyC'],roof:['KeyV'],
+ edit:['KeyF'],rotate:['KeyR'],buildToggle:['KeyB'],delete:['Delete']
+};
+const MB_CONTROL_LABELS={forward:'前進',backward:'後退',left:'左移動',right:'右移動',jump:'ジャンプ',sprint:'ダッシュ',crouch:'しゃがみ',wall:'壁',floor:'床',stair:'階段',roof:'屋根',edit:'編集',rotate:'回転',buildToggle:'建築ON/OFF',delete:'選択建築を削除'};
+function loadMBControls(){try{const saved=JSON.parse(localStorage.getItem(MB_CONTROLS_KEY)||'{}');const result={};for(const [k,v] of Object.entries(MB_CONTROLS_DEFAULTS)){const candidate=saved[k];result[k]=Array.isArray(candidate)?candidate.filter(x=>typeof x==='string').slice(0,2):[...v];if(!result[k].length)result[k]=[...v];}return result;}catch{return Object.fromEntries(Object.entries(MB_CONTROLS_DEFAULTS).map(([k,v])=>[k,[...v]]));}}
+let mbControls=loadMBControls();
+let mbBindingCaptureAction=null;
+let mbTouchHudSettings={layout:'builder',scale:1};
+try{mbTouchHudSettings={...mbTouchHudSettings,...JSON.parse(localStorage.getItem('mb_touch_hud_v1')||'{}')}}catch{}
+function saveMBControls(){try{localStorage.setItem(MB_CONTROLS_KEY,JSON.stringify(mbControls));}catch(e){console.warn('Control settings could not be saved',e)}renderMBControlBindings();}
+function mbControlCodeLabel(code){if(code==='Mouse4')return 'Mouse 4';if(code==='Mouse5')return 'Mouse 5';const names={Space:'Space',ShiftLeft:'Left Shift',ShiftRight:'Right Shift',ControlLeft:'Left Ctrl',ControlRight:'Right Ctrl',AltLeft:'Left Alt',AltRight:'Right Alt',ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',Backspace:'Backspace',Delete:'Delete',Enter:'Enter',Tab:'Tab'};if(names[code])return names[code];if(code.startsWith('Key'))return code.slice(3);if(code.startsWith('Digit'))return code.slice(5);if(code.startsWith('Numpad'))return 'Num '+code.slice(6);return code;}
+function renderMBControlBindings(){document.querySelectorAll('[data-control-binding]').forEach(btn=>{const key=btn.dataset.controlBinding;const binds=mbControls[key]||[];btn.textContent=binds.map(mbControlCodeLabel).join(' / ');btn.classList.toggle('capture',mbBindingCaptureAction===key);});const status=document.getElementById('mbControlCaptureStatus');if(status)status.textContent=mbBindingCaptureAction?'「'+MB_CONTROL_LABELS[mbBindingCaptureAction]+'」に割り当てるキーを押してください（Escで取消）':'ボタンを押してキーを割り当て';const summary=document.getElementById('creativeControlsSummary');if(summary){const key=a=>(mbControls[a]||[]).map(mbControlCodeLabel).join('/');summary.innerHTML='<b>移動</b>　'+key('forward')+' '+key('left')+' '+key('backward')+' '+key('right')+'　／　<b>ジャンプ</b>　'+key('jump')+'　／　<b>ダッシュ</b>　'+key('sprint')+'　／　<b>しゃがみ</b>　'+key('crouch')+'<br><b>建築</b>　壁 '+key('wall')+'・床 '+key('floor')+'・階段 '+key('stair')+'・屋根 '+key('roof')+'　／　<b>回転</b>　'+key('rotate')+'　／　<b>編集</b>　'+key('edit')+'<br>マウスで視点・左クリックで設置/選択・右クリックで編集リセット。コントローラー：左スティック移動／右スティック視点／Aジャンプ／Bしゃがみ／LSダッシュ／X建築／Y編集／LBピース切替／RB回転／RT設置。Escでメニュー。';}}
+function applyTouchHudSettings(){const root=document.getElementById('creativeTouchControls');if(root){root.dataset.layout=mbTouchHudSettings.layout||'builder';root.style.setProperty('--mb-touch-scale',String(Math.max(.75,Math.min(1.4,Number(mbTouchHudSettings.scale)||1))));}const preset=document.getElementById('touchHudPreset'),scale=document.getElementById('touchHudScale');if(preset)preset.value=mbTouchHudSettings.layout||'builder';if(scale)scale.value=String(mbTouchHudSettings.scale||1);}
+function saveTouchHudSettings(patch={}){mbTouchHudSettings={...mbTouchHudSettings,...patch};try{localStorage.setItem('mb_touch_hud_v1',JSON.stringify(mbTouchHudSettings));}catch(e){}applyTouchHudSettings();}
+function mbIsControlDown(action){return (mbControls[action]||[]).some(code=>code.startsWith('Mouse')?creativeMouseButtons.has(code):creativeKeys.has(code));}
+function mbControlActionForCode(code){return Object.keys(mbControls).find(action=>(mbControls[action]||[]).includes(code))||null;}
+function mbActionForMouseButton(button){const code=button===3?'Mouse4':button===4?'Mouse5':null;if(!code)return null;return Object.keys(mbControls).find(action=>(mbControls[action]||[]).includes(code))||null;}
+
 const MB_GRAPHICS_KEY='mb_graphics_settings_v1';
 const MB_GRAPHICS_DEFAULTS={preset:'high',renderScale:100,shadowQuality:'high',viewDistance:190,fpsLimit:60,cameraSensitivity:1,fog:true,grid:true};
 const MB_GRAPHICS_PRESETS={
@@ -700,6 +768,7 @@ let playerName=localStorage.getItem('mb_v050_name')||'プレイヤー';function 
 let mode='creative';const modes={creative:['クリエイティブ','平坦な島で、ひとりでもフレンドとでも自由に建築・編集しよう。']};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode='creative';document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('selected',x===b));$('#modeTitle').textContent=modes.creative[0];$('#modeDesc').textContent=modes.creative[1]});$('#settingsBtn').onclick=()=>{syncGraphicsForm();showOverlay('settingsOverlay')};$('#creditsBtn').onclick=()=>showOverlay('creditsOverlay');
 function syncGraphicsForm(){
  const set=(id,value)=>{const el=$('#'+id);if(el)el.value=String(value)};
+ renderMBControlBindings();applyTouchHudSettings();
  set('qualitySelect',mbGraphics.preset||'high');set('renderScaleSelect',mbGraphics.renderScale);set('shadowQualitySelect',mbGraphics.shadowQuality);set('viewDistanceSelect',mbGraphics.viewDistance);set('fpsLimitSelect',mbGraphics.fpsLimit);set('cameraSensitivitySelect',mbGraphics.cameraSensitivity);
  $('#fogToggle').checked=!!mbGraphics.fog;$('#gridToggle').checked=!!mbGraphics.grid;
 }
@@ -712,7 +781,14 @@ $('#fpsLimitSelect').addEventListener('change',e=>saveMBGraphics({preset:'custom
 $('#cameraSensitivitySelect').addEventListener('change',e=>saveMBGraphics({preset:'custom',cameraSensitivity:Number(e.target.value)}));
 $('#fogToggle').addEventListener('change',e=>saveMBGraphics({preset:'custom',fog:e.target.checked}));
 $('#gridToggle').addEventListener('change',e=>saveMBGraphics({preset:'custom',grid:e.target.checked}));
-syncGraphicsForm();
+ document.querySelectorAll('[data-control-binding]').forEach(btn=>btn.addEventListener('click',()=>{mbBindingCaptureAction=btn.dataset.controlBinding;renderMBControlBindings();}));
+ $('#mbResetControls')?.addEventListener('click',()=>{mbControls=Object.fromEntries(Object.entries(MB_CONTROLS_DEFAULTS).map(([k,v])=>[k,[...v]]));mbBindingCaptureAction=null;saveMBControls();});
+ document.querySelectorAll('[data-close="settingsOverlay"]').forEach(btn=>btn.addEventListener('click',()=>{mbBindingCaptureAction=null;renderMBControlBindings();}));
+ $('#touchHudPreset')?.addEventListener('change',e=>saveTouchHudSettings({layout:e.target.value}));
+ $('#touchHudScale')?.addEventListener('change',e=>saveTouchHudSettings({scale:Number(e.target.value)}));
+ document.addEventListener('keydown',e=>{if(!mbBindingCaptureAction)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(e.code==='Escape'){mbBindingCaptureAction=null;renderMBControlBindings();return;}if(['ShiftLeft','ShiftRight','ControlLeft','ControlRight','AltLeft','AltRight','MetaLeft','MetaRight'].includes(e.code)===false&&e.code){mbControls[mbBindingCaptureAction]=[e.code];mbBindingCaptureAction=null;saveMBControls();}},true);
+ document.addEventListener('pointerdown',e=>{if(!mbBindingCaptureAction)return;if(e.button!==3&&e.button!==4)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();mbControls[mbBindingCaptureAction]=[e.button===3?'Mouse4':'Mouse5'];mbBindingCaptureAction=null;saveMBControls();},true);
+ syncGraphicsForm();applyTouchHudSettings();
 $('#playButton').onclick=()=>{if(window.__MBPlayCreative)window.__MBPlayCreative();};
 $('#onlinePlayButton').onclick=()=>showOverlay('partyOverlay');
 $('#modelFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const buf=await file.arrayBuffer();loader.parse(buf,'',g=>{const newHero=g.scene;newHero.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(newHero),s=b.getSize(new THREE.Vector3());newHero.scale.setScalar(2.75/(s.y||1));newHero.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(newHero);newHero.position.set(4.1,-b2.min.y,0);heroBaseY=newHero.position.y;mixer=null;newHero.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});if(hero)scene.remove(hero);hero=newHero;if(g.animations?.length){mixer=new THREE.AnimationMixer(hero);const idle=g.animations.find(a=>/idle/i.test(a.name))||g.animations[0];mixer.clipAction(idle).play()}scene.add(hero);document.body.classList.add('three-ready');$('#heroSkinLabel').textContent='追加した衣装';toast('3Dキャラクターを変更しました');closeOverlay('settingsOverlay')},err=>{console.error(err);toast('GLBを読み込めませんでした')})}catch(err){console.error(err);toast('ファイルを読み込めませんでした')}});
@@ -1005,6 +1081,7 @@ let creativeActive=false,creativeRenderer=null,creativeScene=null,creativeCamera
 let creativePlayer=null,creativePlayerShadow=null,creativeRemotePlayers=new Map(),creativeBuildObjects=new Map();
 let creativeSun=null,creativeGrid=null,creativeGround=null,creativeLastFrameTime=0,creativeLookDrag=null,creativeFrameDiagnosticDone=false;
 let creativeKeys=new Set(),creativeBuildType='wall',creativeBuildMode=true,creativeEditMode=false,creativeRotation=0,creativeSelected=null;
+let creativeMouseButtons=new Set(),creativePadMove={x:0,y:0},creativePadCrouch=false,creativePadSprint=false,creativePadPrevious={},creativeLockRequestAttempted=false;
 let creativeMouse={x:0,y:0},creativeYaw=0,creativePitch=.56,creativePointerLocked=false,creativeVelocityY=0,creativeGrounded=true,creativeLastSync=0;
 let creativeTouchMove={x:0,y:0},creativeTouchLook=null,creativeJoystickPointer=null,creativeTouchSprint=false,creativeTouchCrouch=false,creativeJumpQueued=false;
 let offCreativePlayers=null,offCreativeBuilds=null,creativeSendTimer=null,creativeGroundPlane=null,creativeRaycaster=null,creativePlaneHit=THREE?new THREE.Vector3():null;
@@ -1230,22 +1307,26 @@ function ensureCreativeRenderer(){
    if(creativeLookDrag&&creativeLookDrag.pointerId===e.pointerId){const dx=e.clientX-creativeLookDrag.x,dy=e.clientY-creativeLookDrag.y;creativeYaw+=dx*.005*sensitivity;creativePitch=Math.max(.16,Math.min(1.12,creativePitch-dy*.003*sensitivity));creativeLookDrag.x=e.clientX;creativeLookDrag.y=e.clientY;}
   }
  });
- document.addEventListener('pointerlockchange',()=>{creativePointerLocked=document.pointerLockElement===canvas;if(creativePointerLocked){creativeMouse.x=0;creativeMouse.y=0;}});
+ document.addEventListener('pointerlockchange',()=>{creativePointerLocked=document.pointerLockElement===canvas;if(creativePointerLocked){creativeLockRequestAttempted=true;creativeMouse.x=0;creativeMouse.y=0;}else creativeLockRequestAttempted=false;});
+ canvas.addEventListener('pointerlockerror',()=>{creativePointerLocked=false;creativeLockRequestAttempted=false;creativeToast('マウス固定を使えないため、右ドラッグで視点を動かせます');});
  canvas.addEventListener('pointerdown',e=>{
   if(e.pointerType==='touch'){
    e.preventDefault();creativeTouchLook={pointerId:e.pointerId,x:e.clientX,y:e.clientY,start:performance.now(),moved:false};creativeMouse.x=0;creativeMouse.y=0;
    try{canvas.setPointerCapture(e.pointerId)}catch{}return;
   }
-  if(e.button===3||e.button===4){e.preventDefault();e.stopPropagation();activateCreativePiece(e.button===3?'wall':'floor');return;}
-  if(e.button===2){e.preventDefault();if(!creativePointerLocked){creativeLookDrag={pointerId:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture?.(e.pointerId);}return;}
+  const mouseAction=mbActionForMouseButton(e.button);if(mouseAction){e.preventDefault();e.stopPropagation();creativeMouseButtons.add(e.button===3?'Mouse4':'Mouse5');if(['forward','backward','left','right','sprint','crouch'].includes(mouseAction))return;if(mouseAction==='jump')creativeJumpQueued=true;else if(mouseAction==='wall')activateCreativePiece('wall');else if(mouseAction==='floor')activateCreativePiece('floor');else if(mouseAction==='stair')activateCreativePiece('stair');else if(mouseAction==='roof')activateCreativePiece('roof');else if(mouseAction==='rotate')rotateCreative();else if(mouseAction==='edit')toggleCreativeEditMode();else if(mouseAction==='buildToggle')toggleCreativeBuildMode();else if(mouseAction==='delete'&&creativeEditMode&&creativeSelected)deleteSelectedCreativeBuild();return;}
+  if(e.button===2){e.preventDefault();if(creativeEditMode&&creativeSelected){const selected=getSelectedCreativeBuild();if(selected?.userData?.type==='wall')replaceSelectedCreativeBuild({variant:'full'});else creativeToast('編集対象の壁を選択してください');}else if(!creativePointerLocked){creativeLookDrag={pointerId:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture?.(e.pointerId);}return;}
   if(e.button!==0)return;e.preventDefault();
-  if(!creativePointerLocked&&typeof canvas.requestPointerLock==='function'){
-   try{const lockResult=canvas.requestPointerLock();if(lockResult&&typeof lockResult.catch==='function')lockResult.catch(err=>console.warn('Pointer lock unavailable; use right-drag to look',err));}catch(err){console.warn('Pointer lock unavailable; use right-drag to look',err);}
+  if(!creativePointerLocked&&!creativeLockRequestAttempted&&typeof canvas.requestPointerLock==='function'){
+   creativeLockRequestAttempted=true;
+   try{const lockResult=canvas.requestPointerLock();if(lockResult&&typeof lockResult.catch==='function')lockResult.catch(err=>{creativeLockRequestAttempted=false;console.warn('Pointer lock unavailable; use right-drag to look',err);});}catch(err){creativeLockRequestAttempted=false;console.warn('Pointer lock unavailable; use right-drag to look',err);}
+   creativeMouse.x=0;creativeMouse.y=0;return; // First click only locks the view, so it cannot place an accidental piece.
   }
   creativeMouse.x=0;creativeMouse.y=0;
   if(creativeEditMode)selectCreativeBuildAtPointer();else if(creativeBuildMode)placeCreativeBuild();
  });
  const endLook=e=>{
+  if(e&&(e.button===3||e.button===4))creativeMouseButtons.delete(e.button===3?'Mouse4':'Mouse5');
   if(creativeLookDrag&&(!e||creativeLookDrag.pointerId===e.pointerId))creativeLookDrag=null;
   if(creativeTouchLook&&(!e||creativeTouchLook.pointerId===e.pointerId)){
    const t=creativeTouchLook;creativeTouchLook=null;
@@ -1274,14 +1355,34 @@ function activateCreativePiece(type){
  if(!creativeBuildMode)toggleCreativeBuildMode();
  setCreativeBuildType(type);
 }
+function updateCreativeGamepad(dt){
+ creativePadMove={x:0,y:0};creativePadCrouch=false;creativePadSprint=false;
+ if(!navigator.getGamepads)return;
+ const pad=Array.from(navigator.getGamepads()||[]).find(p=>p&&p.connected);if(!pad){creativePadPrevious={};return;}
+ const dead=v=>Math.abs(v)<.16?0:Math.sign(v)*(Math.abs(v)-.16)/.84;
+ const ax=pad.axes||[];creativePadMove={x:dead(ax[0]||0),y:dead(ax[1]||0)};
+ const lookX=dead(ax[2]||0),lookY=dead(ax[3]||0),sens=Math.max(.2,Math.min(3,Number(creativeGraphics().cameraSensitivity||1)));
+ creativeYaw+=lookX*2.8*dt*sens;creativePitch=Math.max(.16,Math.min(1.12,creativePitch-lookY*1.9*dt*sens));
+ const pressed=i=>!!(pad.buttons?.[i]&&(pad.buttons[i].pressed||pad.buttons[i].value>.55));
+ const edge=i=>{const now=pressed(i),was=!!creativePadPrevious[i];creativePadPrevious[i]=now;return now&&!was;};
+ creativePadCrouch=pressed(1);creativePadSprint=pressed(10);
+ if(edge(0))creativeJumpQueued=true; // A / Cross
+ if(edge(2))toggleCreativeBuildMode(); // X / Square
+ if(edge(3))toggleCreativeEditMode(); // Y / Triangle
+ if(edge(4)){const order=['wall','floor','stair','roof'];activateCreativePiece(order[(order.indexOf(creativeBuildType)+1)%order.length]);}
+ if(edge(5))rotateCreative();
+ if(edge(7)){creativeMouse.x=0;creativeMouse.y=0;if(creativeEditMode)selectCreativeBuildAtPointer();else if(creativeBuildMode)placeCreativeBuild();}
+ if(edge(9))togglePauseSidebar();
+}
 function animateCreative(){if(!creativeActive||!creativeRenderer)return;creativeAnim=requestAnimationFrame(animateCreative);const g=creativeGraphics(),limit=Number(g.fpsLimit)||0,now=performance.now();if(limit>0&&now-creativeLastFrameTime<1000/limit)return;creativeLastFrameTime=now;const dt=Math.min(creativeClock.getDelta(),.05);
  try{
  if(!pauseIsOpen()){
-  let dx=0,dz=0;if(creativeKeys.has('KeyW'))dz+=1;if(creativeKeys.has('KeyS'))dz-=1;if(creativeKeys.has('KeyA'))dx-=1;if(creativeKeys.has('KeyD'))dx+=1;
-  dx+=creativeTouchMove.x;dz-=creativeTouchMove.y;
+  updateCreativeGamepad(dt);
+  let dx=0,dz=0;if(mbIsControlDown('forward'))dz+=1;if(mbIsControlDown('backward'))dz-=1;if(mbIsControlDown('left'))dx-=1;if(mbIsControlDown('right'))dx+=1;
+  dx+=creativeTouchMove.x+creativePadMove.x;dz-=creativeTouchMove.y+creativePadMove.y;
   const len=Math.hypot(dx,dz)||1;if(len>1){dx/=len;dz/=len;}
-  const crouched=creativeTouchCrouch||creativeKeys.has('ControlLeft')||creativeKeys.has('ControlRight');
-  const sprinting=creativeTouchSprint||creativeKeys.has('ShiftLeft')||creativeKeys.has('ShiftRight');
+  const crouched=creativeTouchCrouch||creativePadCrouch||mbIsControlDown('crouch');
+  const sprinting=creativeTouchSprint||creativePadSprint||mbIsControlDown('sprint');
   const speed=crouched?2.7:(sprinting?10:6);
   creativePlayer.scale.y=crouched?.72:1;
   const sin=Math.sin(creativeYaw),cos=Math.cos(creativeYaw);creativePlayer.position.x+=(dx*cos+dz*sin)*speed*dt;creativePlayer.position.z+=(-dx*sin+dz*cos)*speed*dt;
@@ -1317,10 +1418,10 @@ function startCreativeIsland(){
  creativeKeys.clear();creativeJumpQueued=false;creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeBuildMode=true;creativeEditMode=false;creativeSelected=null;creativeLastFrameTime=0;creativeFrameDiagnosticDone=false;creativePitch=.56;setCreativeBuildType('wall');updateCreativeEditPanel();creativeSetCount();creativeClock.start();
  // MangoOS window transitions may still be settling; resize after each paint frame.
  requestAnimationFrame(()=>requestAnimationFrame(()=>{creativeResize();if(creativeRenderer&&creativeScene&&creativeCamera)creativeRenderer.render(creativeScene,creativeCamera);}));
- MB$('#creativeCanvas')?.focus?.();animateCreative();startCreativeRoomSync();creativeToast('三人称キャラクターを表示しました。'+(currentRoom?'フレンドと共有する島に参加しました':'ソロ島に入りました'));
+ MB$('#creativeCanvas')?.focus?.();applyTouchHudSettings();animateCreative();startCreativeRoomSync();creativeToast('三人称キャラクターを表示しました。'+(currentRoom?'フレンドと共有する島に参加しました':'ソロ島に入りました'));
 }
 function stopCreativeIsland(){
- if(!creativeActive)return;if(!currentRoom)saveSoloCreativeBuilds();creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();creativeJumpQueued=false;creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeLookDrag=null;stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
+ if(!creativeActive)return;if(!currentRoom)saveSoloCreativeBuilds();creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();creativeMouseButtons.clear();creativeJumpQueued=false;try{if(document.pointerLockElement===MB$('#creativeCanvas'))document.exitPointerLock();}catch{}creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeLookDrag=null;stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
 }
 function openPauseSidebar(tab='party'){
  const sidebar=MB$('#creativePauseSidebar');if(!sidebar)return;sidebar.classList.add('open');sidebar.setAttribute('aria-hidden','false');renderCreativePauseTab(tab);
@@ -1339,7 +1440,7 @@ function renderCreativePauseTab(tab){
   friends:['フレンドを追加','参加コードでフレンドと合流',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">Firebaseのパーティーコードをフレンドに共有して、同じ島へ参加してもらえます。</p>${pauseRow('パーティー人数','最大4人')}</div><button class="creative-pause-button" id="pauseInvite2">招待コードを開く</button>`],
   looking:['パーティー参加希望','フレンドと一緒に遊ぶ',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">参加コードを持っている場合は、ここからパーティーに参加できます。</p></div><button class="creative-pause-button" id="pauseJoin">コードで参加</button>`],
   voice:['ボイスチャット','ボイス機能の状態',`<div class="creative-pause-card">${pauseRow('音声チャンネル','この試作版では音声通話は未実装')}${pauseRow('マイク','未接続','—')}${pauseRow('スピーカー','未接続','—')}</div><p style="font-size:10px;color:#b9c9d8">ボイスチャットは今後の追加機能です。現在は参加者一覧と建築同期を利用できます。</p>`],
-  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('視点','三人称視点。キャラクターの背後をカメラが追従。PCはマウス、スマホは右側スワイプ')}${pauseRow('移動','PC：W A S D／スマホ：左スティック')}${pauseRow('ジャンプ・ダッシュ・しゃがみ','Space・Shift・Ctrl')}${pauseRow('建築ピース','Q 壁／X 床／C 階段／V 屋根（数字1～4も可）')}${pauseRow('編集・回転','G または F／R')}</div><button class="creative-pause-button" id="pauseQuality">グラフィック設定を開く</button>`],
+  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('視点','三人称視点。PCはマウス、スマホは右側スワイプ、ゲームパッドは右スティック')}${pauseRow('移動','PC：W A S D／スマホ：左スティック／ゲームパッド：左スティック')}${pauseRow('ジャンプ・ダッシュ・しゃがみ','Space・Shift・Ctrl／タッチボタン／ゲームパッド')}${pauseRow('建築ピース','Q/Mouse4 壁／X/Mouse5 床／C 階段／V 屋根')}${pauseRow('編集・回転','F／R')}</div><button class="creative-pause-button" id="pauseQuality">操作・グラフィック設定を開く</button>`],
   game:['ゲームメニュー','島の設定',`<div class="creative-pause-card">${pauseRow('島の種類','平坦なフリービルド島')}${pauseRow('建築素材','無制限')}${pauseRow('最大プレイヤー','4人')}</div><button class="creative-pause-button" id="pauseReturnHub">島をリセット（建築は残す）</button>`],
   exit:['終了','島・パーティーの退出',`<button class="creative-pause-button" id="pauseReturnLobby">ロビーへ戻る</button><button class="creative-pause-button danger" id="pauseCloseApp">MangoBattleを終了</button><p style="font-size:10px;color:#bac9d8;line-height:1.6;margin-top:10px">終了するとこの島でのプレイを中断します。パーティーから退出する操作は別に選べます。</p>`]
  };
@@ -1348,7 +1449,7 @@ function renderCreativePauseTab(tab){
  byId('pauseInvite')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('partyOverlay')});byId('pauseInvite2')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('partyOverlay')});byId('pauseJoin')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('partyOverlay');setTimeout(()=>MB$('#roomCodeInput')?.focus(),100)});
  byId('pauseReady')?.addEventListener('click',()=>toggleReady().then(()=>renderCreativePauseTab('party')));
  byId('pauseProfileEdit')?.addEventListener('click',()=>{closePauseSidebar();MB$('#nameInput').value=getPlayerName();showOverlay('profileOverlay')});
- byId('pauseQuality')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('settingsOverlay')});
+ byId('pauseQuality')?.addEventListener('click',()=>{closePauseSidebar();syncGraphicsForm();showOverlay('settingsOverlay')});
  byId('pauseReturnHub')?.addEventListener('click',()=>{for(const [key] of creativeBuildObjects)if(key.startsWith((user?.uid||'local')+'/'))removeCreativeBuild(key);if(currentRoom&&user&&db)remove(ref(db,roomPath(currentRoom)+'/creative/builds/'+user.uid)).catch(()=>{});creativeSelected=null;creativeToast('自分の建築物をリセットしました');renderCreativePauseTab('game')});
  byId('pauseReturnLobby')?.addEventListener('click',()=>stopCreativeIsland());
  byId('pauseCloseApp')?.addEventListener('click',()=>{if(window.parent!==window)window.parent.postMessage({type:'MANGOOS_CLOSE_ACTIVE_APP',app:'mangobattle'},location.origin==='null'?'*':location.origin);else{stopCreativeIsland();window.__MangoBattleSceneMode='boot';MB$('#lobby').classList.remove('show');MB$('#boot').classList.add('show');}});
@@ -1371,27 +1472,30 @@ window.__MangoBattleHandleEscape=function(){
 window.addEventListener('keydown',e=>{
  if(!creativeActive||pauseIsOpen()||document.querySelector('.overlay.open'))return;
  const target=e.target;if(target&&target.closest&&target.closest('input,textarea,select,[contenteditable="true"]'))return;
- const movement=['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight','ControlLeft','ControlRight'];
- if(movement.includes(e.code)){e.preventDefault();if(e.code==='Space'&&!e.repeat)creativeJumpQueued=true;creativeKeys.add(e.code);return;}
+ const action=mbControlActionForCode(e.code);
+ const holdActions=['forward','backward','left','right','jump','sprint','crouch'];
+ if(action&&holdActions.includes(action)){
+  e.preventDefault();creativeKeys.add(e.code);
+  if(action==='jump'&&!e.repeat)creativeJumpQueued=true;
+  return;
+ }
  if(e.repeat)return;
- // Fast Fortnite-style build selection around WASD. Mouse side buttons are
- // also supported for wall/floor to match common PC Creative setups.
- if(e.code==='KeyQ')activateCreativePiece('wall');
- else if(e.code==='KeyX')activateCreativePiece('floor');
- else if(e.code==='KeyC')activateCreativePiece('stair');
- else if(e.code==='KeyV')activateCreativePiece('roof');
- // Number keys remain available as alternate selection keys.
+ if(action==='wall')activateCreativePiece('wall');
+ else if(action==='floor')activateCreativePiece('floor');
+ else if(action==='stair')activateCreativePiece('stair');
+ else if(action==='roof')activateCreativePiece('roof');
+ else if(action==='rotate')rotateCreative();
+ else if(action==='edit')toggleCreativeEditMode();
+ else if(action==='buildToggle')toggleCreativeBuildMode();
+ else if(action==='delete'){if(creativeEditMode&&creativeSelected){e.preventDefault();deleteSelectedCreativeBuild();}}
+ // Number row remains a convenient alternate build selector.
  else if(e.code==='Digit1')activateCreativePiece('wall');
  else if(e.code==='Digit2')activateCreativePiece('floor');
  else if(e.code==='Digit3')activateCreativePiece('stair');
  else if(e.code==='Digit4')activateCreativePiece('roof');
- else if(e.code==='KeyR')rotateCreative();
- else if(e.code==='KeyF'||e.code==='KeyG')toggleCreativeEditMode();
- else if(e.code==='KeyB')toggleCreativeBuildMode();
- else if(e.code==='Delete'||e.code==='Backspace'){if(creativeEditMode&&creativeSelected){e.preventDefault();deleteSelectedCreativeBuild();}}
 },true);
 window.addEventListener('keyup',e=>{creativeKeys.delete(e.code)},true);
-window.addEventListener('blur',()=>{creativeKeys.clear();creativeLookDrag=null;});
+window.addEventListener('blur',()=>{creativeKeys.clear();creativeMouseButtons.clear();creativeLookDrag=null;});
 MB$('#creativePauseButton').addEventListener('click',togglePauseSidebar);
 MB$('#creativeExit').addEventListener('click',()=>{openPauseSidebar('exit')});
 MB$('#creativeBuildToggle').addEventListener('click',toggleCreativeBuildMode);
