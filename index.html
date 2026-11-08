@@ -4,7 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#f3f6fc" />
-<title>MangoOS 1.21.0</title>
+<meta name="mangoos-version" content="1.22.0" />
+<title>MangoOS 1.22.0</title>
 <style>
 :root{--accent:#4b86e8;--accent2:#78a9f5;--taskbar-h:44px;--panel-bg:rgba(248,250,255,.88);--surface:#fff;--surface2:#f4f6fa;--ink:#20232b;--muted:#687080;--line:rgba(30,40,60,.12);--shadow:0 16px 48px rgba(20,30,55,.22);--radius:12px;color-scheme:light}
 *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:"Segoe UI","Yu Gothic UI",Meiryo,system-ui,sans-serif;color:var(--ink);user-select:none}button,input,textarea{font:inherit}button{color:inherit}#desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;overflow:hidden;background:radial-gradient(ellipse at 72% 25%,rgba(116,170,255,.38),transparent 35%),radial-gradient(ellipse at 25% 75%,rgba(150,188,255,.25),transparent 40%),linear-gradient(135deg,#172b52 0%,#244a7e 44%,#10243f 100%)}
@@ -572,9 +573,9 @@ function renderSettingsPage(area,key){
  } else if(key==='privacy'){
   extra=`<div class="settings-banner"><strong>プライバシーとアクセス許可</strong><p>以下はMangoOS内でのアプリ機能の許可設定です。Chromeのサイト権限やWindowsのプライバシー設定を直接変更するものではありません。</p></div><div class="settings-card">${settingsSwitch('permCamera','カメラアクセス','MangoOS HTMLアプリからのカメラ利用を許可する設定',false)}${settingsSwitch('permMicrophone','マイクアクセス','MangoOS HTMLアプリからのマイク利用を許可する設定',false)}${settingsSwitch('permLocation','位置情報アクセス','MangoOS HTMLアプリからの位置情報利用を許可する設定',false)}${settingsSwitch('permNotifications','通知アクセス','MangoOSからの通知を許可します。',true)}${settingsSwitch('diagnosticData','診断データ','MangoOSの診断情報をこの端末内で記録する設定',false)}${settingsSwitch('personalizedSuggestions','パーソナライズされたおすすめ','MangoOS内のおすすめ表示を許可します。',true)}</div><h2 class="settings-section-title">セキュリティ</h2><div class="settings-card">${settingsInfo('アプリの実行','HTML sandbox','登録したHTMLは分離されたフレームで開きます。')}${settingsButton('保存データの確認','MangoOSが保存しているアプリと設定を確認します。','storage-info','確認')}</div>`;
  } else if(key==='update'){
-  extra=`<div class="settings-banner"><strong>MangoOS は最新の状態です</strong><p>バージョン 1.21.0 · 更新確認はMangoOSのパッケージを対象にします。Windows Updateは実行しません。</p></div><div class="settings-card">${settingsInfo('現在のバージョン','MangoOS 1.21.0')}${settingsInfo('更新チャネル','安定版')}${settingsSwitch('autoUpdateMango','MangoOSの更新を自動確認','次回起動時に更新状態を確認する設定を保存します。',true)}${settingsButton('更新プログラムの確認','MangoOSの現在のバージョン情報を確認します。','check-update','更新プログラムの確認')}</div><div class="settings-note">Windows本体の更新、ドライバー更新、再起動管理にはアクセスしません。</div>`;
+  extra=`<div class="settings-banner" id="mangoos-update-banner"><strong id="mangoos-update-heading">更新を確認できます</strong><p id="mangoos-update-detail">現在のバージョンは MangoOS 1.22.0 です。インターネット経由で更新を確認します。</p></div><div class="settings-card">${settingsInfo('現在のバージョン','MangoOS 1.22.0')}${settingsInfo('更新チャネル','安定版')}${settingsSwitch('autoUpdateMango','起動時に更新を自動確認','MangoOSの起動時に新しいバージョンを確認します。',false)}${settingsButton('更新プログラムの確認','公開されている最新版を確認して、この画面から更新します。','check-update','更新プログラムの確認')}</div><div id="mangoos-update-status" class="settings-note" role="status">最終確認：まだ確認していません。</div><div class="settings-note">MangoOS本体の更新です。Windows本体・ドライバーの更新は行いません。GitHub Pagesに公開した更新マニフェストを確認します。</div>`;
  } else if(key==='about'){
-  extra=`<div class="settings-banner"><strong>MangoOS</strong><p>Windows 11風の操作画面を持つ、ブラウザー上で動作するデスクトップ環境です。</p></div><div class="settings-card">${settingsInfo('エディション','MangoOS Desktop')}${settingsInfo('バージョン','1.11.0')}${settingsInfo('システムの種類','Webベース 64-bit UI')}${settingsInfo('ブラウザー',navigator.userAgent)}${settingsInfo('画面解像度',`${screen.width} × ${screen.height}`)}${settingsInfo('登録HTMLアプリ',`${apps.length} 個`)}</div><div class="settings-note">WindowsのライセンスやWindowsシステムファイルを使用するものではありません。</div>`;
+  extra=`<div class="settings-banner"><strong>MangoOS</strong><p>Windows 11風の操作画面を持つ、ブラウザー上で動作するデスクトップ環境です。</p></div><div class="settings-card">${settingsInfo('エディション','MangoOS Desktop')}${settingsInfo('バージョン','1.22.0')}${settingsInfo('システムの種類','Webベース 64-bit UI')}${settingsInfo('ブラウザー',navigator.userAgent)}${settingsInfo('画面解像度',`${screen.width} × ${screen.height}`)}${settingsInfo('登録HTMLアプリ',`${apps.length} 個`)}</div><div class="settings-note">WindowsのライセンスやWindowsシステムファイルを使用するものではありません。</div>`;
  }
  main.classList.remove('page-changing');main.innerHTML=`<h1>${escapeHTML(title)}</h1><div class="settings-lead">${escapeHTML(sub)}</div>${extra}`;void main.offsetWidth;main.classList.add('page-changing');
  main.querySelectorAll('[data-pref]').forEach(el=>el.addEventListener(el.type==='range'?'input':'change',e=>{const raw=e.target.type==='checkbox'?e.target.checked:e.target.value;setMangoPref(e.target.dataset.pref,raw);const output=main.querySelector(`[data-range-value="${CSS.escape(e.target.dataset.pref)}"]`);if(output)output.textContent=raw+(e.target.dataset.pref==='displayBrightness'||e.target.dataset.pref==='textScale'||e.target.dataset.pref==='volume'?'%':'');}));
@@ -607,6 +608,43 @@ function applyAllMangoPreferences(){
  const defaults={theme:getMangoPref('theme',storage.getItem('mango-theme')||'light'),displayBrightness:100,nightLight:false,volume:70,bluetoothEnabled:false,wifiEnabled:true,airplaneMode:false,taskbarAlignment:'center',transparency:true,animations:true,reduceMotion:false,reduceTransparency:false,highContrast:false,textScale:100,largePointer:false,accountName:'ユーザー',displayScale:100,gameMode:false,powerMode:'balanced',permCamera:false,permMicrophone:false,permLocation:false,startRecommendations:true,showSearchTaskbar:true,showTaskView:true,weekStart:'0',timeFormat:'24',dateFormat:'ja'};
  Object.keys(defaults).forEach(k=>applyMangoPreference(k,getMangoPref(k,defaults[k])));
 }
+const MANGOOS_BUILD_VERSION='1.22.0';
+const MANGOOS_UPDATE_MANIFEST_URL='https://mangouser1.github.io/-/mangoos-update.json';
+const MANGOOS_UPDATE_RAW_FALLBACK='https://raw.githubusercontent.com/mangouser1/-/main/mangoos-update.json';
+let mangoosLastUpdateManifest=null;
+function mangoosCompareVersions(a,b){const aa=String(a).split('.').map(x=>parseInt(x,10)||0),bb=String(b).split('.').map(x=>parseInt(x,10)||0);for(let i=0;i<Math.max(aa.length,bb.length);i++){const d=(aa[i]||0)-(bb[i]||0);if(d)return d}return 0}
+function mangoosSetUpdateStatus(area,message,heading){const root=area||document;const status=$('#mangoos-update-status',root);const head=$('#mangoos-update-heading',root);const detail=$('#mangoos-update-detail',root);if(status)status.textContent=message;if(head&&heading)head.textContent=heading;if(detail&&message)detail.textContent=message}
+async function mangoosFetchManifest(){
+ const candidates=[MANGOOS_UPDATE_MANIFEST_URL,MANGOOS_UPDATE_RAW_FALLBACK];let lastError=null;
+ for(const url of candidates){try{const response=await fetch(url+(url.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store',mode:'cors',credentials:'omit'});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();if(!data||data.product!=='MangoOS'||!data.latestVersion||!data.htmlUrl)throw new Error('更新情報の形式が正しくありません。');const target=new URL(data.htmlUrl,url);if(!['mangouser1.github.io'].includes(target.hostname))throw new Error('更新ファイルの配布元が許可されていません。');data._manifestUrl=url;data._htmlUrl=target.href;return data}catch(err){lastError=err}}
+ throw lastError||new Error('更新情報を取得できませんでした。')
+}
+async function mangoosSha256(buffer){if(!crypto?.subtle)throw new Error('この環境では更新ファイルの安全性を確認できません。HTTPSのGitHub Pagesで開いてください。');const digest=await crypto.subtle.digest('SHA-256',buffer);return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function mangoosDownloadAndApply(manifest){
+ const url=manifest._htmlUrl+(manifest._htmlUrl.includes('?')?'&':'?')+'_='+Date.now();
+ const response=await fetch(url,{cache:'no-store',mode:'cors',credentials:'omit'});if(!response.ok)throw new Error('更新ファイルをダウンロードできませんでした（HTTP '+response.status+'）。');
+ const buffer=await response.arrayBuffer();if(buffer.byteLength<50000||buffer.byteLength>12*1024*1024)throw new Error('更新HTMLのサイズが想定範囲外です。');
+ const actual=await mangoosSha256(buffer);if(!manifest.sha256||actual.toLowerCase()!==String(manifest.sha256).toLowerCase())throw new Error('更新ファイルのSHA-256が一致しません。マニフェストとHTMLを同時に公開してください。');
+ const text=new TextDecoder('utf-8',{fatal:true}).decode(buffer);const versionMatch=text.match(/<meta\s+name=["']mangoos-version["']\s+content=["']([^"']+)["']/i);if(!versionMatch||versionMatch[1]!==manifest.latestVersion||!/<html[\s>]/i.test(text)||!/<title[^>]*>\s*MangoOS/i.test(text))throw new Error('更新ファイルのバージョンまたはHTML形式が一致しません。');
+ if(MANGO_SERVER_MODE){const saved=await fetch('/api/update-os',{method:'POST',headers:{'Content-Type':'text/html; charset=utf-8'},body:buffer,cache:'no-store'});const result=await saved.json().catch(()=>({}));if(!saved.ok||!result.ok)throw new Error(result.error||'この端末のMangoOSファイルを更新できませんでした。');toast('MangoOSの更新','v'+manifest.latestVersion+'を適用しました。再起動します。');setTimeout(()=>location.reload(),900);return}
+ // For GitHub Pages or an HTML-only hosted session, replace the active document in-place.
+ // This preserves the current origin, localStorage and IndexedDB while loading the new source.
+ toast('MangoOSの更新','v'+manifest.latestVersion+'を適用しています。');document.open();document.write(text);document.close();
+}
+async function checkMangoOSUpdates(area,silent=false){
+ const statusArea=area||document;const status=$('#mangoos-update-status',statusArea);const checkButton=$('[data-setting-action="check-update"]',statusArea);if(checkButton)checkButton.disabled=true;
+ mangoosSetUpdateStatus(statusArea,'GitHub Pagesから更新情報を確認しています…','更新を確認しています');
+ try{
+  const manifest=await mangoosFetchManifest();mangoosLastUpdateManifest=manifest;const comparison=mangoosCompareVersions(manifest.latestVersion,MANGOOS_BUILD_VERSION);const checked=new Date().toLocaleString('ja-JP');
+  if(comparison<=0){const msg='最新の状態です。現在 v'+MANGOOS_BUILD_VERSION+'（確認：'+checked+'）';mangoosSetUpdateStatus(statusArea,msg,'MangoOS は最新の状態です');if(!silent)toast('MangoOS Update','新しい更新プログラムはありません。');return}
+  const notes=Array.isArray(manifest.releaseNotes)?manifest.releaseNotes.join('\n'):String(manifest.releaseNotes||'改善と不具合修正');
+  mangoosSetUpdateStatus(statusArea,'新しいバージョン v'+manifest.latestVersion+' が見つかりました。','更新プログラムがあります');
+  showModal(`<h2>MangoOS の更新</h2><p>新しいバージョン <strong>v${escapeHTML(manifest.latestVersion)}</strong> が見つかりました。</p><div class="settings-card" style="padding:13px;margin:12px 0"><strong>更新内容</strong><p style="white-space:pre-line;line-height:1.7">${escapeHTML(notes)}</p><small>公開日：${escapeHTML(manifest.releaseDate||'不明')}</small></div><p>現在のアプリ・設定・保存データはそのまま維持して、MangoOS本体を更新します。</p><div class="modal-actions"><button class="soft-button" id="mango-update-later">後で</button><button class="primary-button" id="mango-update-now">今すぐ更新</button></div>`);
+  $('#mango-update-later').onclick=closeModal;$('#mango-update-now').onclick=async()=>{const button=$('#mango-update-now');button.disabled=true;button.textContent='更新しています…';try{await mangoosDownloadAndApply(manifest)}catch(err){button.disabled=false;button.textContent='再試行';const p=$('.modal p');if(p)p.textContent='更新に失敗しました：'+(err?.message||err);mangoosSetUpdateStatus(statusArea,'更新に失敗しました：'+(err?.message||err),'更新できませんでした')}};
+ }catch(err){const msg='更新確認に失敗しました：'+(err?.message||String(err));mangoosSetUpdateStatus(statusArea,msg,'更新情報を取得できませんでした');if(!silent)showModal(`<h2>更新を確認できませんでした</h2><p>${escapeHTML(msg)}</p><p>GitHub Pagesのリポジトリに index.html と mangoos-update.json が公開されているか確認してください。</p><div class="modal-actions"><button class="primary-button" id="modal-cancel">閉じる</button></div>`),$('#modal-cancel').onclick=closeModal;}
+ finally{if(checkButton&&checkButton.isConnected)checkButton.disabled=false}
+}
+
 function runSettingsAction(action,area){
  if(action==='manage-apps'){showAppManager();return}
  if(action==='open-store'){openStore();return}
@@ -617,7 +655,7 @@ function runSettingsAction(action,area){
  if(action==='storage-info'){const used=(()=>{try{return (JSON.stringify(localStorage).length/1024).toFixed(1)+' KB (概算)'}catch{return '取得不可'}})();showModal(`<h2>ストレージ</h2><p>HTMLアプリ：${apps.length} 個<br>MangoOS設定：${used}<br>IndexedDB：${db?'利用中':'利用できない場合があります'}</p><p>ブラウザーの保存容量全体や他のサイトのデータは表示できません。</p><div class="modal-actions"><button class="primary-button" id="modal-cancel">閉じる</button></div>`);$('#modal-cancel').onclick=closeModal;return}
  if(action==='save-account'){const name=($('#account-name',area)?.value||'ユーザー').trim().slice(0,24)||'ユーザー';setMangoPref('accountName',name);const account=$('.settings-account strong',area);if(account)account.textContent=name;const chip=$('.user-chip span');if(chip)chip.textContent=name;toast('アカウント','ユーザー名を保存しました。');return}
  if(action==='speech-test'){if(!('speechSynthesis'in window)){toast('音声読み上げ','このブラウザーは音声合成に対応していません。');return}speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance('MangoOS アクセシビリティ 音声読み上げテストです。'));return}
- if(action==='check-update'){toast('Windows Update','MangoOS 1.21.0 の情報を確認しました。Windows本体の更新は行っていません。');return}
+ if(action==='check-update'){checkMangoOSUpdates(area,false);return}
 }
 function setTheme(v){document.body.classList.toggle('dark',v==='dark');storage.setItem('mango-theme',v)}
 function askPassword(){showModal(`<h2 style="display:flex;align-items:center;gap:9px">${iconHTML('lock')} HTMLアプリの追加</h2><p>この機能を開くにはパスワードを入力してください。</p><input id="password-input" type="password" inputmode="numeric" autocomplete="off" placeholder="パスワード" /><div class="modal-error" id="password-error"></div><div class="modal-actions"><button class="soft-button" id="modal-cancel">キャンセル</button><button class="primary-button" id="password-ok">確認</button></div>`);const inp=$('#password-input');const check=()=>{if(inp.value.normalize('NFKC')==='1102'){closeModal();$('#html-file-input').click()}else{$('#password-error').textContent='パスワードが違います。';inp.select()}};$('#password-ok').addEventListener('click',check);inp.addEventListener('keydown',e=>{if(e.key==='Enter')check()});$('#modal-cancel').addEventListener('click',closeModal);setTimeout(()=>inp.focus(),50)}
@@ -845,7 +883,7 @@ window.addEventListener('message',event=>{
  if(event.data.type==='MANGOOS_CLOSE_ACTIVE_APP'){const id=activeWindow;if(id)closeWindow(id);}
 });
 
-async function init(){mangoShutdown=false;try{db=await openDB();apps=await dbAll()}catch(err){console.warn('IndexedDB unavailable',err);toast('保存機能','このブラウザーではアプリ保存が利用できない場合があります。')}makeDesktopItems();if(isPerformanceInstalled()&&(storage.getItem('mango-performance-overlay')==='1'||getMangoPref('startupPerformance',false))){perfState.overlay=true;ensurePerformanceOverlay().classList.add('show');startPerfSampler()}if(getMangoPref('startupStore',false))setTimeout(()=>{if(!mangoShutdown)openStore()},1200);const theme=storage.getItem('mango-theme');if(theme)setTheme(theme);const accent=storage.getItem('mango-accent');if(accent)document.documentElement.style.setProperty('--accent',accent);applyAllMangoPreferences();updateClock();setInterval(updateClock,1000);updateBackgroundTray();setTimeout(()=>$('#boot').classList.add('hide'),950)}
+async function init(){mangoShutdown=false;try{db=await openDB();apps=await dbAll()}catch(err){console.warn('IndexedDB unavailable',err);toast('保存機能','このブラウザーではアプリ保存が利用できない場合があります。')}makeDesktopItems();if(isPerformanceInstalled()&&(storage.getItem('mango-performance-overlay')==='1'||getMangoPref('startupPerformance',false))){perfState.overlay=true;ensurePerformanceOverlay().classList.add('show');startPerfSampler()}if(getMangoPref('startupStore',false))setTimeout(()=>{if(!mangoShutdown)openStore()},1200);const theme=storage.getItem('mango-theme');if(theme)setTheme(theme);const accent=storage.getItem('mango-accent');if(accent)document.documentElement.style.setProperty('--accent',accent);applyAllMangoPreferences();updateClock();setInterval(updateClock,1000);updateBackgroundTray();setTimeout(()=>$('#boot').classList.add('hide'),950);if(getMangoPref('autoUpdateMango',false))setTimeout(()=>checkMangoOSUpdates(document,true),1800)}
 init();
 })();
 </script>
