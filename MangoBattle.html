@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#14263c">
-<meta name="mangobattle-version" content="0.13.6">
+<meta name="mangobattle-version" content="0.13.7">
 <meta name="mangoos-app" content="mangobattle">
 <script id="mango-auth-origin-normalizer">
 /* MangoOS may display stored HTML apps through iframe.srcdoc. In that context
@@ -30,7 +30,7 @@
   }
 })();
 </script>
-<title>マンゴーバトル — v0.13.6</title>
+<title>マンゴーバトル — v0.13.7</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
 :root{--white:#fff;--muted:#d7e2eb;--blue:#1677e8;--blue2:#075fc4;--gold:#ffe91f;--panel:rgba(11,17,28,.82);--panel2:rgba(22,31,44,.72);--line:rgba(255,255,255,.22);--shadow:0 10px 35px rgba(0,0,0,.36)}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#14263c;color:var(--white);font-family:'Noto Sans JP',system-ui,sans-serif}button,input,select{font:inherit}button{color:#fff;border:0;cursor:pointer}button:focus-visible{outline:2px solid white;outline-offset:2px}
@@ -45,6 +45,9 @@
 .event-card{background:linear-gradient(145deg,rgba(12,20,33,.8),rgba(13,26,40,.72));border:1px solid #ffffff42;box-shadow:var(--shadow);overflow:hidden;border-radius:5px;backdrop-filter:blur(8px);margin-top:12px}.event-art{height:142px;background:#24536a url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png') center 54%/cover;position:relative;overflow:hidden}.event-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,12,21,.64),transparent 72%)}.event-copy{padding:11px 13px}.event-copy strong{font-family:'Barlow Condensed';font-size:17px;font-weight:900;letter-spacing:.05em}.event-copy p{font-size:10px;line-height:1.55;color:#d0dbe4;margin:5px 0 0}.news-tag{display:inline-block;background:#e8cd27;color:#172233;font-size:9px;font-weight:900;padding:3px 6px;margin-bottom:7px}
 .center-column{position:relative;pointer-events:none;min-width:0}.stage-caption{position:absolute;top:34px;right:16%;text-align:center;text-shadow:0 2px 12px #001;z-index:2}.stage-caption b{font-family:'Barlow Condensed';font-size:18px;letter-spacing:.18em}.stage-caption small{display:block;font-size:10px;color:#f3f6f7;letter-spacing:.14em;margin-top:3px}.hero-shadow{position:absolute;width:240px;height:36px;border-radius:50%;background:#00121d99;filter:blur(15px);bottom:11%;left:51%;transform:translateX(-50%)}.hero-callout{position:absolute;right:11%;bottom:7%;font-size:10px;color:#e9f4ff;letter-spacing:.14em;text-shadow:0 2px 10px #001;white-space:nowrap}.hero-nameplate{position:absolute;right:12%;top:18%;padding:7px 11px;background:rgba(7,16,28,.5);border-left:3px solid #ffe52e;backdrop-filter:blur(8px);text-shadow:0 2px 8px #000}.hero-nameplate b{display:block;font-family:'Barlow Condensed';font-size:15px;letter-spacing:.09em}.hero-nameplate small{font-size:9px;color:#d6e1e8}
 .playlist{position:absolute;left:0;bottom:0;width:min(100%,315px);background:linear-gradient(145deg,rgba(9,17,29,.88),rgba(17,29,43,.83));border:1px solid #ffffff48;box-shadow:var(--shadow);padding:14px;border-radius:4px;backdrop-filter:blur(10px)}.playlist:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}.playlist-head{display:flex;justify-content:space-between;align-items:center;font-family:'Barlow Condensed';font-weight:900;letter-spacing:.14em;font-size:12px}.playlist-feature{height:92px;margin:9px 0 8px;position:relative;overflow:hidden;background:#456b80 url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png') 55% 60%/cover;border:1px solid #ffffff2a}.playlist-feature:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,12,22,.58),transparent 75%)}.playlist-feature span{position:absolute;left:12px;top:10px;z-index:1;font-family:'Barlow Condensed';font-size:22px;font-weight:900;text-shadow:0 3px 8px #001;line-height:.9}.mode-title{font-weight:900;font-size:17px;letter-spacing:.02em}.mode-desc{font-size:10px;color:#c5d3e1;margin-top:2px}.mode-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.mode-controls button{background:#ffffff19;border:1px solid #ffffff3b;padding:8px;font-size:10px;font-weight:800;border-radius:3px}.mode-controls button.selected{background:#1b69b9;border-color:#9fd6ff;box-shadow:0 0 0 1px #5eacfa inset}.fill-toggle{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:7px 8px;background:#0003;font-size:10px;color:#dae6f2}.toggle{width:34px;height:18px;border-radius:20px;background:#65778d;position:relative}.toggle:after{content:"";position:absolute;width:14px;height:14px;background:white;border-radius:50%;top:2px;left:2px;transition:left .18s}.toggle.on{background:#1478d6}.toggle.on:after{left:18px}.play-button{width:100%;margin-top:11px;padding:12px 14px;background:linear-gradient(180deg,#fff34b,#f3d000);color:#172230;font-family:'Barlow Condensed';font-size:27px;line-height:1;font-weight:900;letter-spacing:.08em;box-shadow:0 4px 0 #a98d08,0 9px 20px #0005;transform:skew(-2deg);transition:transform .16s,filter .16s}.play-button:hover{filter:brightness(1.08);transform:skew(-2deg) translateY(-2px)}.play-button:active{transform:skew(-2deg) translateY(2px);box-shadow:0 1px 0 #9d721b}
+.online-play-button{width:100%;margin-top:9px;padding:10px 12px;background:linear-gradient(180deg,#4b9fe9,#1764a8);color:#fff;border:1px solid #a8d8ff;border-radius:3px;font-size:13px;font-weight:900;letter-spacing:.02em;box-shadow:0 3px 0 #104a7e,0 8px 18px #0004;transition:filter .16s,transform .16s}.online-play-button:hover{filter:brightness(1.12);transform:translateY(-1px)}.online-play-button:active{transform:translateY(2px);box-shadow:0 1px 0 #104a7e}
+.graphics-dialog{width:min(720px,96vw);max-height:90vh}.graphics-section-title{font-size:14px;font-weight:900;margin:16px 0 9px;color:#eaf3fc}.graphic-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.graphic-setting{min-width:0;padding:10px;background:#ffffff0b;border:1px solid #ffffff20;border-radius:5px}.graphic-setting label{display:block;font-size:11px;font-weight:800;color:#e8f1f8}.graphic-setting .input{margin-top:6px}.graphic-toggle-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.graphic-toggle{display:flex!important;align-items:center;justify-content:space-between;gap:9px;padding:10px;background:#ffffff0b;border:1px solid #ffffff20;border-radius:5px}.graphic-toggle span{min-width:0}.graphic-toggle b,.graphic-toggle small{display:block}.graphic-toggle b{font-size:11px;color:#f1f6fa}.graphic-toggle small{font-size:9px;color:#b8c8d8;margin-top:3px}.graphic-toggle input{width:18px;height:18px;accent-color:#43a2f4;flex:0 0 auto}.graphics-note,.graphics-help{display:block;font-size:10px;color:#b8c8d8;line-height:1.6;margin-top:9px}.graphics-separator{height:1px;background:#ffffff25;margin:17px 0 12px}
+@media(max-width:560px){.graphic-settings-grid,.graphic-toggle-list{grid-template-columns:1fr}.graphics-dialog{padding:18px}.online-play-button{font-size:11px;padding:8px}}
 .party-card{background:linear-gradient(145deg,rgba(8,17,29,.82),rgba(17,31,47,.73));border:1px solid #ffffff40;border-radius:5px;padding:12px;backdrop-filter:blur(9px);box-shadow:var(--shadow)}.party-head{display:flex;align-items:center;justify-content:space-between;font-family:'Barlow Condensed';font-weight:900;font-size:14px;letter-spacing:.1em}.party-head button{background:#ffffff1b;border:1px solid #ffffff42;font-size:10px;font-weight:800;padding:5px 8px;border-radius:3px}.party-slots{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.party-slot{min-height:51px;background:rgba(4,12,22,.5);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:7px;padding:6px;border-radius:3px}.slot-icon{width:28px;height:28px;display:grid;place-items:center;background:linear-gradient(135deg,#648ca9,#273d56);font-family:'Barlow Condensed';font-size:16px;font-weight:900;flex-shrink:0}.slot-name{font-size:9px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.slot-status{font-size:8px;color:#b6c8d9;margin-top:2px}.invite-btn{margin-top:8px;width:100%;background:transparent;border:1px dashed #ffffff55;color:#e3effa;font-size:10px;padding:7px;border-radius:3px}.social-status{font-size:9px;color:#cbd7df;margin-top:8px;display:flex;align-items:center;gap:6px}.online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#57d68d;box-shadow:0 0 7px #57d68d}
 .discover-rail{position:absolute;left:360px;right:28px;bottom:13px;height:88px;display:flex;gap:9px;align-items:stretch;overflow:hidden;pointer-events:auto}.discover-title{width:116px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;text-shadow:0 2px 10px #000}.discover-title b{font-family:'Barlow Condensed';font-size:19px;letter-spacing:.08em}.discover-title small{color:#d7e2e8;font-size:9px}.discover-card{position:relative;flex:1;min-width:120px;max-width:205px;border:1px solid #ffffff6b;background:#12283a;overflow:hidden;text-align:left;padding:0;transition:transform .16s,border-color .16s}.discover-card:hover{transform:translateY(-3px);border-color:#fff}.discover-card .art{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .3s}.discover-card:hover .art{transform:scale(1.06)}.discover-card .art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent 85%)}.discover-card b{position:absolute;bottom:7px;left:9px;right:7px;z-index:1;font-family:'Barlow Condensed';font-size:14px;letter-spacing:.04em;text-shadow:0 2px 6px #000}.art-one{background-image:url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png')}.art-two{background-image:url('https://images.pexels.com/photos/15692356/pexels-photo-15692356.jpeg?auto=compress&cs=tinysrgb&w=900')}.art-three{background-image:linear-gradient(135deg,#f2b66b,#97588b 40%,#234e6b)}.art-four{background-image:linear-gradient(135deg,#264b57,#7fa66c 48%,#d6b96c)}
 .bottom-hints{position:absolute;left:20px;right:22px;bottom:114px;display:flex;align-items:center;justify-content:space-between;pointer-events:none;color:#e4eef7;text-shadow:0 2px 8px #001;font-size:9px}.hintkeys{display:flex;gap:9px}.hintkeys span{border:1px solid #ffffff55;background:#07162b77;padding:4px 7px}.bottom-links{display:flex;gap:12px;pointer-events:auto}.bottom-links button{background:#06111f88;border:1px solid #ffffff33;color:#dbe8f4;font-size:9px;padding:5px 9px;border-radius:3px}
@@ -302,10 +305,11 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
       <div class="playlist">
         <div class="playlist-head"><span>クリエイティブ</span><span style="color:var(--gold)">自由建築</span></div>
         <div class="playlist-feature"><span>フリー<br>ビルド</span></div>
-        <div class="mode-title" id="modeTitle">クリエイティブ</div><div class="mode-desc" id="modeDesc">平坦な島で、最大4人の仲間と自由に建築・編集しよう。</div>
+        <div class="mode-title" id="modeTitle">クリエイティブ</div><div class="mode-desc" id="modeDesc">平坦な島で、ひとりで練習することも、オンラインで2～4人の仲間と同じ島を建築・編集することもできます。</div>
         <div class="mode-controls"><button class="selected" data-mode="creative" aria-pressed="true">クリエイティブのみ</button></div>
         <div class="fill-toggle"><span>フレンドと最大4人で遊べます</span><span class="creative-max-label">4人</span></div>
-        <button id="playButton" class="play-button">島に入る</button>
+        <button id="playButton" class="play-button">ソロで島に入る</button>
+        <button id="onlinePlayButton" class="online-play-button" type="button">オンラインで遊ぶ（2～4人）</button>
       </div>
     </section>
     <section class="center-column">
@@ -350,7 +354,7 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
  <div class="fb-box"><h3>パーティーを作成</h3><p>あなたがホストになり、参加コードを発行します。</p><div class="fb-actions"><button class="primary" id="createPartyBtn">部屋を作成する</button></div></div>
  <div class="fb-box"><h3>コードで参加</h3><p>フレンドから受け取った6文字のコードを入力します。</p><div class="fb-field"><label for="roomCodeInput">参加コード</label><input id="roomCodeInput" maxlength="6" autocomplete="off" placeholder="例：AB23CD" style="text-transform:uppercase;letter-spacing:.16em;font-weight:900"></div><div class="fb-actions"><button class="primary" id="joinPartyBtn">部屋に参加する</button></div></div>
 </div>
-<div id="activeRoomPanel" class="fb-box" hidden><h3>参加中のパーティー</h3><div class="fb-code"><span id="roomCodeValue">------</span><button id="copyRoomCodeBtn">コードをコピー</button></div><div class="fb-room-tools"><small id="roomMetaText">モード：クリエイティブ・参加者：1 / 4</small><span class="fb-status connected" id="roomStatePill"><i></i><span>接続中</span></span></div><div class="fb-player-list" id="fbPlayerList"></div><div class="fb-actions"><button class="primary" id="readyBtn">準備完了にする</button><button id="leavePartyBtn">パーティーから退出</button></div><div id="hostHint" class="fb-config-note">全員の準備ができたら、ホストがクリエイティブ島を開始できます。</div></div>
+<div id="activeRoomPanel" class="fb-box" hidden><h3>参加中のパーティー</h3><div class="fb-code"><span id="roomCodeValue">------</span><button id="copyRoomCodeBtn">コードをコピー</button></div><div class="fb-room-tools"><small id="roomMetaText">モード：クリエイティブ・参加者：1 / 4</small><span class="fb-status connected" id="roomStatePill"><i></i><span>接続中</span></span></div><div class="fb-player-list" id="fbPlayerList"></div><div class="fb-actions"><button class="primary" id="readyBtn">準備完了にする</button><button id="leavePartyBtn">パーティーから退出</button></div><div class="fb-actions" style="margin-top:9px"><button class="primary" id="startPartyGameBtn" type="button">ホストの開始を待っています</button></div><div id="hostHint" class="fb-config-note">全員の準備ができたら、ホストがクリエイティブ島を開始できます。</div></div>
 <div class="fb-error" id="fbError" role="status" aria-live="polite"></div>
 <details class="fb-config" id="fbConfigDetails"><summary>Firebase接続設定</summary><p class="fb-config-note">接続先：mangonite2。設定はあらかじめ入力済みです。APIキーはWebアプリ用の公開識別子で、秘密鍵ではありません。データ保護のため、同梱のRealtime Databaseルールを必ず公開してください。</p><div class="fb-config-grid">
  <div class="fb-field"><label for="fbApiKey">APIキー</label><input id="fbApiKey" autocomplete="off" placeholder="AIza..." spellcheck="false"></div>
@@ -362,9 +366,26 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
  <div class="fb-field"><label for="fbStorageBucket">Storageバケット（任意）</label><input id="fbStorageBucket" autocomplete="off" placeholder="your-project.appspot.com"></div>
 </div><div class="fb-config-actions"><button class="primary" id="saveFirebaseBtn">保存して接続</button><button id="clearFirebaseBtn">設定を消去</button></div><p class="fb-config-note">必要な設定：Firebase Authenticationで匿名認証とGoogleプロバイダを有効化し、Realtime Databaseのルールに同梱の database.rules.json を貼り付けて公開してください。GitHub Pagesで公開する場合は、URLが https://アカウント名.github.io/リポジトリ名/ なら、承認済みドメインに「アカウント名.github.io」だけを追加します（https://とパスは不要）。MangoOSのローカルサーバーから起動する場合は localhost を追加してください。file:// 直開きは使えません。</p></details>
 <div class="dialog-actions"><button data-close="partyOverlay">閉じる</button></div></div></div>
-<div id="settingsOverlay" class="overlay"><div class="dialog"><button class="close" data-close="settingsOverlay">×</button><div class="section-kicker">設定</div><h2>設定</h2><p>表示品質やキャラクター素材を変更できます。</p><label>描画品質<select id="qualitySelect" class="input"><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select></label><div style="margin-top:14px"><label for="modelFile">3Dキャラクター素材（3Dモデル形式）</label><input id="modelFile" class="input" type="file" accept=".glb,model/gltf-binary"><small style="color:#b8c8d8;font-size:10px">後からアップロードする3D素材に差し替えできます。</small></div><div class="dialog-actions"><button data-close="settingsOverlay">閉じる</button></div></div></div>
+<div id="settingsOverlay" class="overlay"><div class="dialog graphics-dialog"><button class="close" data-close="settingsOverlay">×</button><div class="section-kicker">ゲーム設定</div><h2>設定</h2><p>クリエイティブ島とロビーの描画設定です。変更はすぐに反映され、この端末に保存されます。</p>
+ <h3 class="graphics-section-title">グラフィックス</h3>
+ <div class="graphic-settings-grid">
+  <div class="graphic-setting"><label for="qualitySelect">全体の画質</label><select id="qualitySelect" class="input"><option value="verylow">最低</option><option value="low">低</option><option value="medium">中</option><option value="high">高</option><option value="ultra">最高</option><option value="custom">カスタム</option></select></div>
+  <div class="graphic-setting"><label for="renderScaleSelect">3D描画解像度</label><select id="renderScaleSelect" class="input"><option value="60">60%</option><option value="75">75%</option><option value="85">85%</option><option value="100">100%</option><option value="115">115%</option><option value="130">130%</option><option value="150">150%</option></select></div>
+  <div class="graphic-setting"><label for="shadowQualitySelect">影の品質</label><select id="shadowQualitySelect" class="input"><option value="off">オフ</option><option value="low">低（512）</option><option value="medium">中（1024）</option><option value="high">高（2048）</option></select></div>
+  <div class="graphic-setting"><label for="viewDistanceSelect">描画距離</label><select id="viewDistanceSelect" class="input"><option value="80">近い</option><option value="130">標準</option><option value="190">遠い</option><option value="280">とても遠い</option><option value="380">最大</option></select></div>
+  <div class="graphic-setting"><label for="fpsLimitSelect">FPS上限</label><select id="fpsLimitSelect" class="input"><option value="30">30 FPS</option><option value="60">60 FPS</option><option value="90">90 FPS</option><option value="120">120 FPS</option><option value="0">上限なし</option></select></div>
+  <div class="graphic-setting"><label for="cameraSensitivitySelect">視点感度</label><select id="cameraSensitivitySelect" class="input"><option value="0.5">低い</option><option value="0.75">やや低い</option><option value="1">標準</option><option value="1.25">やや高い</option><option value="1.5">高い</option><option value="2">とても高い</option></select></div>
+ </div>
+ <div class="graphic-toggle-list">
+  <label class="graphic-toggle"><span><b>フォグ（遠景の霞）</b><small>描画距離に合わせて遠くを自然にぼかします。</small></span><input id="fogToggle" type="checkbox"></label>
+  <label class="graphic-toggle"><span><b>建築グリッド</b><small>島の床に配置の目安となる格子を表示します。</small></span><input id="gridToggle" type="checkbox"></label>
+ </div>
+ <div class="graphics-note" id="graphicsApplyStatus">設定はすぐに反映されます。</div>
+ <div class="graphics-separator"></div>
+ <h3 class="graphics-section-title">キャラクター</h3><label for="modelFile">3Dキャラクター素材（GLB形式）</label><input id="modelFile" class="input" type="file" accept=".glb,model/gltf-binary"><small class="graphics-help">アップロードした3D素材はロビーのキャラクターに適用されます。</small>
+ <div class="dialog-actions"><button data-close="settingsOverlay">閉じる</button></div></div></div>
 <div id="creditsOverlay" class="overlay"><div class="dialog"><button class="close" data-close="creditsOverlay">×</button><div class="section-kicker">素材クレジット</div><h2>画像・3D素材・出典</h2><p><b>背景イラスト：</b>ポートサンドリーズ「南国の島の風景」／ピクサベイのコンテンツライセンス。AI生成作品として掲載。<a href="https://pixabay.com/illustrations/tropical-landscape-island-7979801/" target="_blank" rel="noopener">素材の配布ページ</a></p><p><b>おすすめカードの写真：</b>マット・バーナード「島々に沈む夕日の海景」／ペクセルズ。<a href="https://www.pexels.com/photo/seascape-with-a-sunset-over-the-islands-15692356/" target="_blank" rel="noopener">素材の配布ページ</a></p><p><b>初期3Dキャラクター：</b>本バージョンでは既存の汎用人物モデルをやめ、スリージェイエスの図形を組み合わせたオリジナル衣装に変更しました。キャラクターの形状・衣装は本作独自です。</p><p><b>画面構成の参考：</b>フォートナイト公式ヘルプのロビー・メニュー構成。公式画像や公式スキンは複製せず、一般的な配置の考え方を参考にしています。</p><p><a href="https://www.epicgames.com/help/ja/c-Category_フォートナイト/c-フォートナイト_Creative/how-to-play-fortnite-creative-a000084773" target="_blank" rel="noopener">エピック・ゲームズ公式案内</a> ・ <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">パブリックドメイン相当の利用許諾（CC0 1.0）について</a></p><p>背景画像とスリージェイエスはインターネット接続時に配布元から読み込みます。オリジナルキャラクターはゲーム内で生成します。</p><div class="dialog-actions"><button data-close="creditsOverlay">閉じる</button></div></div></div>
-<div id="matchOverlay" class="overlay"><div class="dialog"><button class="close" data-close="matchOverlay">×</button><div class="section-kicker">マッチメイキング</div><h2>プレイ準備</h2><p id="matchText">オンライン接続はオンライン接続の設定後に有効化します。</p><div class="dialog-actions"><button data-close="matchOverlay">戻る</button></div></div></div>
+<div id="matchOverlay" class="overlay"><div class="dialog"><button class="close" data-close="matchOverlay">×</button><div class="section-kicker">マッチメイキング</div><h2>プレイ準備</h2><p id="matchText">オンラインで遊ぶには、部屋を作成するかフレンドの6文字コードで参加してください。2～4人で全員が準備完了になると開始できます。</p><div class="dialog-actions"><button data-close="matchOverlay">戻る</button></div></div></div>
 
 <section id="creativeScreen" class="screen creative-screen" aria-label="クリエイティブ島">
  <canvas id="creativeCanvas" tabindex="0" aria-label="建築用の3D島"></canvas>
@@ -376,7 +397,7 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
  <div class="creative-center-crosshair" aria-hidden="true"></div>
  <div class="creative-edit-panel" id="creativeEditPanel"><h3>建築編集</h3><p id="creativeEditHint">編集する建築物をクリックして選択してください。</p><div class="creative-edit-options"><button data-wall-variant="door">ドア</button><button data-wall-variant="window">窓</button><button data-wall-variant="full">壁に戻す</button><button id="creativeEditRotate">回転</button><button id="creativeEditDelete" style="grid-column:1/-1;background:#9d3038">選択した建築を削除</button></div></div>
  <div class="creative-bottom-hud">
-  <div class="creative-controls-card"><b>移動</b>　W A S D　／　<b>ジャンプ</b>　Space　／　<b>走る</b>　Shift<br><b>建築</b>　1 壁・2 床・3 階段・4 屋根　／　<b>回転</b>　R　／　<b>編集</b>　G<br>左クリックで設置・選択。視点はマウスを動かして操作。</div>
+  <div class="creative-controls-card"><b>移動</b>　W A S D　／　<b>ジャンプ</b>　Space　／　<b>走る</b>　Shift<br><b>建築</b>　1 壁・2 床・3 階段・4 屋根　／　<b>回転</b>　R　／　<b>編集</b>　G<br>左クリックで設置・選択。右クリックを押しながらドラッグで視点を回す。</div>
   <div class="creative-build-card">
    <button class="creative-action active" id="creativeBuildToggle">建築 ON</button>
    <button class="creative-action" id="creativeEditToggle">編集 OFF</button>
@@ -413,6 +434,35 @@ try { THREE=await import('three'); GLTFLoader=(await import('https://cdn.jsdeliv
 catch(err){ threeImportError=err; console.warn('3Dライブラリを読み込めません。簡易表示で起動します。',err); GLTFLoader=class{load(url,onLoad,onProgress,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}parse(data,path,onLoad,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}}; }
 const $=s=>document.querySelector(s); const sceneHost=$('#scene');
 let renderer,scene,camera,clock,hero,mixer,heroBaseY=0,heroActions={},sceneMode='boot',loaded=0,totalAssets=1,assetFailures=0,quality='high',frame=0;
+const MB_GRAPHICS_KEY='mb_graphics_settings_v1';
+const MB_GRAPHICS_DEFAULTS={preset:'high',renderScale:100,shadowQuality:'high',viewDistance:190,fpsLimit:60,cameraSensitivity:1,fog:true,grid:true};
+const MB_GRAPHICS_PRESETS={
+ verylow:{renderScale:60,shadowQuality:'off',viewDistance:80,fpsLimit:30,fog:false,grid:false},
+ low:{renderScale:75,shadowQuality:'low',viewDistance:130,fpsLimit:30,fog:true,grid:false},
+ medium:{renderScale:85,shadowQuality:'medium',viewDistance:190,fpsLimit:60,fog:true,grid:true},
+ high:{renderScale:100,shadowQuality:'high',viewDistance:280,fpsLimit:60,fog:true,grid:true},
+ ultra:{renderScale:130,shadowQuality:'high',viewDistance:380,fpsLimit:120,fog:true,grid:true}
+};
+function loadMBGraphics(){try{return {...MB_GRAPHICS_DEFAULTS,...JSON.parse(localStorage.getItem(MB_GRAPHICS_KEY)||'{}')}}catch{return {...MB_GRAPHICS_DEFAULTS}}}
+let mbGraphics=loadMBGraphics();quality=mbGraphics.preset||'high';
+function applyLobbyGraphics(){
+ if(!renderer)return;
+ const ratio=Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(mbGraphics.renderScale||100)/100));
+ renderer.setPixelRatio(ratio);renderer.shadowMap.enabled=mbGraphics.shadowQuality!=='off';
+ const mapSize=mbGraphics.shadowQuality==='high'?2048:mbGraphics.shadowQuality==='medium'?1024:512;
+ if(scene)scene.traverse(o=>{if(o.isDirectionalLight){o.castShadow=mbGraphics.shadowQuality!=='off';if(o.castShadow&&o.shadow){o.shadow.mapSize.set(mapSize,mapSize);o.shadow.needsUpdate=true;}}});
+ renderer.setSize(innerWidth,innerHeight);
+}
+function saveMBGraphics(patch={}){
+ mbGraphics={...mbGraphics,...patch};
+ try{localStorage.setItem(MB_GRAPHICS_KEY,JSON.stringify(mbGraphics))}catch(e){console.warn('Graphics settings could not be saved',e)}
+ quality=mbGraphics.preset||'high';
+ applyLobbyGraphics();
+ window.dispatchEvent(new CustomEvent('mb-graphics-change',{detail:{...mbGraphics}}));
+}
+window.__MBGetGraphicsSettings=()=>({...mbGraphics});
+window.__MBSetGraphicsSettings=patch=>saveMBGraphics(patch||{});
+
 window.__MangoBattleSceneMode='boot';
 const SKINS={
  urban:{name:'ネオンランナー',label:'青いストリートジャケット',coat:0x167db6,pants:0x202b40,accent:0x39d8ee,skin:0xe6b28d,hair:0x172438,style:'urban'},
@@ -520,9 +570,9 @@ function buildStylizedSkin(id){
 function init3D(){
  scene=new THREE.Scene();
  camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);camera.position.set(2.1,2.65,10.8);camera.lookAt(4.1,1.55,0);
- renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});renderer.setClearColor(0x000000,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;sceneHost.appendChild(renderer.domElement);
+ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});renderer.setClearColor(0x000000,0);renderer.setPixelRatio(Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(mbGraphics.renderScale||100)/100)));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.shadowMap.enabled=mbGraphics.shadowQuality!=='off';renderer.shadowMap.type=THREE.PCFSoftShadowMap;sceneHost.appendChild(renderer.domElement);
  scene.add(new THREE.HemisphereLight(0xeaf6ff,0x506177,2.1));
- const key=new THREE.DirectionalLight(0xffe3bb,2.5);key.position.set(-4,9,8);key.castShadow=true;key.shadow.mapSize.set(1024,1024);scene.add(key);
+ const key=new THREE.DirectionalLight(0xffe3bb,2.5);key.position.set(-4,9,8);key.castShadow=mbGraphics.shadowQuality!=='off';const lobbyShadowSize=mbGraphics.shadowQuality==='high'?2048:mbGraphics.shadowQuality==='medium'?1024:512;key.shadow.mapSize.set(lobbyShadowSize,lobbyShadowSize);scene.add(key);
  const rim=new THREE.DirectionalLight(0x6fd7ff,1.45);rim.position.set(5,5,-6);scene.add(rim);
  const padMat=new THREE.MeshStandardMaterial({color:0x17384c,metalness:.48,roughness:.3});
  const pad=new THREE.Mesh(new THREE.CylinderGeometry(1.65,1.78,.22,64),padMat);pad.position.set(4.1,-.18,0);pad.receiveShadow=true;scene.add(pad);
@@ -536,7 +586,7 @@ function init3D(){
 }
 window.changeLobbySkin=(name)=>{if(!SKINS[name]||name===activeSkin)return;if(!THREE){activeSkin=name;$('#avatarFallback').dataset.skin=name;$('#heroSkinLabel').textContent=SKINS[name].name;try{localStorage.setItem('mb_v070_skin',name)}catch(e){}toast(`${SKINS[name].name}に変更しました`);return}const next=buildStylizedSkin(name);if(hero)scene.remove(hero);hero=next;heroBaseY=hero.position.y;scene.add(hero);document.body.classList.add('three-ready');$('#avatarFallback').dataset.skin=name;activeSkin=name;$('#heroSkinLabel').textContent=SKINS[name].name;try{localStorage.setItem('mb_v070_skin',name)}catch(e){}toast(`${SKINS[name].name}に変更しました`)};
 function animate(){requestAnimationFrame(animate);if(!renderer)return;const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;if(mixer)mixer.update(dt);if(hero){hero.position.y=heroBaseY+Math.sin(t*1.25)*.025;hero.rotation.y=Math.sin(t*.34)*.06;}camera.position.x+=(2.1+Math.sin(t*.16)*.12-camera.position.x)*.012;camera.lookAt(4.1,1.55,0);renderer.render(scene,camera)}
-function resize(){if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='high'?1.5:quality==='medium'?1.15:.8));renderer.setSize(innerWidth,innerHeight)}window.addEventListener('resize',resize);
+function resize(){if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();applyLobbyGraphics()}window.addEventListener('resize',resize);
 function toast(text){const el=$('#toast');el.textContent=text;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2400)}
 function showOverlay(id){$('#'+id).classList.add('open')}function closeOverlay(id){$('#'+id).classList.remove('open')}
 const tabOrder=['play','locker','shop','pass','quests','competition','career'];
@@ -585,7 +635,24 @@ function bindPageActions(){
 }
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeOverlay(b.dataset.close)));document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
 let playerName=localStorage.getItem('mb_v050_name')||'プレイヤー';function refreshName(){['profileName','lobbyName','partyName'].forEach(id=>$('#'+id).textContent=playerName)}refreshName();$('#profileBtn').onclick=()=>{$('#nameInput').value=playerName;showOverlay('profileOverlay')};$('#saveName').onclick=()=>{playerName=$('#nameInput').value.trim().slice(0,16)||'プレイヤー';localStorage.setItem('mb_v050_name',playerName);refreshName();closeOverlay('profileOverlay');toast('プレイヤー名を保存しました')};$('#inviteBtn').onclick=()=>showOverlay('partyOverlay');$('#inviteBtnSmall').onclick=()=>showOverlay('partyOverlay');document.querySelectorAll('[data-discover]').forEach(b=>b.onclick=()=>toast(b.dataset.discover+'はコンテンツ準備中です')); 
-let mode='creative';const modes={creative:['クリエイティブ','平坦な練習用の島で自由に建築・編集しよう。']};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode='creative';document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('selected',x===b));$('#modeTitle').textContent=modes.creative[0];$('#modeDesc').textContent=modes.creative[1]});$('#playButton').onclick=()=>startCreativeIsland();$('#settingsBtn').onclick=()=>showOverlay('settingsOverlay');$('#creditsBtn').onclick=()=>showOverlay('creditsOverlay');$('#qualitySelect').onchange=e=>{quality=e.target.value;resize();toast('描画品質を変更しました')};
+let mode='creative';const modes={creative:['クリエイティブ','平坦な島で、ひとりでもフレンドとでも自由に建築・編集しよう。']};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode='creative';document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('selected',x===b));$('#modeTitle').textContent=modes.creative[0];$('#modeDesc').textContent=modes.creative[1]});$('#settingsBtn').onclick=()=>{syncGraphicsForm();showOverlay('settingsOverlay')};$('#creditsBtn').onclick=()=>showOverlay('creditsOverlay');
+function syncGraphicsForm(){
+ const set=(id,value)=>{const el=$('#'+id);if(el)el.value=String(value)};
+ set('qualitySelect',mbGraphics.preset||'high');set('renderScaleSelect',mbGraphics.renderScale);set('shadowQualitySelect',mbGraphics.shadowQuality);set('viewDistanceSelect',mbGraphics.viewDistance);set('fpsLimitSelect',mbGraphics.fpsLimit);set('cameraSensitivitySelect',mbGraphics.cameraSensitivity);
+ $('#fogToggle').checked=!!mbGraphics.fog;$('#gridToggle').checked=!!mbGraphics.grid;
+}
+function applyGraphicsPreset(preset){const p=MB_GRAPHICS_PRESETS[preset];if(!p)return;saveMBGraphics({preset,...p});syncGraphicsForm();const status=$('#graphicsApplyStatus');if(status)status.textContent='「'+({verylow:'最低',low:'低',medium:'中',high:'高',ultra:'最高'}[preset])+'」設定を適用しました。';toast('グラフィックス設定を変更しました')}
+$('#qualitySelect').addEventListener('change',e=>applyGraphicsPreset(e.target.value));
+$('#renderScaleSelect').addEventListener('change',e=>saveMBGraphics({preset:'custom',renderScale:Number(e.target.value)}));
+$('#shadowQualitySelect').addEventListener('change',e=>saveMBGraphics({preset:'custom',shadowQuality:e.target.value}));
+$('#viewDistanceSelect').addEventListener('change',e=>saveMBGraphics({preset:'custom',viewDistance:Number(e.target.value)}));
+$('#fpsLimitSelect').addEventListener('change',e=>saveMBGraphics({preset:'custom',fpsLimit:Number(e.target.value)}));
+$('#cameraSensitivitySelect').addEventListener('change',e=>saveMBGraphics({preset:'custom',cameraSensitivity:Number(e.target.value)}));
+$('#fogToggle').addEventListener('change',e=>saveMBGraphics({preset:'custom',fog:e.target.checked}));
+$('#gridToggle').addEventListener('change',e=>saveMBGraphics({preset:'custom',grid:e.target.checked}));
+syncGraphicsForm();
+$('#playButton').onclick=()=>{if(window.__MBPlayCreative)window.__MBPlayCreative();};
+$('#onlinePlayButton').onclick=()=>showOverlay('partyOverlay');
 $('#modelFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const buf=await file.arrayBuffer();loader.parse(buf,'',g=>{const newHero=g.scene;newHero.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(newHero),s=b.getSize(new THREE.Vector3());newHero.scale.setScalar(2.75/(s.y||1));newHero.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(newHero);newHero.position.set(4.1,-b2.min.y,0);heroBaseY=newHero.position.y;mixer=null;newHero.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});if(hero)scene.remove(hero);hero=newHero;if(g.animations?.length){mixer=new THREE.AnimationMixer(hero);const idle=g.animations.find(a=>/idle/i.test(a.name))||g.animations[0];mixer.clipAction(idle).play()}scene.add(hero);document.body.classList.add('three-ready');$('#heroSkinLabel').textContent='追加した衣装';toast('3Dキャラクターを変更しました');closeOverlay('settingsOverlay')},err=>{console.error(err);toast('GLBを読み込めませんでした')})}catch(err){console.error(err);toast('ファイルを読み込めませんでした')}});
 $('#exitLobbyBtn').onclick=()=>{sceneMode='boot';window.__MangoBattleSceneMode='boot';goLobbyPage('play');$('#lobby').classList.remove('show');$('#boot').classList.add('show');$('#startBtn').disabled=false};
 async function startExperience(){goLobbyPage('play');sceneMode='lobby';window.__MangoBattleSceneMode='lobby';$('#boot').classList.remove('show');$('#lobby').classList.add('show')}
@@ -649,19 +716,27 @@ function setModeFromRemote(mode){if(mode!=='creative')return;document.querySelec
 function roomPath(code){return 'rooms/'+code;}
 function stopRoomListeners(){if(offMeta){offMeta();offMeta=null;}if(offPlayers){offPlayers();offPlayers=null;}}
 function stopConnectionListener(){if(offConnection){offConnection();offConnection=null;}connected=false;}
+function updateCreativeLobbyActions(){
+ const btn=MB$('#playButton'),startBtn=MB$('#startPartyGameBtn');
+ if(!currentRoom){if(btn){btn.textContent='ソロで島に入る';btn.disabled=false;}if(startBtn){startBtn.textContent='オンライン部屋に参加していません';startBtn.disabled=true;}return;}
+ const entries=Object.values(memberData||{}),allReady=entries.length>=2&&entries.length<=4&&entries.every(p=>!!p.ready);
+ if(btn){btn.textContent=isHost?'パーティーで島を開始':'ホストの開始を待つ';btn.disabled=false;}
+ if(startBtn){startBtn.textContent=isHost?'クリエイティブ島を開始（'+entries.length+' / 4人）':'ホストの開始を待っています';startBtn.disabled=!isHost||!connected||!allReady;}
+}
 function renderRoster(players){
  memberData=players||{};
  const entries=Object.entries(memberData).sort((a,b)=>Number(!!b[1]?.host)-Number(!!a[1]?.host));
  const max=Number(roomMeta?.maxPlayers||4);
  MB$('#roomMetaText').textContent='モード：'+(modeLabels[roomMeta?.mode]||'ソロ')+'　・　参加者：'+entries.length+' / '+max;
  const list=MB$('#fbPlayerList');list.replaceChildren();
- for(const [uid,p] of entries){const row=document.createElement('div');row.className='fb-player';const av=document.createElement('div');av.className='mini-avatar';av.textContent=p.host?'H':'人';const nm=document.createElement('div');nm.className='mini-name';nm.textContent=p.name||'プレイヤー';const st=document.createElement('div');st.className='mini-state'+(p.ready?' ready':'');st.textContent=p.host?'ホスト':(p.ready?'準備完了':'準備中');row.append(av,nm,st);list.append(row);}
+ for(const [uid,p] of entries){const row=document.createElement('div');row.className='fb-player';const av=document.createElement('div');av.className='mini-avatar';av.textContent=p.host?'H':'人';const nm=document.createElement('div');nm.className='mini-name';nm.textContent=p.name||'プレイヤー';const st=document.createElement('div');st.className='mini-state'+(p.ready?' ready':'');st.textContent=p.host?(p.ready?'ホスト・準備完了':'ホスト・準備中'):(p.ready?'準備完了':'準備中');row.append(av,nm,st);list.append(row);}
  for(let i=entries.length;i<Math.min(4,max);i++){const row=document.createElement('div');row.className='fb-player';row.style.opacity='.5';const av=document.createElement('div');av.className='mini-avatar';av.textContent='＋';const nm=document.createElement('div');nm.className='mini-name';nm.textContent='参加待ち';row.append(av,nm);list.append(row);}
  const partySlots=MB$('.party-slots');
- if(partySlots){partySlots.replaceChildren();for(let i=0;i<4;i++){const row=document.createElement('div');row.className='party-slot';if(entries[i]){const icon=document.createElement('div');icon.className='slot-icon';icon.textContent=entries[i][1]?.host?'H':'人';const wrap=document.createElement('div');const name=document.createElement('div');name.className='slot-name';name.textContent=entries[i][1]?.name||'プレイヤー';const state=document.createElement('div');state.className='slot-status';state.textContent=entries[i][1]?.host?'パーティーリーダー':(entries[i][1]?.ready?'準備完了':'準備中');wrap.append(name,state);row.append(icon,wrap);}else{const icon=document.createElement('div');icon.className='slot-icon';icon.textContent='＋';const wrap=document.createElement('div');const name=document.createElement('div');name.className='slot-name';name.textContent='空きスロット';const state=document.createElement('div');state.className='slot-status';state.textContent='参加待ち';wrap.append(name,state);row.append(icon,wrap);}partySlots.append(row);}const head=MB$('.party-head span');if(head)head.textContent='パーティー　'+entries.length+' / 4';}
+ if(partySlots){partySlots.replaceChildren();for(let i=0;i<4;i++){const row=document.createElement('div');row.className='party-slot';if(entries[i]){const icon=document.createElement('div');icon.className='slot-icon';icon.textContent=entries[i][1]?.host?'H':'人';const wrap=document.createElement('div');const name=document.createElement('div');name.className='slot-name';name.textContent=entries[i][1]?.name||'プレイヤー';const state=document.createElement('div');state.className='slot-status';state.textContent=entries[i][1]?.host?(entries[i][1]?.ready?'リーダー・準備完了':'リーダー・準備中'):(entries[i][1]?.ready?'準備完了':'準備中');wrap.append(name,state);row.append(icon,wrap);}else{const icon=document.createElement('div');icon.className='slot-icon';icon.textContent='＋';const wrap=document.createElement('div');const name=document.createElement('div');name.className='slot-name';name.textContent='空きスロット';const state=document.createElement('div');state.className='slot-status';state.textContent='参加待ち';wrap.append(name,state);row.append(icon,wrap);}partySlots.append(row);}const head=MB$('.party-head span');if(head)head.textContent='パーティー　'+entries.length+' / 4';}
  const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebaseオンライン・パーティー同期中':'Firebase再接続中';
  ready=!!memberData[user?.uid]?.ready;MB$('#readyBtn').textContent=ready?'準備を取り消す':'準備完了にする';
- MB$('#hostHint').textContent=isHost?'あなたがホストです。全員が準備完了になったらプレイを開始できます。':'ホストがモードを選択します。準備ができたら「準備完了」を押してください。';
+ MB$('#hostHint').textContent=isHost?'2～4人で遊べます。参加者全員が準備完了になったら「パーティーで島を開始」を押してください。':'ホストが島を開始するまで待機します。準備ができたら「準備完了」を押してください。';
+ updateCreativeLobbyActions();
 }
 function waitForAuthState(authInstance){return new Promise(resolve=>{const unsub=onAuthStateChanged(authInstance,u=>{unsub();resolve(u);},()=>{unsub();resolve(null);});});}
 async function connectFirebase(config){
@@ -682,6 +757,7 @@ async function connectFirebase(config){
    setStatus(connected?'connected':'connecting',connected?'Firebase接続済み':'Firebase再接続中...');
    const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebaseオンライン・パーティー同期中':'Firebase再接続中';
    if(connected)toastMB('Firebaseデータベースに接続しました');
+   updateCreativeLobbyActions();
   },err=>{connected=false;setStatus('error','データベース接続エラー');error(friendlyError(err));});
   toastMB('Firebase匿名認証に成功しました');
  })();
@@ -691,7 +767,7 @@ function requireConnection(){if(!db||!user||!connected){error('Firebaseへの接
 function randomCode(){const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const bytes=new Uint8Array(6);crypto.getRandomValues(bytes);return [...bytes].map(b=>alphabet[b%alphabet.length]).join('');}
 async function makePlayer(hostFlag){return {name:getPlayerName(),ready:false,host:!!hostFlag,skin:getSkinName(),joinedAt:serverTimestamp()};}
 async function attachRoom(code,hostFlag){
- currentRoom=code;isHost=hostFlag;ready=false;roomMeta=null;
+ currentRoom=code;isHost=hostFlag;ready=false;roomMeta=null;updateCreativeLobbyActions();
  const metaRef=ref(db,roomPath(code)+'/meta'),playersRef=ref(db,roomPath(code)+'/players'),myRef=ref(db,roomPath(code)+'/players/'+user.uid);
  try{await onDisconnect(myRef).remove();if(hostFlag)await onDisconnect(metaRef).remove();}catch(e){console.warn('onDisconnect registration failed',e);}
  MB$('#activeRoomPanel').hidden=false;MB$('#roomCodeValue').textContent=code;MB$('#roomStatePill').querySelector('span').textContent='接続中';
@@ -699,7 +775,7 @@ async function attachRoom(code,hostFlag){
  offMeta=onValue(metaRef,snap=>{if(!snap.exists()){if(currentRoom===code){toastMB('ホストがパーティーを終了しました');resetLocalRoom();}return;}roomMeta=snap.val();if(roomMeta.mode)setModeFromRemote(roomMeta.mode);if(roomMeta.status==='starting'){startCreativeIsland();}},err=>error('ルーム情報を読み込めません：'+friendlyError(err)));
  offPlayers=onValue(playersRef,snap=>renderRoster(snap.val()||{}),err=>error('参加者一覧を読み込めません：'+friendlyError(err)));
 }
-function resetLocalRoom(){stopRoomListeners();currentRoom=null;isHost=false;ready=false;roomMeta=null;memberData={};MB$('#activeRoomPanel').hidden=true;MB$('#roomCodeValue').textContent='------';const list=MB$('#fbPlayerList');if(list)list.replaceChildren();const head=MB$('.party-head span');if(head)head.textContent='パーティー　1 / 4';const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebase接続済み・部屋未参加':'Firebase再接続中';}
+function resetLocalRoom(){stopRoomListeners();currentRoom=null;isHost=false;ready=false;roomMeta=null;memberData={};MB$('#activeRoomPanel').hidden=true;MB$('#roomCodeValue').textContent='------';const list=MB$('#fbPlayerList');if(list)list.replaceChildren();const head=MB$('.party-head span');if(head)head.textContent='パーティー　1 / 4';const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebase接続済み・部屋未参加':'Firebase再接続中';updateCreativeLobbyActions();}
 async function createParty(){
  error('');if(!requireConnection())return;if(currentRoom){error('すでにパーティーに参加しています。先に退出してください。');return;}
  const mode=selectedMode(),metaBase={hostUid:user.uid,hostName:getPlayerName(),roomName:getPlayerName()+'のパーティー',mode,maxPlayers:4,status:'lobby',createdAt:Date.now()};let code='';
@@ -726,7 +802,7 @@ function friendlyError(e){
  const code=e?.code||'';
  if(code.includes('permission-denied'))return 'アクセスが拒否されました。Realtime Databaseに同梱のセキュリティルールを公開してください。';
  if(code.includes('auth/operation-not-allowed'))return 'Firebase ConsoleのAuthenticationで使用するログイン方式（匿名認証またはGoogle）を有効にしてください。';
- if(code.includes('auth/unauthorized-domain')){const launch=getMangoLaunchLocation();return 'Firebase Authenticationが認証元を許可していません。MangoOS内で起動している場合は親ページのドメインを使います。検出した起動元：'+(launch.hostname||'取得できません')+'（'+(launch.origin||'origin不明')+'）。GitHub Pagesなら「mangouser1.github.io」を登録します。MangoOSから起動した場合も、ゲームは同じGitHub Pages上のMangoBattle.htmlとして開きます。現在のページ：'+(launch.href||location.href)+'。ゲーム v0.13.6 を確認してください。';}
+ if(code.includes('auth/unauthorized-domain')){const launch=getMangoLaunchLocation();return 'Firebase Authenticationが認証元を許可していません。MangoOS内で起動している場合は親ページのドメインを使います。検出した起動元：'+(launch.hostname||'取得できません')+'（'+(launch.origin||'origin不明')+'）。GitHub Pagesなら「mangouser1.github.io」を登録します。MangoOSから起動した場合も、ゲームは同じGitHub Pages上のMangoBattle.htmlとして開きます。現在のページ：'+(launch.href||location.href)+'。ゲーム v0.13.7 を確認してください。';}
  if(code.includes('auth/popup-blocked'))return 'Googleログインのポップアップがブロックされました。Chromeでポップアップを許可してください。';
  if(code.includes('auth/popup-closed-by-user'))return 'Googleログイン画面が閉じられました。もう一度お試しください。';
  if(code.includes('auth/credential-already-in-use'))return 'このGoogleアカウントは別のゲームアカウントに連携済みです。既存アカウントでログインします。';
@@ -831,19 +907,23 @@ MB$('#saveFirebaseBtn').addEventListener('click',async()=>{const c=getConfigFrom
 MB$('#clearFirebaseBtn').addEventListener('click',async()=>{if(currentRoom)await leaveParty();stopRoomListeners();stopConnectionListener();if(app){try{await deleteApp(app);}catch{}app=null;auth=null;db=null;user=null;}localStorage.removeItem(LS_KEY);populateConfig({});setStatus('','Firebase未設定');error('保存したFirebase設定を削除しました。');});
 MB$('#createPartyBtn').addEventListener('click',createParty);MB$('#joinPartyBtn').addEventListener('click',joinParty);MB$('#readyBtn').addEventListener('click',toggleReady);MB$('#leavePartyBtn').addEventListener('click',leaveParty);MB$('#copyRoomCodeBtn').addEventListener('click',copyRoomCode);
 MB$('#roomCodeInput').addEventListener('input',e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,'').slice(0,6)});
-MB$('#playButton').onclick=async()=>{
+window.__MBPlayCreative=async()=>{
  error('');
  if(!currentRoom){startCreativeIsland();return;}
  if(!isHost){MB$('#matchText').textContent='ホストが島を開始するまで待機しています。';MB$('#matchOverlay').classList.add('open');return;}
  try{
   const entries=Object.values(memberData);
-  if(!entries.length)throw new Error('参加者情報を確認できません。');
+  if(entries.length<2){error('オンラインで遊ぶには、フレンドを1人以上招待してください。ソロなら「ソロで島に入る」を使えます。');return;}
+  if(entries.length>4)throw new Error('参加できる人数は最大4人です。');
   const notReady=entries.filter(p=>!p.ready);
   if(notReady.length){MB$('#matchText').textContent='参加者全員が「準備完了」になると開始できます。現在 '+(entries.length-notReady.length)+' / '+entries.length+' 人が準備完了です。';MB$('#matchOverlay').classList.add('open');return;}
   await update(ref(db,roomPath(currentRoom)+'/meta'),{status:'starting'});
   startCreativeIsland();
  }catch(e){error('クリエイティブを開始できません：'+friendlyError(e));}
-}
+};
+MB$('#playButton').onclick=()=>window.__MBPlayCreative();
+MB$('#startPartyGameBtn').onclick=()=>window.__MBPlayCreative();
+updateCreativeLobbyActions();
 // Synchronize host-selected mode and profile changes.
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{if(currentRoom){if(isHost)updateHostMode(b.dataset.mode);else{setTimeout(()=>setModeFromRemote(roomMeta?.mode||'solo'),0);error('このアプリはクリエイティブ専用です。');}}}));
 MB$('#saveName').addEventListener('click',()=>setTimeout(refreshMyData,0));
@@ -861,11 +941,39 @@ window.addEventListener('beforeunload',()=>{if(currentRoom&&user&&db){remove(ref
 // ===== Creative-only free-build island (4 players, Firebase RTDB sync) =====
 let creativeActive=false,creativeRenderer=null,creativeScene=null,creativeCamera=null,creativeClock=null,creativeAnim=0;
 let creativePlayer=null,creativePlayerShadow=null,creativeRemotePlayers=new Map(),creativeBuildObjects=new Map();
+let creativeSun=null,creativeGrid=null,creativeGround=null,creativeLastFrameTime=0,creativeLookDrag=null;
 let creativeKeys=new Set(),creativeBuildType='wall',creativeBuildMode=true,creativeEditMode=false,creativeRotation=0,creativeSelected=null;
 let creativeMouse={x:0,y:0},creativeYaw=0,creativeVelocityY=0,creativeGrounded=true,creativeLastSync=0;
 let offCreativePlayers=null,offCreativeBuilds=null,creativeSendTimer=null,creativeGroundPlane=null,creativeRaycaster=null,creativePlaneHit=THREE?new THREE.Vector3():null;
 let creativeLocalPlayerId='local';
 const creativeTempV=THREE?new THREE.Vector3():null;
+const SOLO_CREATIVE_KEY='mb_creative_solo_builds_v1';
+function saveSoloCreativeBuilds(){
+ if(currentRoom)return;
+ const list=[];
+ for(const [key,obj] of creativeBuildObjects){if(obj?.userData?.owner==='local'&&obj.userData.buildData)list.push({...obj.userData.buildData});}
+ try{localStorage.setItem(SOLO_CREATIVE_KEY,JSON.stringify(list));}catch(e){console.warn('Solo build save failed',e);}
+}
+function loadSoloCreativeBuilds(){
+ if(currentRoom)return;
+ try{const list=JSON.parse(localStorage.getItem(SOLO_CREATIVE_KEY)||'[]');if(!Array.isArray(list))return;for(const data of list.slice(0,600)){if(data&&data.id&&!creativeBuildObjects.has('local/'+data.id))addCreativeBuild(data,'local');}}catch(e){console.warn('Solo build load failed',e);}
+}
+function removeNonSoloBuilds(){for(const [key,obj] of [...creativeBuildObjects])if(obj?.userData?.owner!=='local')removeCreativeBuild(key);}
+function creativeGraphics(){return window.__MBGetGraphicsSettings?.()||{renderScale:100,shadowQuality:'high',viewDistance:190,fpsLimit:60,fog:true,grid:true,cameraSensitivity:1};}
+function applyCreativeGraphics(){
+ if(!creativeRenderer||!creativeScene)return;
+ const g=creativeGraphics();
+ const ratio=Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(g.renderScale||100)/100));
+ creativeRenderer.setPixelRatio(ratio);
+ creativeRenderer.shadowMap.enabled=g.shadowQuality!=='off';
+ if(creativeSun){const size=g.shadowQuality==='high'?2048:g.shadowQuality==='medium'?1024:g.shadowQuality==='low'?512:512;creativeSun.castShadow=g.shadowQuality!=='off';creativeSun.shadow.mapSize.set(size,size);creativeSun.shadow.needsUpdate=true;}
+ if(creativeGround)creativeGround.receiveShadow=g.shadowQuality!=='off';
+ if(creativeGrid)creativeGrid.visible=!!g.grid;
+ creativeScene.fog=g.fog?new THREE.Fog(0x83c5ec,Math.max(35,Number(g.viewDistance||190)*.22),Math.max(70,Number(g.viewDistance||190))):null;
+ if(creativeCamera){creativeCamera.far=Math.max(100,Math.min(600,Number(g.viewDistance||190)*1.6));creativeCamera.updateProjectionMatrix();}
+ creativeResize();
+}
+window.addEventListener('mb-graphics-change',applyCreativeGraphics);
 function creativeToast(text){const el=MB$('#creativeStatus');if(!el)return;el.textContent=text;el.classList.add('show');clearTimeout(el._timer);el._timer=setTimeout(()=>el.classList.remove('show'),2100);}
 function creativeSetCount(){const count=1+creativeRemotePlayers.size;const el=MB$('#creativePlayerCount');if(el)el.textContent='プレイヤー '+Math.min(count,4)+' / 4';}
 function createCreativePiece(data,owner){
@@ -916,13 +1024,14 @@ function creativeTargetPoint(){
  return {x:snapCreative(creativePlayer.position.x+Math.sin(creativeYaw)*6),z:snapCreative(creativePlayer.position.z+Math.cos(creativeYaw)*6)};
 }
 function persistCreativeBuild(data){
- if(!currentRoom||!user||!db||!connected)return;
+ if(!currentRoom){saveSoloCreativeBuilds();return;}
+ if(!user||!db||!connected){creativeToast('オンライン接続が切れています。建築はこの端末に保存します');return;}
  const path=roomPath(currentRoom)+'/creative/builds/'+user.uid+'/'+data.id;
  set(ref(db,path),data).catch(e=>{console.warn('Creative build sync failed',e);creativeToast('建築の同期に失敗しました：'+friendlyError(e));});
 }
 function placeCreativeBuild(){
  if(!creativeBuildMode||!creativePlayer||!creativeScene)return;
- const p=creativeTargetPoint();const uid=user?.uid||'local';const id=(crypto.randomUUID?crypto.randomUUID():('b'+Date.now()+Math.random().toString(36).slice(2,7)));
+ const p=creativeTargetPoint();const uid=currentRoom&&user?.uid?user.uid:'local';const id=(crypto.randomUUID?crypto.randomUUID():('b'+Date.now()+Math.random().toString(36).slice(2,7)));
  const data={id,type:creativeBuildType,x:p.x,y:0,z:p.z,rot:creativeRotation,variant:'full',owner:uid,createdAt:Date.now()};
  const group=addCreativeBuild(data,uid);creativeSelected=uid+'/'+id;
  if(group)group.traverse(o=>{if(o.isMesh&&o.material){o.material=o.material.clone();o.material.emissive=new THREE.Color(0x18384a);o.material.emissiveIntensity=.04;}});
@@ -942,13 +1051,13 @@ function replaceSelectedCreativeBuild(patch){
  const root=getSelectedCreativeBuild();if(!root)return;
  const old={...root.userData.buildData,...patch,id:root.userData.id};const owner=root.userData.owner;
  removeCreativeBuild(creativeSelected);const next=addCreativeBuild(old,owner);creativeSelected=owner+'/'+old.id;
- if(currentRoom&&user&&db){set(ref(db,roomPath(currentRoom)+'/creative/builds/'+owner+'/'+old.id),old).catch(e=>creativeToast('編集を同期できませんでした'));}
+ if(currentRoom&&user&&db){set(ref(db,roomPath(currentRoom)+'/creative/builds/'+owner+'/'+old.id),old).catch(e=>creativeToast('編集を同期できませんでした'));}else saveSoloCreativeBuilds();
  updateCreativeEditPanel();
 }
 function deleteSelectedCreativeBuild(){
  const root=getSelectedCreativeBuild();if(!root)return;
  const owner=root.userData.owner,id=root.userData.id,key=creativeSelected;removeCreativeBuild(key);
- if(currentRoom&&user&&db)remove(ref(db,roomPath(currentRoom)+'/creative/builds/'+owner+'/'+id)).catch(e=>creativeToast('削除を同期できませんでした'));
+ if(currentRoom&&user&&db)remove(ref(db,roomPath(currentRoom)+'/creative/builds/'+owner+'/'+id)).catch(e=>creativeToast('削除を同期できませんでした'));else saveSoloCreativeBuilds();
  updateCreativeEditPanel();creativeToast('建築物を削除しました');
 }
 function updateCreativeEditPanel(){
@@ -1002,27 +1111,37 @@ function startCreativeRoomSync(){
 function ensureCreativeRenderer(){
  if(creativeRenderer){creativeResize();return;}
  const canvas=MB$('#creativeCanvas');
+ const g=creativeGraphics();
  creativeRenderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
- creativeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,1.35));creativeRenderer.outputColorSpace=THREE.SRGBColorSpace;creativeRenderer.shadowMap.enabled=true;creativeRenderer.shadowMap.type=THREE.PCFSoftShadowMap;
- creativeScene=new THREE.Scene();creativeScene.background=new THREE.Color(0x83c5ec);creativeScene.fog=new THREE.Fog(0x83c5ec,95,230);
- creativeCamera=new THREE.PerspectiveCamera(62,1,.1,400);
+ creativeRenderer.setPixelRatio(Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(g.renderScale||100)/100)));creativeRenderer.outputColorSpace=THREE.SRGBColorSpace;creativeRenderer.shadowMap.enabled=g.shadowQuality!=='off';creativeRenderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ creativeScene=new THREE.Scene();creativeScene.background=new THREE.Color(0x83c5ec);creativeScene.fog=g.fog?new THREE.Fog(0x83c5ec,Math.max(35,Number(g.viewDistance||190)*.22),Math.max(70,Number(g.viewDistance||190))):null;
+ creativeCamera=new THREE.PerspectiveCamera(62,1,.1,Math.max(100,Math.min(600,Number(g.viewDistance||190)*1.6)));
  creativeClock=new THREE.Clock();creativeRaycaster=new THREE.Raycaster();creativeGroundPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
  creativeScene.add(new THREE.HemisphereLight(0xdaf1ff,0x4e623f,2.1));
- const sun=new THREE.DirectionalLight(0xffe3bd,2.25);sun.position.set(-35,65,28);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);creativeScene.add(sun);
- const ground=new THREE.Mesh(new THREE.PlaneGeometry(220,220),new THREE.MeshStandardMaterial({color:0x6ea653,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.06;ground.receiveShadow=true;creativeScene.add(ground);
- const grid=new THREE.GridHelper(220,55,0xd9e7b0,0xc3d5ab);grid.position.y=-.035;grid.material.transparent=true;grid.material.opacity=.16;creativeScene.add(grid);
+ creativeSun=new THREE.DirectionalLight(0xffe3bd,2.25);creativeSun.position.set(-35,65,28);creativeSun.castShadow=g.shadowQuality!=='off';const shadowSize=g.shadowQuality==='high'?2048:g.shadowQuality==='medium'?1024:g.shadowQuality==='low'?512:512;creativeSun.shadow.mapSize.set(shadowSize,shadowSize);creativeScene.add(creativeSun);
+ creativeGround=new THREE.Mesh(new THREE.PlaneGeometry(220,220),new THREE.MeshStandardMaterial({color:0x6ea653,roughness:1}));creativeGround.rotation.x=-Math.PI/2;creativeGround.position.y=-.06;creativeGround.receiveShadow=g.shadowQuality!=='off';creativeScene.add(creativeGround);
+ creativeGrid=new THREE.GridHelper(220,55,0xd9e7b0,0xc3d5ab);creativeGrid.position.y=-.035;creativeGrid.material.transparent=true;creativeGrid.material.opacity=.16;creativeGrid.visible=!!g.grid;creativeScene.add(creativeGrid);
  const edgeMat=new THREE.MeshStandardMaterial({color:0x457d9a,roughness:.9});
  for(let i=-1;i<=1;i+=2){const ridge=new THREE.Mesh(new THREE.BoxGeometry(220,1,1.5),edgeMat);ridge.position.set(0,-.7,i*111);creativeScene.add(ridge);const side=new THREE.Mesh(new THREE.BoxGeometry(1.5,1,220),edgeMat);side.position.set(i*111,-.7,0);creativeScene.add(side);}
  creativePlayer=buildStylizedSkin(activeSkin);creativePlayer.position.set(0,0,0);creativeScene.add(creativePlayer);
  creativePlayerShadow=new THREE.Mesh(new THREE.CircleGeometry(.62,24),new THREE.MeshBasicMaterial({color:0x183522,transparent:true,opacity:.28}));creativePlayerShadow.rotation.x=-Math.PI/2;creativePlayerShadow.position.y=.015;creativeScene.add(creativePlayerShadow);
  creativeYaw=0;creativeCamera.position.set(0,4.8,-7.6);creativeCamera.lookAt(0,1.4,2.1);creativeResize();
- canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();creativeMouse.x=((e.clientX-r.left)/r.width)*2-1;creativeMouse.y=-(((e.clientY-r.top)/r.height)*2-1);});
- canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();if(creativeEditMode)selectCreativeBuildAtPointer();else placeCreativeBuild();});
+ canvas.addEventListener('pointermove',e=>{
+  const r=canvas.getBoundingClientRect();creativeMouse.x=((e.clientX-r.left)/r.width)*2-1;creativeMouse.y=-(((e.clientY-r.top)/r.height)*2-1);
+  if(creativeLookDrag&&creativeLookDrag.pointerId===e.pointerId){const dx=e.clientX-creativeLookDrag.x;creativeYaw+=dx*.005*Number(creativeGraphics().cameraSensitivity||1);creativeLookDrag.x=e.clientX;}
+ });
+ canvas.addEventListener('pointerdown',e=>{
+  if(e.button===2){e.preventDefault();creativeLookDrag={pointerId:e.pointerId,x:e.clientX};canvas.setPointerCapture?.(e.pointerId);return;}
+  if(e.button!==0)return;e.preventDefault();if(creativeEditMode)selectCreativeBuildAtPointer();else placeCreativeBuild();
+ });
+ const endLook=e=>{if(creativeLookDrag&&(!e||creativeLookDrag.pointerId===e.pointerId))creativeLookDrag=null;};
+ canvas.addEventListener('pointerup',endLook);canvas.addEventListener('pointercancel',endLook);
  canvas.addEventListener('contextmenu',e=>e.preventDefault());
  window.addEventListener('resize',creativeResize);
+ applyCreativeGraphics();
 }
 function creativeResize(){if(!creativeRenderer||!creativeCamera)return;const el=MB$('#creativeScreen'),w=Math.max(1,el.clientWidth),h=Math.max(1,el.clientHeight);creativeCamera.aspect=w/h;creativeCamera.updateProjectionMatrix();creativeRenderer.setSize(w,h,false);}
-function animateCreative(){if(!creativeActive||!creativeRenderer)return;creativeAnim=requestAnimationFrame(animateCreative);const dt=Math.min(creativeClock.getDelta(),.05);
+function animateCreative(){if(!creativeActive||!creativeRenderer)return;creativeAnim=requestAnimationFrame(animateCreative);const g=creativeGraphics(),limit=Number(g.fpsLimit)||0,now=performance.now();if(limit>0&&now-creativeLastFrameTime<1000/limit)return;creativeLastFrameTime=now;const dt=Math.min(creativeClock.getDelta(),.05);
  if(!pauseIsOpen()){
   let dx=0,dz=0;if(creativeKeys.has('KeyW'))dz+=1;if(creativeKeys.has('KeyS'))dz-=1;if(creativeKeys.has('KeyA'))dx-=1;if(creativeKeys.has('KeyD'))dx+=1;
   const len=Math.hypot(dx,dz)||1;dx/=len;dz/=len;const speed=creativeKeys.has('ShiftLeft')||creativeKeys.has('ShiftRight')?10:6;
@@ -1041,11 +1160,13 @@ function startCreativeIsland(){
  if(creativeActive)return;
  if(!THREE){creativeToast('3Dライブラリを読み込めませんでした。インターネット接続を確認して再読み込みしてください。');return;}
  try{ensureCreativeRenderer();}catch(e){console.error(e);creativeToast('3D島を開始できませんでした。WebGL対応を確認してください。');return;}
+ if(!currentRoom){removeNonSoloBuilds();loadSoloCreativeBuilds();}
+ if(currentRoom&&creativePlayer){const roster=Object.keys(memberData||{}).sort();const idx=Math.max(0,roster.indexOf(user?.uid));const angle=idx*Math.PI/2;creativePlayer.position.set(Math.cos(angle)*7,0,Math.sin(angle)*7);creativeYaw=angle+Math.PI;}
  creativeActive=true;window.__MangoBattleSceneMode='creative';MB$('#boot').classList.remove('show');MB$('#lobby').classList.remove('show');MB$('#creativeScreen').classList.add('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');
- creativeKeys.clear();creativeBuildMode=true;creativeEditMode=false;creativeSelected=null;setCreativeBuildType('wall');updateCreativeEditPanel();creativeSetCount();creativeClock.start();animateCreative();startCreativeRoomSync();creativeToast(currentRoom?'フレンドと共有するクリエイティブ島に参加しました':'クリエイティブ島に入りました。自由に建築できます');
+ creativeKeys.clear();creativeBuildMode=true;creativeEditMode=false;creativeSelected=null;creativeLastFrameTime=0;setCreativeBuildType('wall');updateCreativeEditPanel();creativeSetCount();creativeClock.start();MB$('#creativeCanvas')?.focus?.();animateCreative();startCreativeRoomSync();creativeToast(currentRoom?'フレンドと共有するクリエイティブ島に参加しました':'ソロのクリエイティブ島に入りました。自由に建築できます');
 }
 function stopCreativeIsland(){
- if(!creativeActive)return;creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
+ if(!creativeActive)return;if(!currentRoom)saveSoloCreativeBuilds();creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();creativeLookDrag=null;stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
 }
 function openPauseSidebar(tab='party'){
  const sidebar=MB$('#creativePauseSidebar');if(!sidebar)return;sidebar.classList.add('open');sidebar.setAttribute('aria-hidden','false');renderCreativePauseTab(tab);
@@ -1064,7 +1185,7 @@ function renderCreativePauseTab(tab){
   friends:['フレンドを追加','参加コードでフレンドと合流',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">Firebaseのパーティーコードをフレンドに共有して、同じ島へ参加してもらえます。</p>${pauseRow('パーティー人数','最大4人')}</div><button class="creative-pause-button" id="pauseInvite2">招待コードを開く</button>`],
   looking:['パーティー参加希望','フレンドと一緒に遊ぶ',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">参加コードを持っている場合は、ここからパーティーに参加できます。</p></div><button class="creative-pause-button" id="pauseJoin">コードで参加</button>`],
   voice:['ボイスチャット','ボイス機能の状態',`<div class="creative-pause-card">${pauseRow('音声チャンネル','この試作版では音声通話は未実装')}${pauseRow('マイク','未接続','—')}${pauseRow('スピーカー','未接続','—')}</div><p style="font-size:10px;color:#b9c9d8">ボイスチャットは今後の追加機能です。現在は参加者一覧と建築同期を利用できます。</p>`],
-  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('移動','W A S D')}${pauseRow('ジャンプ','Space')}${pauseRow('建築モード','B')}${pauseRow('編集モード','G')}${pauseRow('建築物の回転','R')}</div><button class="creative-pause-button" id="pauseQuality">ロビーの描画品質設定を開く</button>`],
+  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('移動','W A S D')}${pauseRow('ジャンプ','Space')}${pauseRow('建築モード','B')}${pauseRow('編集モード','G')}${pauseRow('建築物の回転','R')}</div><button class="creative-pause-button" id="pauseQuality">グラフィック設定を開く</button>`],
   game:['ゲームメニュー','島の設定',`<div class="creative-pause-card">${pauseRow('島の種類','平坦なフリービルド島')}${pauseRow('建築素材','無制限')}${pauseRow('最大プレイヤー','4人')}</div><button class="creative-pause-button" id="pauseReturnHub">島をリセット（建築は残す）</button>`],
   exit:['終了','島・パーティーの退出',`<button class="creative-pause-button" id="pauseReturnLobby">ロビーへ戻る</button><button class="creative-pause-button danger" id="pauseCloseApp">MangoBattleを終了</button><p style="font-size:10px;color:#bac9d8;line-height:1.6;margin-top:10px">終了するとこの島でのプレイを中断します。パーティーから退出する操作は別に選べます。</p>`]
  };
@@ -1093,8 +1214,23 @@ window.__MangoBattleHandleEscape=function(){
   openPauseSidebar('party');
  }
 };
+window.addEventListener('keydown',e=>{
+ if(!creativeActive||pauseIsOpen()||document.querySelector('.overlay.open'))return;
+ const target=e.target;if(target&&target.closest&&target.closest('input,textarea,select,[contenteditable="true"]'))return;
+ const movement=['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight'];
+ if(movement.includes(e.code)){e.preventDefault();creativeKeys.add(e.code);return;}
+ if(e.repeat)return;
+ if(e.code==='Digit1')setCreativeBuildType('wall');
+ else if(e.code==='Digit2')setCreativeBuildType('floor');
+ else if(e.code==='Digit3')setCreativeBuildType('stair');
+ else if(e.code==='Digit4')setCreativeBuildType('roof');
+ else if(e.code==='KeyR')rotateCreative();
+ else if(e.code==='KeyG')toggleCreativeEditMode();
+ else if(e.code==='KeyB')toggleCreativeBuildMode();
+ else if(e.code==='Delete'||e.code==='Backspace'){if(creativeEditMode&&creativeSelected){e.preventDefault();deleteSelectedCreativeBuild();}}
+},true);
 window.addEventListener('keyup',e=>{creativeKeys.delete(e.code)},true);
-window.addEventListener('blur',()=>creativeKeys.clear());
+window.addEventListener('blur',()=>{creativeKeys.clear();creativeLookDrag=null;});
 MB$('#creativePauseButton').addEventListener('click',togglePauseSidebar);
 MB$('#creativeExit').addEventListener('click',()=>{openPauseSidebar('exit')});
 MB$('#creativeBuildToggle').addEventListener('click',toggleCreativeBuildMode);
