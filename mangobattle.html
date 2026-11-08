@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#14263c">
+<meta name="mangobattle-version" content="0.13.6">
+<meta name="mangoos-app" content="mangobattle">
+<script id="mango-auth-origin-normalizer">
+/* MangoOS may display stored HTML apps through iframe.srcdoc. In that context
+   location.hostname can be empty even though the frame inherits the trusted
+   GitHub Pages origin. Normalize the frame's URL to its same-origin parent URL
+   before Firebase Auth modules load. */
+(function normalizeMangoEmbeddedOrigin(){
+  try {
+    if (window.parent === window) return;
+    const parentHref = window.parent.location.href;
+    const parentUrl = new URL(parentHref);
+    if (!['https:', 'http:'].includes(parentUrl.protocol)) return;
+    if (location.protocol === 'about:' || !location.hostname) {
+      // srcdoc inherits the parent's origin when MangoOS grants allow-same-origin.
+      if (location.origin !== 'null' && location.origin === parentUrl.origin) {
+        history.replaceState({mangoEmbeddedOriginNormalized:true}, document.title,
+          parentUrl.pathname + parentUrl.search + parentUrl.hash);
+      }
+    }
+  } catch (e) {
+    // The game can still run when opened directly; diagnostics below try parent/referrer.
+    console.debug('MangoBattle origin normalization skipped', e);
+  }
+})();
+</script>
+<title>マンゴーバトル — v0.13.6</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
+:root{--white:#fff;--muted:#d7e2eb;--blue:#1677e8;--blue2:#075fc4;--gold:#ffe91f;--panel:rgba(11,17,28,.82);--panel2:rgba(22,31,44,.72);--line:rgba(255,255,255,.22);--shadow:0 10px 35px rgba(0,0,0,.36)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#14263c;color:var(--white);font-family:'Noto Sans JP',system-ui,sans-serif}button,input,select{font:inherit}button{color:#fff;border:0;cursor:pointer}button:focus-visible{outline:2px solid white;outline-offset:2px}
+#scene{position:fixed;inset:0;z-index:0;background:#6f91ab;background-image:url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png'),linear-gradient(135deg,#19364d,#5e8590 50%,#d7a978);background-position:center 48%,center;background-size:cover,cover;background-repeat:no-repeat,no-repeat;transform:scale(1.015)}#scene canvas{display:block;width:100%;height:100%;background:transparent!important}.scene-shade{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(3,8,18,.68) 0%,rgba(3,8,18,.28) 31%,rgba(3,8,18,.02) 57%,rgba(3,8,18,.18) 100%),linear-gradient(0deg,rgba(3,8,18,.7) 0%,transparent 32%,rgba(3,8,18,.24) 100%)}
+.screen{position:fixed;inset:0;z-index:2;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}.screen.show{opacity:1;visibility:visible}.screen.hide{opacity:0;visibility:hidden;pointer-events:none}
+/* boot */
+#boot{display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(120deg,rgba(2,8,20,.25),rgba(2,8,20,.46))}.bootbox{width:min(690px,92vw);padding:34px 24px;text-shadow:0 4px 24px #00142e}.studio{font-family:var(--jp-font);font-size:11px;letter-spacing:.12em;font-weight:800;color:#e7f3ff}.logo{font-family:var(--jp-font);font-size:clamp(46px,9vw,112px);font-weight:900;line-height:1.02;letter-spacing:.015em;margin:20px 0 12px;text-transform:uppercase;text-shadow:0 7px 0 rgba(0,0,0,.12),0 17px 42px rgba(0,0,0,.4);transform:skew(-5deg)}.logo .mango{color:#ffe52e}.tagline{font-family:var(--jp-font);font-size:clamp(13px,1.8vw,19px);letter-spacing:.035em;line-height:1.7;color:#f2f7fb;font-weight:800}.bootline{width:min(370px,80vw);height:5px;background:#ffffff55;margin:34px auto 12px;border-radius:8px;overflow:hidden}.bootline i{display:block;width:0;height:100%;background:#fff;box-shadow:0 0 18px #8bd5ff;transition:width .32s ease}.boot-status{font-size:11px;color:#e5edf5;letter-spacing:.08em;min-height:18px}.start-button{font-family:var(--jp-font);margin-top:28px;padding:15px 42px;background:linear-gradient(180deg,#fff36a,#f3c928);color:#14243b;font-weight:900;font-size:15px;letter-spacing:.16em;box-shadow:0 5px 0 #a77c17,0 12px 30px #0006;transform:skew(-4deg);transition:transform .18s,filter .18s,opacity .3s}.start-button:hover{filter:brightness(1.08);transform:skew(-4deg) translateY(-3px)}.start-button:active{transform:skew(-4deg) translateY(2px);box-shadow:0 2px 0 #a77c17}.start-button:disabled{opacity:.35;pointer-events:none}.boot-foot{position:absolute;bottom:18px;left:24px;right:24px;display:flex;justify-content:space-between;color:#e1eaf2;font-size:10px;letter-spacing:.08em}
+/* top bar */
+.topbar{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;gap:18px;padding:0 28px;background:linear-gradient(180deg,rgba(8,14,24,.92),rgba(8,14,24,.58));border-bottom:1px solid rgba(255,255,255,.18);z-index:5}.brand-small{font-family:'Barlow Condensed',sans-serif;font-style:italic;font-weight:900;font-size:23px;white-space:nowrap;letter-spacing:.02em;text-shadow:0 2px 6px #0008}.brand-small span{color:var(--gold)}.nav{display:flex;align-items:stretch;gap:0;height:100%;flex:1;min-width:0}.nav button{height:100%;padding:0 clamp(8px,1.1vw,17px);background:transparent;color:#e6edf4;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;letter-spacing:.05em;position:relative;white-space:nowrap;text-shadow:0 1px 4px #0006;transition:background .18s,color .18s}.nav button:hover,.nav button.active{background:rgba(255,255,255,.13);color:#fff}.nav button.active:after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:4px;background:var(--gold);box-shadow:0 0 12px #ffd84a}.account{display:flex;align-items:center;gap:9px;white-space:nowrap}.currency{border:1px solid #ffffff42;background:#101c2eb8;padding:7px 12px;font-weight:900;font-size:12px;border-radius:3px}.profile{display:flex;align-items:center;gap:8px;padding:6px 9px;background:#ffffff1e;border:1px solid #ffffff35;border-radius:4px;font-size:11px;font-weight:800}.avatar-dot{width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#b9d6e8,#487c9f);display:grid;place-items:center;color:#112439;font-weight:900;font-style:normal}
+/* lobby composition */
+#lobby{display:block}.lobby-layout{position:absolute;inset:64px 0 0;padding:18px 28px 108px;display:grid;grid-template-columns:minmax(250px,315px) minmax(350px,1fr) minmax(235px,285px);gap:18px;pointer-events:none}.left-column,.right-column{display:flex;flex-direction:column;min-height:0;pointer-events:none}.left-column>* ,.right-column>*{pointer-events:auto}.left-column{justify-content:space-between}.right-column{justify-content:flex-start;gap:12px;padding-top:10px}.player-card{background:linear-gradient(125deg,rgba(11,19,31,.84),rgba(20,31,47,.66));border:1px solid var(--line);box-shadow:var(--shadow);padding:12px 14px;border-radius:5px;backdrop-filter:blur(10px)}.section-kicker{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.18em;color:#d5e0e9;font-weight:800}.player-name{font-size:16px;font-weight:900;margin-top:4px}.player-level{display:flex;align-items:center;gap:9px;margin-top:8px}.level-box{width:34px;height:34px;display:grid;place-items:center;background:linear-gradient(145deg,#fff06b,#dcaa27);color:#1b2b43;font-family:'Barlow Condensed';font-size:21px;font-weight:900;clip-path:polygon(14% 0,86% 0,100% 50%,86% 100%,14% 100%,0 50%)}.xp-wrap{flex:1}.xp-text{display:flex;justify-content:space-between;font-size:9px;color:#d8e6f4;margin-bottom:5px}.xp-bar{height:5px;background:#ffffff35}.xp-bar i{display:block;height:100%;width:46%;background:#f6dc52}
+.event-card{background:linear-gradient(145deg,rgba(12,20,33,.8),rgba(13,26,40,.72));border:1px solid #ffffff42;box-shadow:var(--shadow);overflow:hidden;border-radius:5px;backdrop-filter:blur(8px);margin-top:12px}.event-art{height:142px;background:#24536a url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png') center 54%/cover;position:relative;overflow:hidden}.event-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,12,21,.64),transparent 72%)}.event-copy{padding:11px 13px}.event-copy strong{font-family:'Barlow Condensed';font-size:17px;font-weight:900;letter-spacing:.05em}.event-copy p{font-size:10px;line-height:1.55;color:#d0dbe4;margin:5px 0 0}.news-tag{display:inline-block;background:#e8cd27;color:#172233;font-size:9px;font-weight:900;padding:3px 6px;margin-bottom:7px}
+.center-column{position:relative;pointer-events:none;min-width:0}.stage-caption{position:absolute;top:34px;right:16%;text-align:center;text-shadow:0 2px 12px #001;z-index:2}.stage-caption b{font-family:'Barlow Condensed';font-size:18px;letter-spacing:.18em}.stage-caption small{display:block;font-size:10px;color:#f3f6f7;letter-spacing:.14em;margin-top:3px}.hero-shadow{position:absolute;width:240px;height:36px;border-radius:50%;background:#00121d99;filter:blur(15px);bottom:11%;left:51%;transform:translateX(-50%)}.hero-callout{position:absolute;right:11%;bottom:7%;font-size:10px;color:#e9f4ff;letter-spacing:.14em;text-shadow:0 2px 10px #001;white-space:nowrap}.hero-nameplate{position:absolute;right:12%;top:18%;padding:7px 11px;background:rgba(7,16,28,.5);border-left:3px solid #ffe52e;backdrop-filter:blur(8px);text-shadow:0 2px 8px #000}.hero-nameplate b{display:block;font-family:'Barlow Condensed';font-size:15px;letter-spacing:.09em}.hero-nameplate small{font-size:9px;color:#d6e1e8}
+.playlist{position:absolute;left:0;bottom:0;width:min(100%,315px);background:linear-gradient(145deg,rgba(9,17,29,.88),rgba(17,29,43,.83));border:1px solid #ffffff48;box-shadow:var(--shadow);padding:14px;border-radius:4px;backdrop-filter:blur(10px)}.playlist:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}.playlist-head{display:flex;justify-content:space-between;align-items:center;font-family:'Barlow Condensed';font-weight:900;letter-spacing:.14em;font-size:12px}.playlist-feature{height:92px;margin:9px 0 8px;position:relative;overflow:hidden;background:#456b80 url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png') 55% 60%/cover;border:1px solid #ffffff2a}.playlist-feature:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,12,22,.58),transparent 75%)}.playlist-feature span{position:absolute;left:12px;top:10px;z-index:1;font-family:'Barlow Condensed';font-size:22px;font-weight:900;text-shadow:0 3px 8px #001;line-height:.9}.mode-title{font-weight:900;font-size:17px;letter-spacing:.02em}.mode-desc{font-size:10px;color:#c5d3e1;margin-top:2px}.mode-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.mode-controls button{background:#ffffff19;border:1px solid #ffffff3b;padding:8px;font-size:10px;font-weight:800;border-radius:3px}.mode-controls button.selected{background:#1b69b9;border-color:#9fd6ff;box-shadow:0 0 0 1px #5eacfa inset}.fill-toggle{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:7px 8px;background:#0003;font-size:10px;color:#dae6f2}.toggle{width:34px;height:18px;border-radius:20px;background:#65778d;position:relative}.toggle:after{content:"";position:absolute;width:14px;height:14px;background:white;border-radius:50%;top:2px;left:2px;transition:left .18s}.toggle.on{background:#1478d6}.toggle.on:after{left:18px}.play-button{width:100%;margin-top:11px;padding:12px 14px;background:linear-gradient(180deg,#fff34b,#f3d000);color:#172230;font-family:'Barlow Condensed';font-size:27px;line-height:1;font-weight:900;letter-spacing:.08em;box-shadow:0 4px 0 #a98d08,0 9px 20px #0005;transform:skew(-2deg);transition:transform .16s,filter .16s}.play-button:hover{filter:brightness(1.08);transform:skew(-2deg) translateY(-2px)}.play-button:active{transform:skew(-2deg) translateY(2px);box-shadow:0 1px 0 #9d721b}
+.party-card{background:linear-gradient(145deg,rgba(8,17,29,.82),rgba(17,31,47,.73));border:1px solid #ffffff40;border-radius:5px;padding:12px;backdrop-filter:blur(9px);box-shadow:var(--shadow)}.party-head{display:flex;align-items:center;justify-content:space-between;font-family:'Barlow Condensed';font-weight:900;font-size:14px;letter-spacing:.1em}.party-head button{background:#ffffff1b;border:1px solid #ffffff42;font-size:10px;font-weight:800;padding:5px 8px;border-radius:3px}.party-slots{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.party-slot{min-height:51px;background:rgba(4,12,22,.5);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:7px;padding:6px;border-radius:3px}.slot-icon{width:28px;height:28px;display:grid;place-items:center;background:linear-gradient(135deg,#648ca9,#273d56);font-family:'Barlow Condensed';font-size:16px;font-weight:900;flex-shrink:0}.slot-name{font-size:9px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.slot-status{font-size:8px;color:#b6c8d9;margin-top:2px}.invite-btn{margin-top:8px;width:100%;background:transparent;border:1px dashed #ffffff55;color:#e3effa;font-size:10px;padding:7px;border-radius:3px}.social-status{font-size:9px;color:#cbd7df;margin-top:8px;display:flex;align-items:center;gap:6px}.online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#57d68d;box-shadow:0 0 7px #57d68d}
+.discover-rail{position:absolute;left:360px;right:28px;bottom:13px;height:88px;display:flex;gap:9px;align-items:stretch;overflow:hidden;pointer-events:auto}.discover-title{width:116px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;text-shadow:0 2px 10px #000}.discover-title b{font-family:'Barlow Condensed';font-size:19px;letter-spacing:.08em}.discover-title small{color:#d7e2e8;font-size:9px}.discover-card{position:relative;flex:1;min-width:120px;max-width:205px;border:1px solid #ffffff6b;background:#12283a;overflow:hidden;text-align:left;padding:0;transition:transform .16s,border-color .16s}.discover-card:hover{transform:translateY(-3px);border-color:#fff}.discover-card .art{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .3s}.discover-card:hover .art{transform:scale(1.06)}.discover-card .art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent 85%)}.discover-card b{position:absolute;bottom:7px;left:9px;right:7px;z-index:1;font-family:'Barlow Condensed';font-size:14px;letter-spacing:.04em;text-shadow:0 2px 6px #000}.art-one{background-image:url('https://cdn.pixabay.com/photo/2023/05/08/21/26/tropical-7979801_1280.png')}.art-two{background-image:url('https://images.pexels.com/photos/15692356/pexels-photo-15692356.jpeg?auto=compress&cs=tinysrgb&w=900')}.art-three{background-image:linear-gradient(135deg,#f2b66b,#97588b 40%,#234e6b)}.art-four{background-image:linear-gradient(135deg,#264b57,#7fa66c 48%,#d6b96c)}
+.bottom-hints{position:absolute;left:20px;right:22px;bottom:114px;display:flex;align-items:center;justify-content:space-between;pointer-events:none;color:#e4eef7;text-shadow:0 2px 8px #001;font-size:9px}.hintkeys{display:flex;gap:9px}.hintkeys span{border:1px solid #ffffff55;background:#07162b77;padding:4px 7px}.bottom-links{display:flex;gap:12px;pointer-events:auto}.bottom-links button{background:#06111f88;border:1px solid #ffffff33;color:#dbe8f4;font-size:9px;padding:5px 9px;border-radius:3px}
+.loadnote{position:fixed;left:14px;bottom:9px;z-index:6;color:#f1f6fa;font-size:9px;text-shadow:0 1px 6px #000;opacity:.8}.overlay{position:fixed;inset:0;z-index:20;background:rgba(1,7,15,.68);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s,visibility .22s;padding:16px}.overlay.open{opacity:1;visibility:visible}.dialog{width:min(560px,94vw);max-height:86vh;overflow:auto;position:relative;background:linear-gradient(145deg,rgba(18,32,48,.98),rgba(6,15,27,.98));border:1px solid #ffffff4b;box-shadow:0 20px 80px #0009;padding:25px;border-radius:7px;transform:translateY(12px) scale(.98);transition:transform .22s}.overlay.open .dialog{transform:translateY(0) scale(1)}.dialog h2{font-family:'Barlow Condensed';font-size:30px;margin:4px 0 6px;letter-spacing:.04em}.dialog p{font-size:12px;color:#d0dce7;line-height:1.7}.close{position:absolute;right:12px;top:10px;background:#ffffff19;border:1px solid #ffffff34;width:31px;height:31px;border-radius:4px;font-size:18px}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.dialog-actions button{padding:9px 14px;background:#ffffff1d;border:1px solid #ffffff37;border-radius:3px;font-size:11px;font-weight:800}.dialog-actions .primary{background:#e5cf26;color:#172332;border-color:#ffed65}.input{width:100%;margin-top:8px;background:#081523;color:#fff;border:1px solid #ffffff48;padding:10px;border-radius:3px}.tab-content{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}.tab-tile{background:#ffffff12;border:1px solid #ffffff2c;padding:12px;border-radius:4px}.tab-tile b{display:block;font-size:12px}.tab-tile small{display:block;color:#bdcbd7;font-size:10px;margin-top:4px}.skin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.skin-card{background:rgba(255,255,255,.08);border:1px solid #ffffff30;padding:8px;text-align:left;border-radius:4px;display:flex;flex-direction:column;gap:4px}.skin-card.chosen{border:2px solid #ffe52e;background:rgba(255,230,44,.11)}.skin-art{height:96px;display:block;position:relative;overflow:hidden;background:linear-gradient(135deg,#334f65,#16293d)}.skin-art:before{content:"";position:absolute;width:38px;height:38px;border-radius:50%;background:#d9a781;left:calc(50% - 19px);top:12px;box-shadow:0 -8px 0 1px #242a39}.skin-art:after{content:"";position:absolute;width:55px;height:50px;left:calc(50% - 27px);top:51px;background:#1f5479;border-radius:12px 12px 4px 4px;box-shadow:-11px 37px 0 -5px #1c2734,11px 37px 0 -5px #1c2734}.skin-traveler{background:linear-gradient(135deg,#27535a,#cfb27d)}.skin-traveler:after{background:#ad7541;box-shadow:-11px 37px 0 -5px #35422e,11px 37px 0 -5px #35422e}.skin-student{background:linear-gradient(135deg,#5b6f88,#b4c1d3)}.skin-student:after{background:#3e5777;box-shadow:-11px 37px 0 -5px #252d3e,11px 37px 0 -5px #252d3e}.skin-festival{background:linear-gradient(135deg,#8b4772,#e0a64c)}.skin-festival:before{box-shadow:0 -8px 0 4px #4a2b56}.skin-festival:after{background:#703e75;box-shadow:-11px 37px 0 -5px #392f58,11px 37px 0 -5px #392f58}.skin-card b{font-family:'Barlow Condensed';font-size:14px;letter-spacing:.05em}.skin-card small{font-size:9px;color:#c7d4df}.skin-card em{font-style:normal;font-size:9px;color:#ffe52e;font-weight:900;margin-top:3px}.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:40;background:#081727e8;border:1px solid #ffffff4a;color:white;padding:10px 16px;font-size:11px;opacity:0;visibility:hidden;transition:.2s}.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+@media(max-width:1120px){.topbar{padding:0 14px;gap:10px}.nav button{font-size:14px;padding:0 9px}.lobby-layout{grid-template-columns:250px minmax(250px,1fr) 235px;padding-left:14px;padding-right:14px;gap:9px}.discover-rail{left:285px;right:14px}.discover-title{width:88px}.discover-card{min-width:105px}}
+@media(max-width:780px){.topbar{height:56px;padding:0 8px;gap:7px}.brand-small{font-size:16px}.nav{overflow-x:auto}.nav button{font-size:12px;padding:0 8px}.nav button:nth-child(n+6){display:none}.account .currency{display:none}.lobby-layout{inset:56px 0 0;grid-template-columns:minmax(170px,1fr) minmax(170px,1fr);padding:10px 9px 150px;gap:8px}.left-column{grid-column:1;justify-content:flex-start}.event-card{display:none}.center-column{position:absolute;inset:0;z-index:-1}.right-column{grid-column:2;padding-top:4px}.party-slots{grid-template-columns:1fr}.party-slot:nth-child(n+3){display:none}.playlist{width:100%;padding:10px}.playlist-feature{height:62px}.mode-controls{grid-template-columns:1fr 1fr}.discover-rail{left:10px;right:10px;bottom:10px;height:72px}.discover-title{width:72px}.discover-title b{font-size:15px}.discover-card{min-width:100px}.discover-card b{font-size:11px}.bottom-hints{bottom:88px;left:8px;right:8px}.hintkeys{display:none}.hero-nameplate{display:none}.hero-callout{display:none}.stage-caption{display:none}.hero-shadow{bottom:13%}}
+@media(max-width:520px){.account .profile span:last-child{display:none}.topbar{gap:4px}.nav button{font-size:10px;padding:0 6px}.brand-small{font-size:14px}.lobby-layout{grid-template-columns:1fr 1fr;padding:8px 7px 140px}.player-card{padding:8px}.player-name{font-size:13px}.playlist{padding:8px}.playlist-feature{height:48px}.mode-controls{gap:4px}.mode-controls button{padding:6px 4px;font-size:9px}.mode-title{font-size:13px}.play-button{font-size:22px;padding:9px}.party-card{padding:8px}.party-head{font-size:12px}.party-slot{min-height:40px}.slot-icon{width:23px;height:23px}.slot-name{font-size:8px}.discover-rail{height:65px}.discover-title{width:55px}.discover-title small{font-size:7px}.discover-card{min-width:88px}.discover-card b{font-size:10px}.bottom-links{gap:4px}.bottom-links button{font-size:8px;padding:4px 5px}.tab-content{grid-template-columns:1fr}}
+
+/* v0.9.0: Japanese typography, spacing and responsive layout */
+/* v0.11.0: Firebase project connected and party flow hardened */
+:root{--jp-font:'Noto Sans JP','Yu Gothic UI','Meiryo',sans-serif}
+html,body,button,input,select{font-family:var(--jp-font)}
+.topbar{gap:12px;padding-inline:clamp(10px,1.45vw,26px)}
+.brand-small{font-size:clamp(16px,1.35vw,22px);flex:0 0 auto}
+.nav{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+.nav button{font-family:var(--jp-font);font-size:clamp(10px,.78vw,13px);letter-spacing:0;padding-inline:clamp(7px,.75vw,13px);flex:0 0 auto}
+.account{flex:0 0 auto;gap:7px}
+.currency{white-space:nowrap;font-size:11px;padding:6px 9px}
+.profile{min-width:0;max-width:170px}.profile span:last-child{overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.lobby-layout{grid-template-columns:minmax(235px,285px) minmax(0,1fr) minmax(205px,250px);gap:14px;padding-left:clamp(12px,1.5vw,26px);padding-right:clamp(12px,1.5vw,26px)}
+.left-column,.right-column,.center-column,.player-card,.event-card,.playlist,.party-card{min-width:0}
+.left-column{position:relative}
+.section-kicker{font-family:var(--jp-font);font-size:10px;letter-spacing:.08em}
+.xp-text{font-size:9px;gap:5px;flex-wrap:wrap;line-height:1.45}
+.event-copy strong{display:block;font-family:var(--jp-font);font-size:13px;line-height:1.5;letter-spacing:0;overflow-wrap:anywhere}
+.event-copy p{font-size:10px;line-height:1.65;overflow-wrap:anywhere}
+.news-tag{font-size:9px;letter-spacing:0}
+.playlist-head{font-family:var(--jp-font);letter-spacing:0;font-size:11px;gap:8px}
+.playlist-feature span{font-family:var(--jp-font);font-size:18px;line-height:1.25;letter-spacing:0}
+.mode-title{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.mode-desc{font-size:10px;line-height:1.55;overflow-wrap:anywhere}
+.mode-controls button{font-family:var(--jp-font);font-size:11px;line-height:1.35;min-height:34px;white-space:normal;overflow-wrap:anywhere}
+.fill-toggle{font-size:10px;line-height:1.45;gap:8px}.fill-toggle span{min-width:0}
+.play-button{font-family:var(--jp-font);font-size:22px;letter-spacing:.04em;line-height:1.3}
+.party-head{font-family:var(--jp-font);font-size:12px;letter-spacing:0;gap:6px}
+.party-head span{min-width:0;white-space:nowrap}
+.party-head button{font-family:var(--jp-font);font-size:10px;white-space:nowrap}
+.party-slot>div:not(.slot-icon){min-width:0;flex:1}
+.slot-name{font-family:var(--jp-font);font-size:10px;line-height:1.35;white-space:normal;overflow-wrap:anywhere}
+.slot-status{font-family:var(--jp-font);font-size:9px;line-height:1.4;overflow-wrap:anywhere}
+.invite-btn{font-family:var(--jp-font);font-size:10px;line-height:1.4;white-space:normal}
+.social-status{font-size:9px;line-height:1.5;align-items:flex-start;overflow-wrap:anywhere}
+.social-status .online-dot{flex:0 0 7px;margin-top:3px}
+.hero-nameplate{max-width:210px;right:7%;overflow:hidden}.hero-nameplate b{font-family:var(--jp-font);font-size:13px;letter-spacing:0;line-height:1.4;overflow-wrap:anywhere}.hero-nameplate small{font-family:var(--jp-font);font-size:9px;letter-spacing:0}
+.stage-caption{right:10%;max-width:180px}.stage-caption b{font-family:var(--jp-font);font-size:13px;letter-spacing:.04em}.stage-caption small{font-family:var(--jp-font);font-size:9px;letter-spacing:0;line-height:1.4}
+.hero-callout{font-family:var(--jp-font);font-size:10px;letter-spacing:0;white-space:normal;max-width:220px;text-align:right;line-height:1.5}
+.discover-title{width:104px;flex:0 0 104px}.discover-title b{font-family:var(--jp-font);font-size:15px;letter-spacing:0}.discover-title small{font-size:9px;line-height:1.4}.discover-card b{font-family:var(--jp-font);font-size:11px;letter-spacing:0;line-height:1.35;white-space:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bottom-hints{font-family:var(--jp-font);font-size:9px;gap:10px;justify-content:flex-end}
+.bottom-hints .hintkeys{display:none}.hintkeys{flex-wrap:wrap;min-width:0}.hintkeys span{line-height:1.4}.bottom-links{gap:6px;flex:0 0 auto}.bottom-links button{font-family:var(--jp-font);font-size:9px;white-space:nowrap}
+.dialog{font-family:var(--jp-font)}.dialog h2{font-family:var(--jp-font);font-size:23px;line-height:1.4;letter-spacing:0;overflow-wrap:anywhere}.dialog p{font-size:12px;line-height:1.8;overflow-wrap:anywhere}.dialog label{display:block;font-size:11px;line-height:1.6}.dialog-actions{flex-wrap:wrap}.dialog-actions button{font-family:var(--jp-font);font-size:11px}.tab-tile b,.tab-tile small{overflow-wrap:anywhere;line-height:1.5}.skin-card b{font-family:var(--jp-font);font-size:12px;line-height:1.4;letter-spacing:0}.skin-card small,.skin-card em{font-family:var(--jp-font);font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.skin-art{height:130px;border-radius:4px;background-size:cover}
+.skin-art:before{width:43px;height:43px;left:calc(50% - 21.5px);top:10px;border-radius:44% 44% 40% 40%;background:linear-gradient(135deg,#f4c69f,#bd805e);box-shadow:0 -11px 0 4px var(--hair,#202b3a),0 0 0 2px #1b2535}
+.skin-art:after{width:62px;height:54px;left:calc(50% - 31px);top:57px;border-radius:16px 16px 7px 7px;background:var(--coat,#1680a8);box-shadow:-14px 47px 0 -9px var(--pants,#202b3b),14px 47px 0 -9px var(--pants,#202b3b),-22px 6px 0 -13px var(--coat,#1680a8),22px 6px 0 -13px var(--coat,#1680a8)}
+.skin-urban{--hair:#172438;--coat:#147fbc;--pants:#202b40;background:linear-gradient(145deg,#15314c,#42a7c3)}
+.skin-explorer{--hair:#633d27;--coat:#9b713f;--pants:#344533;background:linear-gradient(145deg,#244a3f,#c69b54)}
+.skin-pop{--hair:#7d2f87;--coat:#bb3b9b;--pants:#29283e;background:linear-gradient(145deg,#392452,#d45b9b)}
+.skin-pilot{--hair:#d8b15d;--coat:#c64d3f;--pants:#263b5d;background:linear-gradient(145deg,#233e63,#da7858)}
+.skin-urban:before{box-shadow:0 -11px 0 5px #172438,0 0 0 2px #1b2535,-14px 3px 0 -8px #172438,14px 3px 0 -8px #172438}
+.skin-explorer:before{box-shadow:0 -13px 0 7px #633d27,0 0 0 2px #1b2535}
+.skin-pop:before{box-shadow:0 -11px 0 5px #7d2f87,0 0 0 2px #1b2535,-17px 0 0 -6px #7d2f87,17px 0 0 -6px #7d2f87}
+.skin-pilot:before{box-shadow:0 -12px 0 6px #d8b15d,0 0 0 2px #1b2535}
+@media(max-width:1180px){.topbar{gap:8px}.nav button{padding-inline:7px;font-size:11px}.lobby-layout{grid-template-columns:minmax(220px,260px) minmax(0,1fr) minmax(190px,220px);gap:9px}.discover-rail{left:275px;right:12px}.discover-title{width:88px;flex-basis:88px}}
+@media(max-width:900px){.brand-small{font-size:16px}.account .currency{display:none}.nav button{font-size:10px;padding-inline:6px}.lobby-layout{grid-template-columns:minmax(205px,235px) minmax(0,1fr) minmax(175px,195px);padding-inline:10px;gap:7px}.discover-rail{left:252px;right:10px}.discover-title{width:74px;flex-basis:74px}}
+@media(max-width:720px){.topbar{height:58px;padding-inline:7px;gap:5px}.brand-small{font-size:13px}.nav{flex:1}.nav button{font-size:9px;padding-inline:5px}.account{gap:3px}.profile{padding:4px}.avatar-dot{width:22px;height:22px}.lobby-layout{inset:58px 0 0;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:8px 8px 142px;gap:7px}.left-column{grid-column:1;justify-content:flex-start;gap:8px}.right-column{grid-column:2;padding-top:0}.center-column{position:absolute;inset:0;z-index:-1}.player-card{padding:8px}.event-card{display:none}.playlist{position:relative;width:100%;padding:9px}.playlist-feature{height:55px}.party-card{padding:8px}.party-slots{grid-template-columns:1fr}.party-slot:nth-child(n+3){display:none}.discover-rail{left:8px;right:8px;bottom:8px;height:70px;gap:6px}.discover-title{width:60px;flex-basis:60px}.discover-title b{font-size:12px}.discover-title small{font-size:8px}.discover-card{min-width:0}.discover-card b{font-size:9px;left:5px;right:5px}.bottom-hints{left:8px;right:8px;bottom:83px}.hintkeys{display:none}.bottom-links button{font-size:8px;padding:4px 6px}.hero-nameplate,.hero-callout,.stage-caption{display:none}}
+@media(max-width:500px){.topbar{height:54px}.brand-small{font-size:11px}.nav button{font-size:8px;padding-inline:4px}.profile span:last-child{display:none}.lobby-layout{inset:54px 0 0;padding:6px 6px 128px;gap:5px}.player-card{padding:7px}.player-name{font-size:12px}.player-level{gap:5px}.level-box{width:27px;height:27px;font-size:17px}.xp-text{font-size:8px}.playlist{padding:7px}.playlist-head{font-size:9px}.playlist-feature{height:42px}.mode-title{font-size:12px}.mode-desc{font-size:9px}.mode-controls button{font-size:9px;padding:5px 2px;min-height:30px}.fill-toggle{font-size:8px;padding:5px}.play-button{font-size:17px;padding:8px}.party-card{padding:6px}.party-head{font-size:10px}.party-head button{font-size:8px;padding:4px}.party-slot{min-height:36px;padding:4px;gap:5px}.slot-icon{width:21px;height:21px}.slot-name{font-size:8px}.slot-status{font-size:7px}.invite-btn{font-size:8px;padding:5px}.social-status{font-size:7px}.discover-rail{height:60px}.discover-title{width:46px;flex-basis:46px}.discover-title b{font-size:10px}.discover-title small{font-size:7px}.discover-card b{font-size:8px}.bottom-links{gap:3px}.bottom-links button{font-size:7px;padding:3px 4px}}
+
+
+/* 3D読込失敗時にも人物が消えないようにする、衣装連動の2D代替表示 */
+.avatar-fallback{position:absolute;left:52%;bottom:12%;width:190px;height:400px;transform:translateX(-50%);z-index:1;pointer-events:none;filter:drop-shadow(0 18px 14px #07162477);}
+body.three-ready .avatar-fallback{display:none}
+.avatar-head{position:absolute;top:22px;left:62px;width:66px;height:82px;border-radius:43% 43% 46% 46%;background:linear-gradient(135deg,#f2c5a1,#be8668);border:2px solid #26364b;z-index:4;box-shadow:inset -8px -5px 0 #8f594533}
+.avatar-hair{position:absolute;top:8px;left:58px;width:74px;height:50px;background:var(--avatar-hair,#18263c);border-radius:52% 48% 20% 18%;z-index:5;transform:rotate(-5deg);box-shadow:inset 0 -9px 0 #0002}
+.avatar-hair:after{content:"";position:absolute;left:8px;top:22px;width:37px;height:24px;background:inherit;border-radius:6px 5px 18px 6px;transform:rotate(13deg)}
+.avatar-head .eye{position:absolute;top:38px;width:7px;height:9px;border-radius:50%;background:#1c2938;box-shadow:inset 0 2px 0 #fff}
+.avatar-head .eye-left{left:15px}.avatar-head .eye-right{right:15px}
+.avatar-head .mouth{position:absolute;left:28px;top:60px;width:12px;height:4px;border-radius:0 0 7px 7px;background:#8a4d43}
+.avatar-neck{position:absolute;top:94px;left:86px;width:25px;height:29px;background:#d6a17d;border-radius:7px;z-index:2}
+.avatar-body{position:absolute;left:43px;top:112px;width:104px;height:135px;background:linear-gradient(115deg,var(--avatar-coat,#1680b8),color-mix(in srgb,var(--avatar-coat,#1680b8),#09182a 36%));border:3px solid #1b2a3d;border-radius:25px 25px 14px 14px;z-index:3;box-shadow:inset 0 5px 0 #ffffff2d,inset 0 -8px 0 #0002}
+.avatar-body:before{content:"";position:absolute;left:47px;top:6px;height:115px;width:5px;background:var(--avatar-accent,#41d9ed);border-radius:3px;box-shadow:0 0 9px var(--avatar-accent,#41d9ed)}
+.avatar-body:after{content:"";position:absolute;left:11px;right:11px;top:68px;height:6px;background:#ffffff25;border-radius:5px}
+.avatar-arm{position:absolute;top:128px;width:34px;height:104px;background:var(--avatar-coat,#1680b8);border:3px solid #1b2a3d;border-radius:18px;z-index:2;box-shadow:inset 0 -15px 0 #0002}
+.avatar-arm-left{left:17px;transform:rotate(8deg)}.avatar-arm-right{right:17px;transform:rotate(-8deg)}
+.avatar-arm:after{content:"";position:absolute;bottom:-10px;left:2px;width:25px;height:23px;background:#29364a;border-radius:10px 10px 13px 13px}
+.avatar-leg{position:absolute;top:235px;width:42px;height:119px;background:var(--avatar-pants,#202b40);border:3px solid #1b2a3d;border-radius:11px 11px 15px 15px;z-index:2}
+.avatar-leg-left{left:54px;transform:rotate(2deg)}.avatar-leg-right{right:54px;transform:rotate(-2deg)}
+.avatar-boot{position:absolute;top:339px;width:48px;height:28px;background:#f0f3f5;border:3px solid #202e43;border-radius:9px 14px 7px 7px;z-index:3;box-shadow:inset 0 -5px 0 var(--avatar-accent,#41d9ed)}
+.avatar-boot-left{left:48px}.avatar-boot-right{right:48px}
+.avatar-pack{position:absolute;left:128px;top:141px;width:28px;height:83px;background:#e0a044;border:3px solid #25384d;border-radius:9px;z-index:1}
+.avatar-body .jacket-line{position:absolute;left:17px;top:17px;width:20px;height:32px;border:3px solid #ffffff65;border-radius:5px}
+.avatar-body .jacket-badge{position:absolute;right:12px;top:19px;width:17px;height:17px;background:var(--avatar-accent,#41d9ed);clip-path:polygon(50% 0,100% 30%,82% 100%,18% 100%,0 30%)}
+.avatar-fallback[data-skin="explorer"]{--avatar-hair:#5b3923;--avatar-coat:#947040;--avatar-pants:#354835;--avatar-accent:#e9a33f}
+.avatar-fallback[data-skin="explorer"] .avatar-hair{width:80px;height:34px;top:18px;left:55px;border-radius:55% 55% 12% 12%;background:#b88742}
+.avatar-fallback[data-skin="explorer"] .avatar-hair:after{left:6px;top:27px;width:68px;height:8px;background:#664329;border-radius:8px;transform:rotate(0)}
+.avatar-fallback[data-skin="explorer"] .avatar-pack{background:#6e532f;width:35px;left:126px}
+.avatar-fallback[data-skin="pop"]{--avatar-hair:#7d2f87;--avatar-coat:#b23894;--avatar-pants:#29283e;--avatar-accent:#f5d1ff}
+.avatar-fallback[data-skin="pop"] .avatar-hair{width:84px;height:48px;left:53px;border-radius:50% 45% 20% 10%}
+.avatar-fallback[data-skin="pop"] .avatar-hair:after{left:48px;top:26px;width:29px;height:64px;border-radius:16px;background:#7d2f87;transform:rotate(-12deg)}
+.avatar-fallback[data-skin="pop"] .avatar-boot{background:#e9e8f4}
+.avatar-fallback[data-skin="pilot"]{--avatar-hair:#d5ae5c;--avatar-coat:#c84e3f;--avatar-pants:#263b5d;--avatar-accent:#f5d46b}
+.avatar-fallback[data-skin="pilot"] .avatar-hair{width:78px;height:40px;top:13px;left:56px;border-radius:50% 50% 8px 8px;background:#c84e3f}
+.avatar-fallback[data-skin="pilot"] .avatar-hair:after{left:5px;top:34px;width:66px;height:7px;background:#d5ae5c;border-radius:2px;transform:rotate(0)}
+@media(max-width:720px){.avatar-fallback{left:51%;bottom:14%;transform:translateX(-50%) scale(.72);transform-origin:bottom center}}
+@media(max-height:700px){.avatar-fallback{transform:translateX(-50%) scale(.82);transform-origin:bottom center;bottom:10%}}
+
+
+/* v0.9.0: independent full-page destinations with Fortnite-style transitions */
+.nav{overflow-x:auto;overflow-y:hidden;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{flex:0 0 auto;font-family:'Noto Sans JP',system-ui,sans-serif;font-size:clamp(10px,.82vw,13px);letter-spacing:0;padding-inline:clamp(6px,.78vw,12px)}
+@media(max-width:900px){.nav button{font-size:10px;padding-inline:5px}}
+@media(max-width:600px){.topbar{gap:3px}.brand-small{display:none}.nav button{font-size:9px;padding-inline:4px}.account .profile{gap:3px}}
+#lobby.subpage-active .lobby-layout,#lobby.subpage-active .discover-rail,#lobby.subpage-active .bottom-hints,#lobby.subpage-active .loadnote{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s,visibility .22s}
+.subpage{position:absolute;z-index:4;left:0;right:0;top:64px;bottom:0;overflow:auto;opacity:0;visibility:hidden;pointer-events:none;background:linear-gradient(115deg,rgba(5,13,24,.88),rgba(8,20,32,.58) 50%,rgba(5,13,24,.83));backdrop-filter:blur(13px);transform:translateX(34px);transition:opacity .28s ease,transform .42s cubic-bezier(.2,.8,.2,1),visibility .28s}
+.subpage.open{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0)}
+.subpage-inner{width:min(1480px,100%);min-height:100%;margin:0 auto;padding:clamp(18px,3vw,40px) clamp(16px,3vw,42px) 46px;animation:pageContentIn .42s cubic-bezier(.2,.8,.2,1) both}
+.subpage-inner.slide-next{animation:pageNext .42s cubic-bezier(.2,.8,.2,1) both}
+.subpage-inner.slide-prev{animation:pagePrev .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pageNext{from{opacity:0;transform:translateX(62px) scale(.985);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes pagePrev{from{opacity:0;transform:translateX(-62px) scale(.985);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes pageContentIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:24px;border-bottom:1px solid #ffffff2b;padding-bottom:16px}
+.page-kicker{font-size:10px;font-weight:900;letter-spacing:.2em;color:#ffe45a}
+.page-heading h1{margin:4px 0 0;font-size:clamp(28px,4vw,48px);font-weight:900;line-height:1.12;text-shadow:0 4px 18px #0008}
+.page-heading p{margin:8px 0 0;color:#d2dfeb;font-size:12px;line-height:1.7}
+.page-meta{color:#e3ebf4;background:#ffffff14;border:1px solid #ffffff2b;padding:9px 13px;font-size:11px;font-weight:800;white-space:nowrap}
+.page-grid{display:grid;gap:14px}.page-card{position:relative;min-width:0;overflow:hidden;background:linear-gradient(145deg,rgba(20,34,51,.92),rgba(8,17,29,.82));border:1px solid #ffffff28;box-shadow:0 12px 28px #0003;border-radius:7px;padding:17px;backdrop-filter:blur(9px)}
+.page-card h2{font-size:17px;margin:0 0 7px;font-weight:900}.page-card h3{font-size:14px;margin:0 0 6px;font-weight:900}.page-card p{font-size:11px;color:#c9d7e4;line-height:1.7;margin:0}.page-card .eyebrow{font-size:9px;color:#ffe45a;font-weight:900;letter-spacing:.15em;margin-bottom:7px}
+.page-button{padding:10px 15px;background:#1677e8;border:1px solid #65b6ff;color:#fff;font-weight:900;font-size:11px;border-radius:4px;transition:transform .18s,filter .18s,background .18s;cursor:pointer}.page-button:hover{filter:brightness(1.15);transform:translateY(-2px)}.page-button.secondary{background:#ffffff16;border-color:#ffffff42}.page-button.gold{background:linear-gradient(180deg,#fff26b,#e7b91b);border-color:#fff08b;color:#17243a}.page-button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+/* locker */
+.locker-layout{display:grid;grid-template-columns:minmax(190px,.7fr) minmax(0,2fr);gap:18px}.locker-side{display:flex;flex-direction:column;gap:10px}.locker-current{min-height:230px;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 55%,#72b9d944,transparent 54%),linear-gradient(140deg,#123b5c,#17283f 70%);border:1px solid #ffffff32;border-radius:7px;overflow:hidden;position:relative}.locker-dummy{width:124px;height:205px;position:relative;filter:drop-shadow(0 12px 12px #0009);animation:skinIdle 2.7s ease-in-out infinite}.locker-dummy .head{position:absolute;top:7px;left:39px;width:47px;height:50px;border-radius:44% 44% 42% 42%;background:linear-gradient(135deg,#f4c9a7,#ae7455);border:2px solid #1a2a3b}.locker-dummy .hair{position:absolute;z-index:2;top:0;left:35px;width:55px;height:24px;border-radius:55% 55% 20% 20%;background:var(--skin-hair,#172438)}.locker-dummy .torso{position:absolute;top:57px;left:24px;width:78px;height:80px;border-radius:22px 22px 12px 12px;background:linear-gradient(120deg,var(--skin-coat,#147fbc),#132b42);border:3px solid #1b2a3c}.locker-dummy .arm{position:absolute;top:64px;width:23px;height:74px;border-radius:14px;background:var(--skin-coat,#147fbc);border:2px solid #1b2a3c}.locker-dummy .arm.a{left:7px;transform:rotate(7deg)}.locker-dummy .arm.b{right:7px;transform:rotate(-7deg)}.locker-dummy .leg{position:absolute;top:130px;width:31px;height:68px;background:var(--skin-pants,#202b40);border:2px solid #1b2a3c;border-radius:8px}.locker-dummy .leg.a{left:30px}.locker-dummy .leg.b{right:30px}.locker-dummy .boot{position:absolute;top:190px;width:38px;height:13px;background:#d7e2ea;border-radius:5px}.locker-dummy .boot.a{left:24px}.locker-dummy .boot.b{right:24px}
+@keyframes skinIdle{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
+.skin-selector{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.skin-select-card{padding:0;text-align:left;border:1px solid #ffffff30;background:#0b1728;border-radius:6px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s}.skin-select-card:hover{transform:translateY(-4px);border-color:#b7ddff}.skin-select-card.selected{border:2px solid #ffe45a;box-shadow:0 0 0 2px #ffe45a33}.skin-thumb{height:150px;position:relative;display:grid;place-items:center;overflow:hidden;background:var(--skin-bg,linear-gradient(140deg,#204a64,#132338))}.skin-thumb .locker-dummy{transform:scale(.68);transform-origin:center center;margin-top:22px}.skin-select-card.selected .skin-thumb:after{content:'装備中';position:absolute;top:8px;right:8px;background:#ffe45a;color:#1b2735;font-size:9px;font-weight:900;padding:4px 7px;border-radius:3px}.skin-select-copy{padding:10px}.skin-select-copy b{display:block;font-size:12px}.skin-select-copy small{display:block;color:#bacddd;font-size:9px;margin-top:5px;line-height:1.5}
+.locker-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+/* shop */
+.shop-feature{display:grid;grid-template-columns:1.2fr .8fr;min-height:220px;background:linear-gradient(110deg,#263e5b,#773b5e);border:1px solid #ffffff3c;border-radius:8px;overflow:hidden;position:relative}.shop-feature-art{background:radial-gradient(circle at 70% 42%,#ffd97077,transparent 32%),linear-gradient(140deg,transparent,#f8b44a44);min-height:200px;display:grid;place-items:center}.shop-feature-art .locker-dummy{transform:scale(1.08)}.shop-feature-copy{padding:clamp(18px,3vw,36px);display:flex;flex-direction:column;justify-content:center}.shop-feature-copy h2{font-size:clamp(24px,3vw,38px);margin:0 0 8px}.shop-feature-copy p{font-size:11px;color:#e2eaf1;line-height:1.7}.shop-section-title{display:flex;align-items:center;justify-content:space-between;margin:23px 0 10px}.shop-section-title h2{font-size:18px;margin:0}.shop-items{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.shop-item{border-radius:6px;overflow:hidden;background:#0c1929;border:1px solid #ffffff2b}.shop-item-art{height:128px;display:grid;place-items:center;background:var(--item-bg,linear-gradient(145deg,#23435d,#19283e))}.shop-item-art .locker-dummy{transform:scale(.52);transform-origin:center center;margin-top:55px}.shop-item-copy{padding:11px}.shop-item-copy b{display:block;font-size:12px}.shop-item-copy small{display:block;font-size:9px;color:#c2d0dc;margin:4px 0 9px;min-height:26px}.shop-price{font-size:11px;font-weight:900;color:#ffe45a;margin-bottom:8px}
+/* battle pass */
+.pass-hero{display:grid;grid-template-columns:1fr auto;align-items:center;gap:18px;padding:24px;background:linear-gradient(110deg,#234d6d,#47316a 60%,#9b5c42);border:1px solid #ffffff39;border-radius:8px}.pass-level{font-size:46px;font-weight:900;line-height:1;color:#ffe45a;text-shadow:0 4px 12px #0006}.pass-progress{height:9px;background:#ffffff38;border-radius:20px;overflow:hidden;margin-top:13px}.pass-progress i{display:block;width:46%;height:100%;background:linear-gradient(90deg,#fff06b,#ffc52c);border-radius:20px}.reward-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:16px}.reward-card{min-height:145px;text-align:center;background:#101d30;border:1px solid #ffffff30;border-radius:6px;padding:11px 7px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}.reward-icon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#f9df7b,#b27b2b);color:#172235;font-size:21px;font-weight:900;box-shadow:0 0 18px #ffdb6655}.reward-card b{font-size:10px}.reward-card small{font-size:8px;color:#c2d0df}
+/* quests */
+.quest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.quest-card{background:#101e30;border:1px solid #ffffff2b;border-radius:6px;padding:15px}.quest-card .quest-reward{color:#ffe45a;font-weight:900;font-size:10px;margin-top:10px}.quest-progress{height:6px;background:#ffffff24;border-radius:8px;margin:11px 0 8px;overflow:hidden}.quest-progress i{height:100%;display:block;background:#54b9ff}.quest-card .page-button{margin-top:10px;width:100%}
+/* competitive */
+.comp-hero{display:grid;grid-template-columns:1fr minmax(160px,.55fr);gap:15px}.rank-panel{background:linear-gradient(140deg,#283d60,#4e3674);border:1px solid #ffffff35;padding:24px;border-radius:7px}.rank-emblem{font-size:58px;font-weight:900;color:#f2d48a;text-shadow:0 6px 16px #0008}.rank-name{font-size:25px;font-weight:900}.rank-meter{height:8px;background:#ffffff32;margin-top:14px;border-radius:10px;overflow:hidden}.rank-meter i{display:block;width:32%;height:100%;background:#f4d374}.event-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}.event-tournament{background:linear-gradient(150deg,#162c45,#302b4e);border:1px solid #ffffff30;border-radius:7px;padding:16px;min-height:150px}
+/* career */
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat-tile{background:#101e30;border:1px solid #ffffff2b;padding:17px;border-radius:6px}.stat-tile small{display:block;color:#c3d3e0;font-size:10px}.stat-tile b{display:block;font-size:30px;font-weight:900;margin-top:8px}.career-bottom{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}.career-bars{display:grid;gap:12px;margin-top:15px}.career-bar{display:grid;grid-template-columns:82px 1fr 36px;gap:8px;align-items:center;font-size:10px}.career-bar i{height:8px;background:#ffffff25;border-radius:8px;overflow:hidden}.career-bar i span{display:block;height:100%;background:#44b8ff;border-radius:8px}
+@media(max-width:950px){.skin-selector,.shop-items{grid-template-columns:repeat(2,minmax(0,1fr))}.reward-track{grid-template-columns:repeat(3,minmax(0,1fr))}.quest-grid,.event-list{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.subpage{top:54px}.subpage-inner{padding:16px 12px 32px}.page-heading{align-items:flex-start;flex-direction:column;margin-bottom:15px}.page-meta{font-size:9px}.locker-layout,.shop-feature,.pass-hero,.comp-hero,.career-bottom{grid-template-columns:1fr}.locker-current{min-height:180px}.skin-selector{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.skin-thumb{height:115px}.shop-items{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.shop-item-art{height:106px}.reward-track{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.reward-card{min-height:120px}.quest-grid,.event-list{grid-template-columns:1fr}.pass-level{font-size:38px}.stats-grid{gap:8px}.stat-tile{padding:12px}.stat-tile b{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.subpage,.subpage-inner,.skin-select-card,.locker-dummy{animation:none!important;transition:none!important}}
+
+
+/* Firebase party lobby */
+.fb-status{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #ffffff35;background:#ffffff0d;border-radius:4px;font-size:10px;color:#e4edf5}
+.fb-status i{width:8px;height:8px;border-radius:50%;background:#8794a3;box-shadow:0 0 8px currentColor}
+.fb-status.connected i{background:#54dc8b;color:#54dc8b}.fb-status.connecting i{background:#f1c94e;color:#f1c94e}.fb-status.error i{background:#ff6a6a;color:#ff6a6a}
+.party-online-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin:14px 0}
+.fb-box{padding:13px;background:rgba(255,255,255,.055);border:1px solid #ffffff25;border-radius:5px;min-width:0}
+.fb-box h3{margin:0 0 8px;font-size:13px}.fb-box p{margin:0 0 9px;font-size:10px;color:#c9d6e2;line-height:1.65}
+.fb-field{display:flex;flex-direction:column;gap:5px;margin:8px 0}.fb-field label{font-size:10px;color:#d9e4ed}.fb-field input{width:100%;height:36px;padding:7px 9px;background:#071321;border:1px solid #ffffff3b;border-radius:4px;color:white;font-size:11px;outline:none}.fb-field input:focus{border-color:#8dcaff;box-shadow:0 0 0 2px #369cff30}
+.fb-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.fb-actions button{padding:9px 12px;border-radius:4px;background:#ffffff18;border:1px solid #ffffff3c;font-size:10px;font-weight:800}.fb-actions button.primary{background:linear-gradient(180deg,#ffe95a,#f2c72b);color:#172438;border:0}.fb-actions button:disabled{opacity:.4;cursor:not-allowed}
+.fb-code{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#071321;border:1px dashed #ffffff5a;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:25px;font-weight:900;letter-spacing:.2em}
+.fb-code button{font:800 10px 'Noto Sans JP',sans-serif;letter-spacing:0;padding:7px 9px;background:#ffffff20;border:1px solid #ffffff38;border-radius:3px;white-space:nowrap}
+.fb-player-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}.fb-player{display:flex;align-items:center;gap:9px;padding:8px;background:#ffffff0d;border:1px solid #ffffff1c;border-radius:4px;min-width:0}.fb-player .mini-avatar{width:28px;height:28px;flex:0 0 28px;border-radius:4px;background:linear-gradient(140deg,#cce5f8,#547d9d);display:grid;place-items:center;color:#13263a;font-weight:900}.fb-player .mini-name{flex:1;min-width:0;font-size:11px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fb-player .mini-state{font-size:9px;color:#c4d5e4;white-space:nowrap}.fb-player .mini-state.ready{color:#73e8a0}.fb-room-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap}.fb-room-tools small{font-size:9px;color:#c5d2dd}.fb-config{margin-top:14px;border-top:1px solid #ffffff22;padding-top:10px}.fb-config summary{cursor:pointer;color:#dbe7f1;font-size:11px;font-weight:800;list-style:none}.fb-config summary::-webkit-details-marker{display:none}.fb-config summary:after{content:'＋';float:right}.fb-config[open] summary:after{content:'－'}.fb-config-note{font-size:9px!important;color:#b7c5d3!important;line-height:1.7!important;margin:8px 0!important}.fb-config-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.fb-config-grid .wide{grid-column:1/-1}.fb-config-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.fb-config-actions button{padding:9px 12px;border-radius:4px;font-size:10px;font-weight:800;background:#ffffff1a;border:1px solid #ffffff38}.fb-config-actions .primary{background:#ffe34e;color:#18263a;border:0}.fb-error{min-height:17px;color:#ffaaa5;font-size:10px;margin-top:7px;line-height:1.5}
+@media(max-width:600px){.party-online-grid{grid-template-columns:1fr}.fb-config-grid{grid-template-columns:1fr}.fb-config-grid .wide{grid-column:auto}.fb-code{font-size:21px}}
+
+
+.google-auth-card{margin:17px 0 6px;padding:14px;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.055);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.google-auth-copy strong{display:block;font-size:13px}.google-auth-copy small{display:block;color:#b9c8d8;font-size:10px;line-height:1.55;margin-top:4px}.google-login-btn{display:flex;align-items:center;gap:9px;border:1px solid #d7dce3;border-radius:7px;background:#fff;color:#30343b;padding:10px 13px;font-weight:700;font-size:11px;white-space:nowrap}.google-login-btn:hover{background:#f1f4f8}.google-login-btn:disabled{opacity:.65;cursor:default}.google-g-mark{font-family:Arial,sans-serif;font-weight:900;font-size:17px;color:#4285f4}.google-auth-message{grid-column:1/-1;margin:0;font-size:10px;line-height:1.5;color:#ffe08a;min-height:0}.google-auth-message:empty{display:none}.google-auth-message:not(:empty){display:block;min-height:22px;padding-top:3px;overflow-wrap:anywhere}@media(max-width:520px){.google-auth-card{grid-template-columns:1fr}.google-login-btn{justify-content:center}}
+
+
+/* v0.13.0 Creative free-build island and Fortnite-inspired pause sidebar */
+#creativeScreen{z-index:14;background:#83b9d8;color:#fff;overflow:hidden}
+#creativeCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:0}
+.creative-top-hud{position:absolute;left:18px;right:18px;top:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;pointer-events:none}
+.creative-hud-block{background:rgba(8,16,27,.72);border:1px solid #ffffff33;border-radius:7px;padding:9px 13px;backdrop-filter:blur(9px);box-shadow:0 8px 28px #00152a35}
+.creative-hud-title{font-weight:900;letter-spacing:.04em;font-size:14px}.creative-hud-sub{font-size:10px;color:#d3e3f2;margin-top:3px}
+.creative-hud-right{display:flex;gap:8px;align-items:center}.creative-hud-pill{background:rgba(8,16,27,.72);border:1px solid #ffffff30;border-radius:99px;padding:8px 12px;font-size:11px;font-weight:800;backdrop-filter:blur(9px)}
+.creative-center-crosshair{position:absolute;left:50%;top:50%;width:16px;height:16px;transform:translate(-50%,-50%);pointer-events:none;opacity:.8}.creative-center-crosshair:before,.creative-center-crosshair:after{content:"";position:absolute;background:#fff;box-shadow:0 1px 3px #000}.creative-center-crosshair:before{width:2px;height:14px;left:7px;top:1px}.creative-center-crosshair:after{width:14px;height:2px;left:1px;top:7px}
+.creative-bottom-hud{position:absolute;left:18px;right:18px;bottom:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;pointer-events:none}
+.creative-controls-card,.creative-build-card{pointer-events:auto;background:rgba(7,15,27,.82);border:1px solid #ffffff35;border-radius:8px;padding:10px 12px;backdrop-filter:blur(10px);box-shadow:0 10px 30px #00172e55}
+.creative-controls-card{max-width:min(360px,45vw);font-size:10px;line-height:1.8;color:#d4e1ee}.creative-controls-card b{color:#fff}
+.creative-build-card{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:min(720px,70vw)}
+.creative-action{border:1px solid #ffffff35;background:#ffffff14;padding:9px 12px;border-radius:5px;font-size:11px;font-weight:800;transition:background .16s,transform .16s,border-color .16s}.creative-action:hover{background:#ffffff2b;transform:translateY(-2px)}.creative-action.active{background:#e9cf2e;color:#1d2a37;border-color:#fff18b}.creative-action.primary{background:#f2d634;color:#152332;border-color:#fff18b}
+.creative-build-select{display:flex;align-items:center;gap:5px}.creative-build-select button{min-width:58px}.creative-status{position:absolute;left:50%;top:75px;transform:translateX(-50%);background:rgba(7,15,27,.72);border:1px solid #ffffff30;border-radius:5px;padding:8px 13px;font-size:11px;pointer-events:none;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .18s}.creative-status.show{opacity:1}
+.creative-edit-panel{position:absolute;right:18px;top:92px;width:220px;background:rgba(7,15,27,.88);border:1px solid #ffffff35;border-radius:8px;padding:13px;backdrop-filter:blur(10px);display:none}.creative-edit-panel.show{display:block;animation:creativePanelIn .18s ease both}.creative-edit-panel h3{margin:0 0 8px;font-size:13px}.creative-edit-panel p{margin:0 0 9px;color:#cedbea;font-size:10px;line-height:1.5}.creative-edit-options{display:grid;grid-template-columns:1fr 1fr;gap:6px}.creative-edit-options button{font-size:10px;padding:8px 5px;background:#ffffff15;border:1px solid #ffffff2b;border-radius:4px}
+@keyframes creativePanelIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+#creativePauseSidebar{position:fixed;inset:0;z-index:65;display:flex;justify-content:flex-end;visibility:hidden;pointer-events:none}
+#creativePauseSidebar.open{visibility:visible;pointer-events:auto}
+.creative-pause-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.36);opacity:0;transition:opacity .2s}
+#creativePauseSidebar.open .creative-pause-backdrop{opacity:1}
+.creative-pause-panel{position:relative;width:min(450px,94vw);height:100%;background:linear-gradient(140deg,rgba(20,28,42,.97),rgba(8,14,25,.97));border-left:1px solid #ffffff35;box-shadow:-18px 0 65px #0008;display:grid;grid-template-columns:62px 1fr;transform:translateX(102%);transition:transform .25s cubic-bezier(.2,.8,.2,1);backdrop-filter:blur(18px)}
+#creativePauseSidebar.open .creative-pause-panel{transform:translateX(0)}
+.creative-pause-rail{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px;background:#060d18aa;border-right:1px solid #ffffff1b}
+.creative-pause-avatar{width:42px;height:42px;border-radius:8px;background:linear-gradient(145deg,#1d8fcb,#144266);display:grid;place-items:center;font-size:18px;font-weight:900;margin-bottom:5px;border:1px solid #ffffff5b}
+.creative-pause-rail button{width:42px;height:42px;border-radius:7px;background:transparent;border:1px solid transparent;display:grid;place-items:center;color:#dfeaf4;font-size:19px;transition:background .15s,transform .15s}
+.creative-pause-rail button:hover,.creative-pause-rail button.active{background:#ffffff20;border-color:#ffffff2a;transform:translateY(-1px)}
+.creative-pause-rail .spacer{flex:1}
+.creative-pause-content{min-width:0;overflow:auto;padding:22px 19px 18px}
+.creative-pause-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid #ffffff25;padding-bottom:14px;margin-bottom:14px}
+.creative-pause-head h2{margin:0;font-size:22px;font-weight:900}.creative-pause-head small{display:block;color:#b9cada;font-size:10px;margin-top:4px}
+.creative-pause-close{width:34px;height:34px;border-radius:5px;background:#ffffff18;border:1px solid #ffffff30;font-size:18px}
+.creative-pause-card{background:#ffffff0c;border:1px solid #ffffff22;border-radius:7px;padding:12px;margin:9px 0}
+.creative-pause-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff18;font-size:12px}.creative-pause-row:last-child{border-bottom:0}
+.creative-pause-row small{display:block;color:#b8c8d8;font-size:10px;margin-top:3px}
+.creative-pause-button{width:100%;padding:11px 12px;border:1px solid #ffffff32;background:#ffffff16;border-radius:5px;text-align:left;font-size:12px;font-weight:800;margin-top:7px;transition:background .16s}.creative-pause-button:hover{background:#ffffff2b}.creative-pause-button.danger{background:#b93039;border-color:#e45a5e}.creative-pause-button.danger:hover{background:#d83b43}
+.creative-pause-input{width:100%;background:#0a1422;color:#fff;border:1px solid #ffffff44;border-radius:4px;padding:10px;margin:5px 0 7px}
+.creative-ready-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#36d78b;margin-right:6px}
+@media(max-width:760px){.creative-top-hud{left:8px;right:8px;top:8px}.creative-hud-block{padding:7px 9px}.creative-hud-title{font-size:12px}.creative-hud-sub{font-size:9px}.creative-hud-right{gap:5px}.creative-hud-pill{font-size:9px;padding:7px 9px}.creative-bottom-hud{left:8px;right:8px;bottom:8px;align-items:stretch;flex-direction:column-reverse;gap:6px}.creative-controls-card{max-width:100%;font-size:9px;padding:6px 9px;line-height:1.45}.creative-build-card{max-width:100%;justify-content:center;padding:7px;gap:4px}.creative-action{padding:8px 9px;font-size:10px}.creative-build-select{width:100%;justify-content:center}.creative-build-select button{flex:1;min-width:0}.creative-edit-panel{right:8px;top:76px;width:190px}.creative-status{top:66px;font-size:9px}.creative-pause-panel{grid-template-columns:54px 1fr;width:min(420px,100vw)}.creative-pause-rail button{width:38px;height:38px}}
+
+</style>
+<script>
+window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disabled){b.disabled=false;const st=document.getElementById('bootStatus');if(st)st.textContent='3D表示を開始できません。簡易表示で起動できます。';const bar=document.getElementById('bootProgress');if(bar)bar.style.width='100%';}},12000);
+</script>
+</head>
+
+<script>
+(function(){
+ let announced=false;
+ function askParentFullscreen(){
+  if(window.parent&&window.parent!==window){
+   try{window.parent.postMessage({type:'MANGOOS_USER_GESTURE_FULLSCREEN',app:'mangobattle'},location.origin==='null'?'*':location.origin);}catch(e){}
+  }else if(!document.fullscreenElement){
+   try{document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{});}catch(e){}
+  }
+ }
+ document.addEventListener('pointerdown',()=>{if(!announced){announced=true;askParentFullscreen();}},true);
+})();
+</script>
+
+<body>
+<div id="scene" aria-label="島の背景と3Dキャラクター"></div><div class="scene-shade"></div>
+<section id="boot" class="screen show">
+  <div class="bootbox">
+    <div class="studio">マンゴースタジオ制作</div>
+    <div class="logo"><span class="mango">マンゴー</span><br>バトル</div>
+    <div class="tagline">島へ降り立ち、仲間と挑み、自分たちの島を作ろう。</div>
+    <div class="bootline"><i id="bootProgress"></i></div>
+    <div class="boot-status" id="bootStatus">ゲームデータを準備しています...</div>
+    <button id="startBtn" class="start-button" disabled>タップして開始</button>
+  </div>
+  <div class="boot-foot"><span>マンゴーバトルロイヤル</span><span>バージョン 0.13.3 ・ クリエイティブ</span></div>
+</section>
+<section id="lobby" class="screen">
+  <header class="topbar">
+    <div class="brand-small">マンゴーバトル</div>
+    <nav class="nav" aria-label="メインメニュー">
+      <button class="active" data-tab="play">プレイ</button><button data-tab="locker">ロッカー</button><button data-tab="shop">ショップ</button><button data-tab="pass">パス</button><button data-tab="quests">クエスト</button><button data-tab="competition">競技</button><button data-tab="career">キャリア</button>
+    </nav>
+    <div class="account"><div class="currency">コイン　1,200</div><button id="profileBtn" class="profile"><i class="avatar-dot">人</i><span id="profileName">プレイヤー</span></button></div>
+  </header>
+  <main class="lobby-layout">
+    <section class="left-column">
+      <div>
+        <div class="player-card">
+          <div class="section-kicker">プレイヤー情報</div><div class="player-name" id="lobbyName">プレイヤー</div>
+          <div class="player-level"><div class="level-box">01</div><div class="xp-wrap"><div class="xp-text"><span>シーズンレベル</span><span>0 / 10,000 経験値</span></div><div class="xp-bar"><i></i></div></div></div>
+        </div>
+        <div class="event-card"><div class="event-art"></div><div class="event-copy"><span class="news-tag">新シーズン</span><strong>島の秘宝を探せ</strong><p>新しい島の景色を探索し、シーズンの世界を楽しもう。</p></div></div>
+      </div>
+      <div class="playlist">
+        <div class="playlist-head"><span>クリエイティブ</span><span style="color:var(--gold)">自由建築</span></div>
+        <div class="playlist-feature"><span>フリー<br>ビルド</span></div>
+        <div class="mode-title" id="modeTitle">クリエイティブ</div><div class="mode-desc" id="modeDesc">平坦な島で、最大4人の仲間と自由に建築・編集しよう。</div>
+        <div class="mode-controls"><button class="selected" data-mode="creative" aria-pressed="true">クリエイティブのみ</button></div>
+        <div class="fill-toggle"><span>フレンドと最大4人で遊べます</span><span class="creative-max-label">4人</span></div>
+        <button id="playButton" class="play-button">島に入る</button>
+      </div>
+    </section>
+    <section class="center-column">
+      <div class="stage-caption"><b>チャプター 01</b><small>島の最前線</small></div>
+      <div class="hero-nameplate"><b id="heroSkinLabel">ネオンランナー</b><small>ロビーの衣装</small></div>
+      <div class="hero-shadow"></div>
+      <div class="avatar-fallback" id="avatarFallback" data-skin="urban" aria-hidden="true"><div class="avatar-hair"></div><div class="avatar-head"><i class="eye eye-left"></i><i class="eye eye-right"></i><i class="mouth"></i></div><div class="avatar-neck"></div><div class="avatar-body"><i class="jacket-line"></i><i class="jacket-badge"></i></div><div class="avatar-arm avatar-arm-left"></div><div class="avatar-arm avatar-arm-right"></div><div class="avatar-leg avatar-leg-left"></div><div class="avatar-leg avatar-leg-right"></div><div class="avatar-boot avatar-boot-left"></div><div class="avatar-boot avatar-boot-right"></div><div class="avatar-pack"></div></div>
+      <div class="hero-callout">選択中の衣装 ・ ロビーで待機中</div>
+    </section>
+    <section class="right-column">
+      <div class="party-card">
+        <div class="party-head"><span>パーティー　1 / 4</span><button id="inviteBtn">＋ 招待</button></div>
+        <div class="party-slots">
+          <div class="party-slot"><div class="slot-icon">人</div><div><div class="slot-name" id="partyName">プレイヤー</div><div class="slot-status">パーティーリーダー</div></div></div>
+          <div class="party-slot"><div class="slot-icon">＋</div><div><div class="slot-name">空きスロット</div><div class="slot-status">参加待ち</div></div></div>
+          <div class="party-slot"><div class="slot-icon">＋</div><div><div class="slot-name">空きスロット</div><div class="slot-status">参加待ち</div></div></div>
+          <div class="party-slot"><div class="slot-icon">＋</div><div><div class="slot-name">空きスロット</div><div class="slot-status">参加待ち</div></div></div>
+        </div>
+        <button class="invite-btn" id="inviteBtnSmall">フレンドを招待する</button>
+        <div class="social-status"><i class="online-dot"></i><span>オンライン状態を確認中</span></div>
+      </div>
+    </section>
+  </main>
+  <div class="discover-rail">
+    <div class="discover-title"><b>おすすめ</b><small>おすすめの体験</small></div>
+    <button class="discover-card" data-discover="島の大冒険"><span class="art art-one"></span><b>島の大冒険</b></button>
+    <button class="discover-card" data-discover="夕焼けの海岸"><span class="art art-two"></span><b>夕焼けの海岸</b></button>
+    <button class="discover-card" data-discover="空のランニング"><span class="art art-three"></span><b>空のランニング</b></button>
+    <button class="discover-card" data-discover="森のキャンプ"><span class="art art-four"></span><b>森のキャンプ</b></button>
+  </div>
+  <div class="bottom-hints"><div class="hintkeys"><span>ロッカー：スキンを選択</span><span>キャラクター：設定から3Dモデルを追加</span></div><div class="bottom-links"><button id="settingsBtn">設定</button><button id="creditsBtn">素材・クレジット</button><button id="exitLobbyBtn">タイトルへ</button></div></div>
+  <div class="loadnote" id="sceneStatus">キャラクターを準備しています...</div>
+  <section id="subpage" class="subpage" aria-live="polite" aria-label="ゲームメニューの各画面">
+    <div id="subpageBody" class="subpage-inner"></div>
+  </section>
+</section>
+<div id="tabOverlay" class="overlay"><div class="dialog"><button class="close" data-close="tabOverlay">×</button><div class="section-kicker">マンゴーバトル</div><h2 id="tabTitle">ロッカー</h2><p id="tabText">キャラクターや見た目を管理できます。</p><div id="tabTiles" class="tab-content"></div><div class="dialog-actions"><button data-close="tabOverlay">閉じる</button></div></div></div>
+<div id="profileOverlay" class="overlay"><div class="dialog"><button class="close" data-close="profileOverlay">×</button><div class="section-kicker">プレイヤー情報</div><h2>プレイヤー名</h2><p>ロビーに表示する名前を設定できます。</p><input id="nameInput" class="input" maxlength="16" placeholder="プレイヤー"><div class="google-auth-card"><div class="google-auth-copy"><strong>Googleアカウント</strong><small id="googleAuthStatus">Firebaseに接続するとログインできます。</small></div><button id="googleLoginBtn" class="google-login-btn" type="button"><span class="google-g-mark">G</span><span>Googleでログイン</span></button><p id="googleAuthMessage" class="google-auth-message" aria-live="polite"></p></div><div class="dialog-actions"><button data-close="profileOverlay">キャンセル</button><button id="saveName" class="primary">保存</button></div></div></div>
+<div id="partyOverlay" class="overlay"><div class="dialog" style="width:min(680px,94vw);max-height:90vh;overflow:auto"><button class="close" data-close="partyOverlay">×</button><div class="section-kicker">オンラインパーティー</div><h2>フレンドとプレイ</h2><p>部屋を作成して6文字のコードをフレンドに共有するか、受け取ったコードで参加できます。最大4人まで同じロビーに接続できます。</p>
+<div class="fb-status" id="fbStatus"><i></i><span id="fbStatusText">Firebase未設定</span></div>
+<div class="party-online-grid">
+ <div class="fb-box"><h3>パーティーを作成</h3><p>あなたがホストになり、参加コードを発行します。</p><div class="fb-actions"><button class="primary" id="createPartyBtn">部屋を作成する</button></div></div>
+ <div class="fb-box"><h3>コードで参加</h3><p>フレンドから受け取った6文字のコードを入力します。</p><div class="fb-field"><label for="roomCodeInput">参加コード</label><input id="roomCodeInput" maxlength="6" autocomplete="off" placeholder="例：AB23CD" style="text-transform:uppercase;letter-spacing:.16em;font-weight:900"></div><div class="fb-actions"><button class="primary" id="joinPartyBtn">部屋に参加する</button></div></div>
+</div>
+<div id="activeRoomPanel" class="fb-box" hidden><h3>参加中のパーティー</h3><div class="fb-code"><span id="roomCodeValue">------</span><button id="copyRoomCodeBtn">コードをコピー</button></div><div class="fb-room-tools"><small id="roomMetaText">モード：クリエイティブ・参加者：1 / 4</small><span class="fb-status connected" id="roomStatePill"><i></i><span>接続中</span></span></div><div class="fb-player-list" id="fbPlayerList"></div><div class="fb-actions"><button class="primary" id="readyBtn">準備完了にする</button><button id="leavePartyBtn">パーティーから退出</button></div><div id="hostHint" class="fb-config-note">全員の準備ができたら、ホストがクリエイティブ島を開始できます。</div></div>
+<div class="fb-error" id="fbError" role="status" aria-live="polite"></div>
+<details class="fb-config" id="fbConfigDetails"><summary>Firebase接続設定</summary><p class="fb-config-note">接続先：mangonite2。設定はあらかじめ入力済みです。APIキーはWebアプリ用の公開識別子で、秘密鍵ではありません。データ保護のため、同梱のRealtime Databaseルールを必ず公開してください。</p><div class="fb-config-grid">
+ <div class="fb-field"><label for="fbApiKey">APIキー</label><input id="fbApiKey" autocomplete="off" placeholder="AIza..." spellcheck="false"></div>
+ <div class="fb-field"><label for="fbAuthDomain">Authドメイン</label><input id="fbAuthDomain" autocomplete="off" placeholder="your-project.firebaseapp.com" spellcheck="false"></div>
+ <div class="fb-field wide"><label for="fbDatabaseURL">Realtime Database URL</label><input id="fbDatabaseURL" autocomplete="off" placeholder="https://your-project-default-rtdb.firebaseio.com" spellcheck="false"></div>
+ <div class="fb-field"><label for="fbProjectId">プロジェクトID</label><input id="fbProjectId" autocomplete="off" placeholder="your-project-id" spellcheck="false"></div>
+ <div class="fb-field"><label for="fbAppId">アプリID</label><input id="fbAppId" autocomplete="off" placeholder="1:123456:web:abcdef" spellcheck="false"></div>
+ <div class="fb-field"><label for="fbSenderId">送信者ID（任意）</label><input id="fbSenderId" autocomplete="off" placeholder="123456789"></div>
+ <div class="fb-field"><label for="fbStorageBucket">Storageバケット（任意）</label><input id="fbStorageBucket" autocomplete="off" placeholder="your-project.appspot.com"></div>
+</div><div class="fb-config-actions"><button class="primary" id="saveFirebaseBtn">保存して接続</button><button id="clearFirebaseBtn">設定を消去</button></div><p class="fb-config-note">必要な設定：Firebase Authenticationで匿名認証とGoogleプロバイダを有効化し、Realtime Databaseのルールに同梱の database.rules.json を貼り付けて公開してください。GitHub Pagesで公開する場合は、URLが https://アカウント名.github.io/リポジトリ名/ なら、承認済みドメインに「アカウント名.github.io」だけを追加します（https://とパスは不要）。MangoOSのローカルサーバーから起動する場合は localhost を追加してください。file:// 直開きは使えません。</p></details>
+<div class="dialog-actions"><button data-close="partyOverlay">閉じる</button></div></div></div>
+<div id="settingsOverlay" class="overlay"><div class="dialog"><button class="close" data-close="settingsOverlay">×</button><div class="section-kicker">設定</div><h2>設定</h2><p>表示品質やキャラクター素材を変更できます。</p><label>描画品質<select id="qualitySelect" class="input"><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select></label><div style="margin-top:14px"><label for="modelFile">3Dキャラクター素材（3Dモデル形式）</label><input id="modelFile" class="input" type="file" accept=".glb,model/gltf-binary"><small style="color:#b8c8d8;font-size:10px">後からアップロードする3D素材に差し替えできます。</small></div><div class="dialog-actions"><button data-close="settingsOverlay">閉じる</button></div></div></div>
+<div id="creditsOverlay" class="overlay"><div class="dialog"><button class="close" data-close="creditsOverlay">×</button><div class="section-kicker">素材クレジット</div><h2>画像・3D素材・出典</h2><p><b>背景イラスト：</b>ポートサンドリーズ「南国の島の風景」／ピクサベイのコンテンツライセンス。AI生成作品として掲載。<a href="https://pixabay.com/illustrations/tropical-landscape-island-7979801/" target="_blank" rel="noopener">素材の配布ページ</a></p><p><b>おすすめカードの写真：</b>マット・バーナード「島々に沈む夕日の海景」／ペクセルズ。<a href="https://www.pexels.com/photo/seascape-with-a-sunset-over-the-islands-15692356/" target="_blank" rel="noopener">素材の配布ページ</a></p><p><b>初期3Dキャラクター：</b>本バージョンでは既存の汎用人物モデルをやめ、スリージェイエスの図形を組み合わせたオリジナル衣装に変更しました。キャラクターの形状・衣装は本作独自です。</p><p><b>画面構成の参考：</b>フォートナイト公式ヘルプのロビー・メニュー構成。公式画像や公式スキンは複製せず、一般的な配置の考え方を参考にしています。</p><p><a href="https://www.epicgames.com/help/ja/c-Category_フォートナイト/c-フォートナイト_Creative/how-to-play-fortnite-creative-a000084773" target="_blank" rel="noopener">エピック・ゲームズ公式案内</a> ・ <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">パブリックドメイン相当の利用許諾（CC0 1.0）について</a></p><p>背景画像とスリージェイエスはインターネット接続時に配布元から読み込みます。オリジナルキャラクターはゲーム内で生成します。</p><div class="dialog-actions"><button data-close="creditsOverlay">閉じる</button></div></div></div>
+<div id="matchOverlay" class="overlay"><div class="dialog"><button class="close" data-close="matchOverlay">×</button><div class="section-kicker">マッチメイキング</div><h2>プレイ準備</h2><p id="matchText">オンライン接続はオンライン接続の設定後に有効化します。</p><div class="dialog-actions"><button data-close="matchOverlay">戻る</button></div></div></div>
+
+<section id="creativeScreen" class="screen creative-screen" aria-label="クリエイティブ島">
+ <canvas id="creativeCanvas" tabindex="0" aria-label="建築用の3D島"></canvas>
+ <div class="creative-top-hud">
+  <div class="creative-hud-block"><div class="creative-hud-title">マンゴーバトル　|　クリエイティブ</div><div class="creative-hud-sub">フリービルド島 ・ 素材無制限</div></div>
+  <div class="creative-hud-right"><div class="creative-hud-pill" id="creativePlayerCount">プレイヤー 1 / 4</div><div class="creative-hud-pill" id="creativeModePill">建築モード</div><button class="creative-action" id="creativePauseButton" type="button">メニュー　Esc</button></div>
+ </div>
+ <div class="creative-status" id="creativeStatus"></div>
+ <div class="creative-center-crosshair" aria-hidden="true"></div>
+ <div class="creative-edit-panel" id="creativeEditPanel"><h3>建築編集</h3><p id="creativeEditHint">編集する建築物をクリックして選択してください。</p><div class="creative-edit-options"><button data-wall-variant="door">ドア</button><button data-wall-variant="window">窓</button><button data-wall-variant="full">壁に戻す</button><button id="creativeEditRotate">回転</button><button id="creativeEditDelete" style="grid-column:1/-1;background:#9d3038">選択した建築を削除</button></div></div>
+ <div class="creative-bottom-hud">
+  <div class="creative-controls-card"><b>移動</b>　W A S D　／　<b>ジャンプ</b>　Space　／　<b>走る</b>　Shift<br><b>建築</b>　1 壁・2 床・3 階段・4 屋根　／　<b>回転</b>　R　／　<b>編集</b>　G<br>左クリックで設置・選択。視点はマウスを動かして操作。</div>
+  <div class="creative-build-card">
+   <button class="creative-action active" id="creativeBuildToggle">建築 ON</button>
+   <button class="creative-action" id="creativeEditToggle">編集 OFF</button>
+   <div class="creative-build-select"><button class="creative-action active" data-creative-build="wall">1 壁</button><button class="creative-action" data-creative-build="floor">2 床</button><button class="creative-action" data-creative-build="stair">3 階段</button><button class="creative-action" data-creative-build="roof">4 屋根</button></div>
+   <button class="creative-action" id="creativeRotate">回転 R</button>
+   <button class="creative-action" id="creativeDelete">削除</button>
+   <button class="creative-action" id="creativeExit">ロビーへ</button>
+  </div>
+ </div>
+</section>
+<aside id="creativePauseSidebar" aria-hidden="true">
+ <div class="creative-pause-backdrop" data-pause-close></div>
+ <div class="creative-pause-panel">
+  <nav class="creative-pause-rail" aria-label="ゲームメニュー">
+   <button class="creative-pause-avatar" data-pause-tab="profile" title="プロフィール">人</button>
+   <button class="active" data-pause-tab="party" title="パーティー">▣</button>
+   <button data-pause-tab="friends" title="フレンドを追加">＋</button>
+   <button data-pause-tab="looking" title="パーティー参加希望">⌕</button>
+   <button data-pause-tab="voice" title="ボイスチャット">◖</button>
+   <div class="spacer"></div>
+   <button data-pause-tab="settings" title="設定">⚙</button>
+   <button data-pause-tab="game" title="ゲームメニュー">☰</button>
+   <button data-pause-tab="exit" title="終了" style="color:#ff6b70">↪</button>
+  </nav>
+  <section class="creative-pause-content"><div class="creative-pause-head"><div><h2 id="creativePauseTitle">パーティー</h2><small id="creativePauseSubtitle">フレンドと一緒にクリエイティブ</small></div><button class="creative-pause-close" data-pause-close aria-label="閉じる">×</button></div><div id="creativePauseBody"></div></section>
+ </div>
+</aside>
+
+<div id="toast" class="toast"></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+let THREE, GLTFLoader, threeImportError=null;
+try { THREE=await import('three'); GLTFLoader=(await import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js')).GLTFLoader; }
+catch(err){ threeImportError=err; console.warn('3Dライブラリを読み込めません。簡易表示で起動します。',err); GLTFLoader=class{load(url,onLoad,onProgress,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}parse(data,path,onLoad,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}}; }
+const $=s=>document.querySelector(s); const sceneHost=$('#scene');
+let renderer,scene,camera,clock,hero,mixer,heroBaseY=0,heroActions={},sceneMode='boot',loaded=0,totalAssets=1,assetFailures=0,quality='high',frame=0;
+window.__MangoBattleSceneMode='boot';
+const SKINS={
+ urban:{name:'ネオンランナー',label:'青いストリートジャケット',coat:0x167db6,pants:0x202b40,accent:0x39d8ee,skin:0xe6b28d,hair:0x172438,style:'urban'},
+ explorer:{name:'アイランドスカウト',label:'探検ベストとオレンジスカーフ',coat:0x947040,pants:0x354835,accent:0xe9a33f,skin:0xc98d68,hair:0x56351f,style:'explorer'},
+ pop:{name:'ポップスター',label:'紫とピンクのステージ衣装',coat:0xb23894,pants:0x29283e,accent:0xf5d1ff,skin:0xf0c19e,hair:0x7d2f87,style:'pop'},
+ pilot:{name:'スカイパイロット',label:'赤白のフライトジャケット',coat:0xc84e3f,pants:0x263b5d,accent:0xf5d46b,skin:0xe8b78e,hair:0xd5ae5c,style:'pilot'}
+};
+let activeSkin='urban';
+const loader=new GLTFLoader(); let localHeroUrl=null;
+
+function buildStylizedSkin(id){
+ const cfg=SKINS[id]||SKINS.urban;
+ const g=new THREE.Group();
+ const mat=(color,roughness=.62,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
+ const skin=mat(cfg.skin,.78),hair=mat(cfg.hair,.74),coat=mat(cfg.coat,.5),pants=mat(cfg.pants,.72),accent=mat(cfg.accent,.38,.12),dark=mat(0x172333,.68),boot=mat(id==='pilot'?0x202d48:0x202b37,.6),white=mat(0xf0f4f7,.42),eyeWhite=mat(0xfafafa,.35),iris=mat(id==='pop'?0x6c4ac7:0x253f56,.3),mouth=mat(0x713f3a,.75);
+ const add=(geo,m,x,y,z,sx=1,sy=1,sz=1,rx=0,ry=0,rz=0)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.rotation.set(rx,ry,rz);o.castShadow=true;o.receiveShadow=true;g.add(o);return o};
+ const box=(w,h,d,m,x,y,z,rx=0,ry=0,rz=0)=>add(new THREE.BoxGeometry(w,h,d),m,x,y,z,1,1,1,rx,ry,rz);
+ const ball=(rx,ry,rz,m,x,y,z)=>add(new THREE.SphereGeometry(1,22,16),m,x,y,z,rx,ry,rz);
+ const capsule=(r,len,m,a,b)=>{const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),dir=bv.clone().sub(av);const mesh=new THREE.Mesh(new THREE.CapsuleGeometry(r,Math.max(.03,dir.length()-r*1.4),6,12),m);mesh.position.copy(av.add(bv).multiplyScalar(.5));mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.normalize());mesh.castShadow=true;mesh.receiveShadow=true;g.add(mesh);return mesh};
+ // Legs: sturdy, athletic proportions with articulated-looking knee and boot shapes.
+ for(const x of [-.205,.205]){
+  capsule(.185,.48,pants,[x,.98,0],[x,.54,.015]);
+  ball(.19,.18,.19,pants,x,.56,.015);
+  capsule(.145,.34,pants,[x,.54,.015],[x,.23,.035]);
+  box(.32,.17,.48,boot,x,.135,.11,-.035,0,0);
+  box(.33,.055,.49,accent,x,.065,.105);
+  box(.105,.08,.17,white,x,.17,.32);
+ }
+ // Waist, torso and layered outfit.
+ box(.68,.30,.43,dark,0,1.01,0);
+ const torso=add(new THREE.CapsuleGeometry(.39,.52,7,16),coat,0,1.52,0,1.06,1,0.78);
+ box(.78,.20,.47,coat,0,1.20,0);
+ box(.70,.075,.49,accent,0,1.10,.015);
+ // Front jacket panels and zipper.
+ box(.20,.56,.035,accent,-.13,1.55,.305,0,0,-.025);
+ box(.20,.56,.035,coat,.13,1.55,.305,0,0,.025);
+ box(.026,.54,.035,dark,0,1.55,.33);
+ for(const y of [1.38,1.55,1.72])ball(.025,.025,.018,white,0,y,.355);
+ // Neck and head.
+ capsule(.115,.18,skin,[0,1.86,0],[0,2.08,0]);
+ ball(.285,.345,.265,skin,0,2.34,.015);
+ // Ears.
+ for(const x of [-.285,.285])ball(.065,.095,.055,skin,x,2.34,.005);
+ // Eyes, brows, nose and small smile facing the lobby camera.
+ for(const x of [-.105,.105]){
+  ball(.052,.045,.027,eyeWhite,x,2.385,.254);
+  ball(.022,.027,.014,iris,x,2.38,.279);
+  box(.095,.025,.035,hair,x,2.465,.256,0,0,x<0?-.08:.08);
+ }
+ ball(.047,.055,.045,skin,0,2.31,.27);
+ box(.095,.018,.018,mouth,0,2.245,.267,0,0,0);
+ // Hair cap and front fringe.
+ add(new THREE.SphereGeometry(.305,24,16,0,Math.PI*2,0,Math.PI*.62),hair,0,2.40,.005);
+ if(id==='urban'){
+  box(.34,.09,.28,hair,-.105,2.58,.12,-.12,0,-.12);box(.14,.18,.20,hair,-.245,2.46,.015,0,0,-.24);
+  // Hood and cyan piping.
+  ball(.39,.40,.10,coat,0,1.69,-.205);
+  box(.78,.045,.045,accent,0,1.80,.24);
+ }else if(id==='explorer'){
+  // Explorer cap, brim, scarf and utility straps.
+  ball(.31,.12,.29,accent,0,2.60,.005);
+  box(.52,.055,.34,hair,0,2.55,.16);
+  box(.18,.33,.045,accent,-.20,1.54,.32,0,0,-.15);box(.18,.33,.045,accent,.20,1.54,.32,0,0,.15);
+  box(.76,.16,.52,dark,0,1.26,-.03);
+  box(.24,.24,.08,accent,0,1.82,.25);
+  box(.43,.48,.22,mat(0x6e532f),0,1.42,-.37);
+ }else if(id==='pop'){
+  // Asymmetric high ponytail and bright stage jacket.
+  ball(.14,.36,.15,hair,.29,2.26,-.06,.95,1.1,1);
+  box(.24,.12,.31,accent,-.14,2.55,.08,0,0,-.26);
+  box(.82,.10,.47,accent,0,1.83,.015);
+  box(.18,.30,.05,white,.24,1.53,.30,0,0,-.08);
+  ball(.17,.08,.17,accent,0,1.95,-.02);
+ }else if(id==='pilot'){
+  // Flight cap, goggles, shoulder panels and back pack.
+  ball(.30,.13,.30,accent,0,2.59,.005);
+  box(.54,.045,.35,coat,0,2.53,.16);
+  box(.58,.09,.06,white,0,2.42,.265);
+  box(.24,.12,.065,accent,-.13,2.42,.31);box(.24,.12,.065,accent,.13,2.42,.31);
+  box(.84,.23,.54,white,0,1.70,-.025);
+  box(.17,.55,.05,accent,.22,1.55,.31,0,0,.05);
+  box(.48,.55,.22,dark,0,1.43,-.37);
+ }
+ // Sleeves, shoulder guards, forearms and gloves.
+ for(const side of [-1,1]){
+  const x=side;
+  ball(.205,.20,.20,id==='pilot'?white:coat,side*.45,1.78,0);
+  capsule(.155,.38,coat,[side*.47,1.78,0],[side*.57,1.40,.035]);
+  ball(.16,.15,.16,accent,side*.57,1.40,.035);
+  capsule(.13,.30,id==='explorer'?accent:coat,[side*.57,1.40,.035],[side*.62,1.12,.105]);
+  ball(.13,.13,.13,dark,side*.62,1.08,.12);
+  // Shoulder patches and wrist bands.
+  box(.27,.12,.30,accent,side*.45,1.82,.03,0,0,side*.10);
+  box(.27,.07,.22,white,side*.62,1.19,.14,0,0,side*.08);
+ }
+ // Outfit-specific chest emblem and collar.
+ ball(.075,.075,.035,accent,0,1.68,.34);
+ box(.36,.09,.40,dark,0,1.96,.005);
+ if(id==='explorer')box(.54,.12,.48,accent,0,1.96,.03);
+ if(id==='pilot')box(.54,.11,.48,accent,0,1.96,.03);
+ // Small belt pouches and distinctive side detail.
+ for(const x of [-.28,.28])box(.16,.18,.12,id==='explorer'?accent:dark,x,1.05,.25);
+ g.position.set(4.1,0,0);g.userData.skinId=id;return g;
+}
+function init3D(){
+ scene=new THREE.Scene();
+ camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);camera.position.set(2.1,2.65,10.8);camera.lookAt(4.1,1.55,0);
+ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});renderer.setClearColor(0x000000,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;sceneHost.appendChild(renderer.domElement);
+ scene.add(new THREE.HemisphereLight(0xeaf6ff,0x506177,2.1));
+ const key=new THREE.DirectionalLight(0xffe3bb,2.5);key.position.set(-4,9,8);key.castShadow=true;key.shadow.mapSize.set(1024,1024);scene.add(key);
+ const rim=new THREE.DirectionalLight(0x6fd7ff,1.45);rim.position.set(5,5,-6);scene.add(rim);
+ const padMat=new THREE.MeshStandardMaterial({color:0x17384c,metalness:.48,roughness:.3});
+ const pad=new THREE.Mesh(new THREE.CylinderGeometry(1.65,1.78,.22,64),padMat);pad.position.set(4.1,-.18,0);pad.receiveShadow=true;scene.add(pad);
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(1.64,.045,10,96),new THREE.MeshStandardMaterial({color:0x76e5ff,emissive:0x26a8d9,emissiveIntensity:2,metalness:.4}));ring.rotation.x=Math.PI/2;ring.position.set(4.1,-.04,0);scene.add(ring);
+ const ring2=new THREE.Mesh(new THREE.TorusGeometry(1.36,.018,8,96),new THREE.MeshStandardMaterial({color:0xffdf6a,emissive:0x98681a,emissiveIntensity:.7}));ring2.rotation.x=Math.PI/2;ring2.position.set(4.1,-.03,0);scene.add(ring2);
+ const spot=new THREE.Mesh(new THREE.CircleGeometry(1.32,64),new THREE.MeshBasicMaterial({color:0x5ac8f3,transparent:true,opacity:.15,side:THREE.DoubleSide}));spot.rotation.x=-Math.PI/2;spot.position.set(4.1,-.055,0);scene.add(spot);
+ try{const saved=localStorage.getItem('mb_v070_skin');if(saved&&SKINS[saved])activeSkin=saved;else{const old=localStorage.getItem('mb_v060_skin');const map={street:'urban',traveler:'explorer',student:'pop',festival:'pilot'};if(map[old])activeSkin=map[old];}}catch(e){}
+ hero=buildStylizedSkin(activeSkin);heroBaseY=hero.position.y;scene.add(hero);document.body.classList.add('three-ready');$('#avatarFallback').dataset.skin=activeSkin;$('#heroSkinLabel').textContent=SKINS[activeSkin].name;
+ loaded=1;totalAssets=1;$('#bootProgress').style.width='100%';$('#bootStatus').textContent='ロビーの準備ができました';$('#sceneStatus').textContent='オリジナル3Dキャラクターを表示中';$('#startBtn').disabled=false;
+ clock=new THREE.Clock();animate();
+}
+window.changeLobbySkin=(name)=>{if(!SKINS[name]||name===activeSkin)return;if(!THREE){activeSkin=name;$('#avatarFallback').dataset.skin=name;$('#heroSkinLabel').textContent=SKINS[name].name;try{localStorage.setItem('mb_v070_skin',name)}catch(e){}toast(`${SKINS[name].name}に変更しました`);return}const next=buildStylizedSkin(name);if(hero)scene.remove(hero);hero=next;heroBaseY=hero.position.y;scene.add(hero);document.body.classList.add('three-ready');$('#avatarFallback').dataset.skin=name;activeSkin=name;$('#heroSkinLabel').textContent=SKINS[name].name;try{localStorage.setItem('mb_v070_skin',name)}catch(e){}toast(`${SKINS[name].name}に変更しました`)};
+function animate(){requestAnimationFrame(animate);if(!renderer)return;const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;if(mixer)mixer.update(dt);if(hero){hero.position.y=heroBaseY+Math.sin(t*1.25)*.025;hero.rotation.y=Math.sin(t*.34)*.06;}camera.position.x+=(2.1+Math.sin(t*.16)*.12-camera.position.x)*.012;camera.lookAt(4.1,1.55,0);renderer.render(scene,camera)}
+function resize(){if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='high'?1.5:quality==='medium'?1.15:.8));renderer.setSize(innerWidth,innerHeight)}window.addEventListener('resize',resize);
+function toast(text){const el=$('#toast');el.textContent=text;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2400)}
+function showOverlay(id){$('#'+id).classList.add('open')}function closeOverlay(id){$('#'+id).classList.remove('open')}
+const tabOrder=['play','locker','shop','pass','quests','competition','career'];
+let currentPage='play', pageCurrency=Number(localStorage.getItem('mb_v080_coins')||1200);
+let ownedItems=JSON.parse(localStorage.getItem('mb_v080_owned')||'[]');
+function renderCoinCount(){const el=document.querySelector('.currency');if(el)el.textContent='コイン　'+pageCurrency.toLocaleString('ja-JP')}
+renderCoinCount();
+function heading(kicker,title,desc,meta='シーズン 01'){return `<div class="page-heading"><div><div class="page-kicker">${kicker}</div><h1>${title}</h1><p>${desc}</p></div><div class="page-meta">${meta}</div></div>`}
+function miniDoll(skin='urban'){const c=SKINS[skin]||SKINS.urban;return `<div class="locker-dummy" style="--skin-coat:#${c.coat.toString(16).padStart(6,'0')};--skin-pants:#${c.pants.toString(16).padStart(6,'0')};--skin-hair:#${c.hair.toString(16).padStart(6,'0')}"><i class="hair"></i><i class="head"></i><i class="torso"></i><i class="arm a"></i><i class="arm b"></i><i class="leg a"></i><i class="leg b"></i><i class="boot a"></i><i class="boot b"></i></div>`}
+function renderSubpage(key,dir='next'){
+ const body=$('#subpageBody');
+ body.className='subpage-inner '+(dir==='prev'?'slide-prev':'slide-next');
+ let html='';
+ if(key==='locker'){
+  html=heading('ロッカー','ロッカー','お気に入りの衣装やエモートを選んで、自分のスタイルに変更しよう。','所持アイテム')+`<div class="locker-layout"><div class="locker-side"><div class="page-card"><div class="eyebrow">現在の装備</div><div class="locker-current">${miniDoll(activeSkin)}</div><h2>${SKINS[activeSkin].name}</h2><p>${SKINS[activeSkin].label}</p><div class="locker-actions"><button class="page-button" data-page-action="random-skin">ランダムで選択</button><button class="page-button secondary" data-page-action="add-model">3Dモデルを追加</button></div></div><div class="page-card"><div class="eyebrow">装備スロット</div><h3>衣装セット</h3><p>衣装・背中のアクセサリー・ツルハシ・グライダー・エモート・ラップは、今後の素材追加に合わせて拡張するよ。</p></div></div><div><div class="shop-section-title"><h2>衣装コレクション</h2><small>4 種類</small></div><div class="skin-selector">${Object.entries(SKINS).map(([id,c],i)=>`<button class="skin-select-card ${id===activeSkin?'selected':''}" data-page-action="equip" data-skin="${id}"><span class="skin-thumb" style="--skin-bg:${['linear-gradient(140deg,#15314c,#42a7c3)','linear-gradient(140deg,#244a3f,#c69b54)','linear-gradient(140deg,#392452,#d45b9b)','linear-gradient(140deg,#233e63,#da7858)'][i]}">${miniDoll(id)}</span><span class="skin-select-copy"><b>${c.name}</b><small>${c.label}</small></span></button>`).join('')}</div></div></div>`;
+ }else if(key==='shop'){
+  const items=[['urban','ネオンランナー','レア衣装',800,'#143d5c'],['explorer','アイランドスカウト','探検衣装',700,'#426047'],['pop','ポップスター','エピック衣装',1200,'#62335f'],['pilot','スカイパイロット','レア衣装',900,'#6a3f38']];
+  html=heading('アイテムショップ','ショップ','新しい衣装をチェック。購入したアイテムはロッカーから装備できるよ。','本日のラインナップ')+`<div class="shop-feature"><div class="shop-feature-art">${miniDoll('pop')}</div><div class="shop-feature-copy"><div class="eyebrow">本日のピックアップ</div><h2>ポップスター セット</h2><p>ステージの主役になろう。衣装を購入するとロッカーに追加されるよ。</p><button class="page-button gold" data-page-action="buy" data-item="pop" data-price="1200" ${ownedItems.includes('pop')?'disabled':''}>${ownedItems.includes('pop')?'購入済み':'購入する　1,200 コイン'}</button></div></div><div class="shop-section-title"><h2>おすすめアイテム</h2><small>購入はゲーム内コインのみ</small></div><div class="shop-items">${items.map(([id,name,label,price,bg])=>`<article class="shop-item"><div class="shop-item-art" style="--item-bg:linear-gradient(140deg,${bg},#14263c)">${miniDoll(id)}</div><div class="shop-item-copy"><b>${name}</b><small>${label}</small><div class="shop-price">${price.toLocaleString('ja-JP')} コイン</div><button class="page-button ${ownedItems.includes(id)?'secondary':''}" data-page-action="buy" data-item="${id}" data-price="${price}" ${ownedItems.includes(id)?'disabled':''}>${ownedItems.includes(id)?'所持済み':'購入する'}</button></div></article>`).join('')}</div>`;
+ }else if(key==='pass'){
+  html=heading('シーズン 01','バトルパス','プレイして経験値を獲得し、シーズン報酬をアンロックしよう。','シーズン終了まで 38 日')+`<div class="pass-hero"><div><div class="eyebrow">現在のシーズンレベル</div><div class="pass-level">レベル 01</div><p>次のレベルまで 5,400 XP</p><div class="pass-progress"><i></i></div><small style="display:block;margin-top:7px;color:#e3eaf1;font-size:9px">4,600 / 10,000 XP</small></div><div class="page-card" style="min-width:180px;background:#ffffff16"><div class="eyebrow">シーズン報酬</div><h2>島の最前線</h2><p>シーズンの冒険を進めて限定報酬を受け取ろう。</p></div></div><div class="shop-section-title"><h2>報酬トラック</h2><small>レベル 1 ～ 6</small></div><div class="reward-track">${['バナー','100 コイン','エモート','衣装カラー','XP ブースト','限定衣装'].map((n,i)=>`<div class="reward-card"><div class="reward-icon">${['旗','C','動','色','XP','★'][i]}</div><b>${n}</b><small>レベル ${i+1}</small><button class="page-button secondary" style="padding:6px 8px;font-size:9px" disabled>${i===0?'受取済み':'未解放'}</button></div>`).join('')}</div>`;
+ }else if(key==='quests'){
+  const qs=[['毎日のログイン','ゲームにログインする','1 / 1',100,'完了'],['島を探索','おすすめの場所を3か所見る','1 / 3',250,'進行中'],['パーティーを組む','フレンド画面を開く','0 / 1',150,'挑戦可能'],['モードを選択','プレイモードを選ぶ','1 / 1',100,'完了'],['ショップを確認','アイテムショップを見る','0 / 1',150,'挑戦可能'],['衣装を変更','ロッカーで衣装を選ぶ','0 / 1',200,'挑戦可能']];
+  html=heading('ミッション','クエスト','クエストをクリアして経験値とコインを獲得しよう。','更新まで 08:24:16')+`<div class="page-grid quest-grid">${qs.map((q,i)=>`<article class="quest-card"><div class="eyebrow">${i<3?'デイリークエスト':'ウィークリークエスト'}</div><h3>${q[0]}</h3><p>${q[1]}</p><div class="quest-progress"><i style="width:${i===0||i===3?100:i===1?33:0}%"></i></div><small style="font-size:9px;color:#d4dfeb">進行状況　${q[2]}</small><div class="quest-reward">報酬　${q[3]} XP</div><button class="page-button ${q[4]==='完了'?'gold':'secondary'}" data-page-action="quest" data-quest="${i}" ${q[4]==='完了'?'disabled':''}>${q[4]==='完了'?'達成済み':'詳細を見る'}</button></article>`).join('')}</div>`;
+ }else if(key==='competition'){
+  html=heading('競技','競技','腕前を試してランクを上げよう。イベントの参加情報をチェック。','地域：アジア')+`<div class="comp-hero"><div class="rank-panel"><div class="eyebrow">現在のランク</div><div class="rank-emblem">Ⅲ</div><div class="rank-name">ブロンズ III</div><p>ランクポイント　320 RP</p><div class="rank-meter"><i></i></div><small style="display:block;margin-top:7px;color:#e2eaf1;font-size:9px">次のランクまで 180 RP</small></div><div class="page-card"><div class="eyebrow">競技プロフィール</div><h2>ランクマッチ</h2><p>マッチの結果に応じてランクポイントが変動する想定の画面だよ。オンライン対戦・順位集計はFirebase接続後に実装するね。</p><div class="locker-actions"><button class="page-button" data-page-action="competition-info">ルールを見る</button></div></div></div><div class="shop-section-title"><h2>開催予定のイベント</h2><small>イベント予定のサンプル表示</small></div><div class="event-list"><article class="event-tournament"><div class="eyebrow">ソロ / ランク</div><h3>ソロ・チャレンジ</h3><p>個人の実力を試そう。</p><div class="locker-actions"><button class="page-button secondary" data-page-action="event-info">詳細</button></div></article><article class="event-tournament"><div class="eyebrow">デュオ / 競技</div><h3>デュオ・カップ</h3><p>仲間と連携して挑戦。</p><div class="locker-actions"><button class="page-button secondary" data-page-action="event-info">詳細</button></div></article><article class="event-tournament"><div class="eyebrow">スクワッド / 週末</div><h3>チーム・カップ</h3><p>4人チームで挑戦。</p><div class="locker-actions"><button class="page-button secondary" data-page-action="event-info">詳細</button></div></article></div>`;
+ }else if(key==='career'){
+  html=heading('戦績','キャリア','これまでのプレイ記録や実績を確認できる画面。オンライン対戦の記録は接続後に保存するよ。','シーズン 01')+`<div class="stats-grid"><div class="stat-tile"><small>プレイ回数</small><b>0</b></div><div class="stat-tile"><small>ビクトリー</small><b>0</b></div><div class="stat-tile"><small>上位 10 位</small><b>0</b></div><div class="stat-tile"><small>合計プレイ時間</small><b>0 分</b></div></div><div class="career-bottom"><div class="page-card"><div class="eyebrow">プレイスタイル</div><h2>シーズン統計</h2><div class="career-bars"><div class="career-bar"><span>生存時間</span><i><span style="width:0%"></span></i><b>0</b></div><div class="career-bar"><span>探索</span><i><span style="width:0%"></span></i><b>0</b></div><div class="career-bar"><span>チーム貢献</span><i><span style="width:0%"></span></i><b>0</b></div></div></div><div class="page-card"><div class="eyebrow">実績</div><h2>まだ記録がありません</h2><p>マッチをプレイすると、ここに実績や戦績が追加されます。Firebaseを接続したらフレンドとの記録も保存できるようにするよ。</p></div></div>`;
+ }
+ body.innerHTML=html;
+ $('#subpage').classList.add('open');
+ $('#lobby').classList.add('subpage-active');
+ bindPageActions();
+}
+function goLobbyPage(key){const old=tabOrder.indexOf(currentPage),next=tabOrder.indexOf(key),dir=next>=old?'next':'prev';currentPage=key;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));if(key==='play'){$('#subpage').classList.remove('open');$('#lobby').classList.remove('subpage-active');return;}renderSubpage(key,dir)}
+document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>goLobbyPage(btn.dataset.tab)));
+function bindPageActions(){
+ $('#subpageBody').querySelectorAll('[data-page-action]').forEach(btn=>btn.addEventListener('click',()=>{
+  const act=btn.dataset.pageAction;
+  if(act==='equip'){window.changeLobbySkin(btn.dataset.skin);renderSubpage('locker','next');toast(SKINS[btn.dataset.skin].name+'を装備しました')}
+  else if(act==='random-skin'){const ids=Object.keys(SKINS),id=ids[Math.floor(Math.random()*ids.length)];window.changeLobbySkin(id);renderSubpage('locker','next')}
+  else if(act==='add-model'){goLobbyPage('play');showOverlay('settingsOverlay')}
+  else if(act==='buy'){const id=btn.dataset.item,price=Number(btn.dataset.price);if(ownedItems.includes(id)){toast('このアイテムは所持済みです');return}if(pageCurrency<price){toast('コインが足りません');return}pageCurrency-=price;ownedItems.push(id);localStorage.setItem('mb_v080_coins',String(pageCurrency));localStorage.setItem('mb_v080_owned',JSON.stringify(ownedItems));renderCoinCount();renderSubpage('shop','next');toast('アイテムを購入しました。ロッカーから装備できます')}
+  else if(act==='quest'){toast('このクエストはオンライン進行機能の準備後に更新されます')}
+  else if(act==='competition-info'||act==='event-info'){toast('競技イベントはオンライン機能の準備後に開催します')}
+ }));
+}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeOverlay(b.dataset.close)));document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+let playerName=localStorage.getItem('mb_v050_name')||'プレイヤー';function refreshName(){['profileName','lobbyName','partyName'].forEach(id=>$('#'+id).textContent=playerName)}refreshName();$('#profileBtn').onclick=()=>{$('#nameInput').value=playerName;showOverlay('profileOverlay')};$('#saveName').onclick=()=>{playerName=$('#nameInput').value.trim().slice(0,16)||'プレイヤー';localStorage.setItem('mb_v050_name',playerName);refreshName();closeOverlay('profileOverlay');toast('プレイヤー名を保存しました')};$('#inviteBtn').onclick=()=>showOverlay('partyOverlay');$('#inviteBtnSmall').onclick=()=>showOverlay('partyOverlay');document.querySelectorAll('[data-discover]').forEach(b=>b.onclick=()=>toast(b.dataset.discover+'はコンテンツ準備中です')); 
+let mode='creative';const modes={creative:['クリエイティブ','平坦な練習用の島で自由に建築・編集しよう。']};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode='creative';document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('selected',x===b));$('#modeTitle').textContent=modes.creative[0];$('#modeDesc').textContent=modes.creative[1]});$('#playButton').onclick=()=>startCreativeIsland();$('#settingsBtn').onclick=()=>showOverlay('settingsOverlay');$('#creditsBtn').onclick=()=>showOverlay('creditsOverlay');$('#qualitySelect').onchange=e=>{quality=e.target.value;resize();toast('描画品質を変更しました')};
+$('#modelFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const buf=await file.arrayBuffer();loader.parse(buf,'',g=>{const newHero=g.scene;newHero.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(newHero),s=b.getSize(new THREE.Vector3());newHero.scale.setScalar(2.75/(s.y||1));newHero.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(newHero);newHero.position.set(4.1,-b2.min.y,0);heroBaseY=newHero.position.y;mixer=null;newHero.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});if(hero)scene.remove(hero);hero=newHero;if(g.animations?.length){mixer=new THREE.AnimationMixer(hero);const idle=g.animations.find(a=>/idle/i.test(a.name))||g.animations[0];mixer.clipAction(idle).play()}scene.add(hero);document.body.classList.add('three-ready');$('#heroSkinLabel').textContent='追加した衣装';toast('3Dキャラクターを変更しました');closeOverlay('settingsOverlay')},err=>{console.error(err);toast('GLBを読み込めませんでした')})}catch(err){console.error(err);toast('ファイルを読み込めませんでした')}});
+$('#exitLobbyBtn').onclick=()=>{sceneMode='boot';window.__MangoBattleSceneMode='boot';goLobbyPage('play');$('#lobby').classList.remove('show');$('#boot').classList.add('show');$('#startBtn').disabled=false};
+async function startExperience(){goLobbyPage('play');sceneMode='lobby';window.__MangoBattleSceneMode='lobby';$('#boot').classList.remove('show');$('#lobby').classList.add('show')}
+$('#startBtn').onclick=startExperience;
+window.addEventListener('contextmenu',e=>e.preventDefault());
+// Stagger boot progress while 3D assets stream in.
+let fake=0;const prog=setInterval(()=>{fake=Math.min(fake+Math.random()*10+3,86);const real=loaded/totalAssets*100;$('#bootProgress').style.width=Math.max(fake,real)+'%';if($('#bootStatus').textContent==='ゲームデータを準備しています...')$('#bootStatus').textContent='ロビーの表示を準備しています...';if(fake>=86)clearInterval(prog)},240);
+try{init3D()}catch(e){console.error(e);$('#bootStatus').textContent='3D表示を開始できません。簡易表示で起動できます。';$('#sceneStatus').textContent='簡易キャラクターで表示中';$('#startBtn').disabled=false;$('#startBtn').textContent='ロビーを開く（簡易表示）'}
+</script>
+
+<script type="module">
+import {initializeApp,deleteApp,getApps} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
+let THREE=null;
+try{THREE=await import('three');}
+catch(threeError){console.warn('3Dライブラリを読み込めません。ロビーとログインは引き続き利用できます。',threeError);}
+import {getAuth,setPersistence,browserLocalPersistence,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithPopup,signInWithCredential,signOut} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
+import {getDatabase,ref,set,get,update,remove,onValue,onDisconnect,serverTimestamp,runTransaction} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js';
+
+const MB$=s=>document.querySelector(s);
+const LS_KEY='mangobattle_firebase_config_v1';
+const DEFAULT_FIREBASE_CONFIG=Object.freeze({
+ apiKey:'AIzaSyDq2pWTYv6JNdhZJLzy4HJ2RD-q2kK0iII',
+ authDomain:'mangonite2.firebaseapp.com',
+ databaseURL:'https://mangonite2-default-rtdb.asia-southeast1.firebasedatabase.app',
+ projectId:'mangonite2',
+ storageBucket:'mangonite2.firebasestorage.app',
+ messagingSenderId:'439496116451',
+ appId:'1:439496116451:web:70d976a593d429abc7ddd6'
+});
+const statusEl=MB$('#fbStatus'),statusText=MB$('#fbStatusText'),errorEl=MB$('#fbError');
+let app=null,auth=null,db=null,user=null,connected=false,currentRoom=null,isHost=false,ready=false,roomMeta=null;
+let offMeta=null,offPlayers=null,offConnection=null,memberData={},connectingPromise=null;
+const modeLabels={creative:'クリエイティブ'};
+function getMangoLaunchLocation(){
+  const candidates=[];
+  const isWeb=u=>u&&['https:','http:'].includes(u.protocol)&&!!u.hostname;
+  try{const own=new URL(location.href);if(isWeb(own))candidates.push(own);}catch{}
+  // MangoOS passes its origin as a diagnostic fallback. It is accepted only when the
+  // actual frame is same-origin or is an inherited about:srcdoc document.
+  try{
+    const hinted=new URLSearchParams(location.search).get('mangoosHostOrigin');
+    if(hinted){const h=new URL(hinted);if(isWeb(h)&&((location.origin!=='null'&&location.origin===h.origin)||location.protocol==='about:'))candidates.push(h);}
+  }catch{}
+  try{if(window.parent&&window.parent!==window){const p=new URL(window.parent.location.href);if(isWeb(p))candidates.push(p);}}catch{}
+  try{if(window.top&&window.top!==window){const t=new URL(window.top.location.href);if(isWeb(t))candidates.push(t);}}catch{}
+  try{for(const origin of Array.from(location.ancestorOrigins||[])){const u=new URL(origin);if(isWeb(u))candidates.push(u);}}catch{}
+  try{if(document.referrer){const r=new URL(document.referrer);if(isWeb(r))candidates.push(r);}}catch{}
+  const u=candidates[0]||new URL(location.href);
+  return {hostname:u.hostname||'',origin:u.origin||'',protocol:u.protocol||'',href:u.href||'',frameHostname:location.hostname||'',frameOrigin:location.origin||'',frameHref:location.href||''};
+}
+function setStatus(state,text){if(statusEl){statusEl.className='fb-status '+state;statusText.textContent=text;}}
+function error(text=''){if(errorEl)errorEl.textContent=text;}
+function toastMB(text){const el=MB$('#toast');if(el){el.textContent=text;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600)}}
+function getConfigFromForm(){return {apiKey:MB$('#fbApiKey').value.trim(),authDomain:MB$('#fbAuthDomain').value.trim(),databaseURL:MB$('#fbDatabaseURL').value.trim().replace(/\/$/,''),projectId:MB$('#fbProjectId').value.trim(),appId:MB$('#fbAppId').value.trim(),messagingSenderId:MB$('#fbSenderId').value.trim(),storageBucket:MB$('#fbStorageBucket').value.trim()};}
+function configValid(c){return !!(c.apiKey&&c.authDomain&&/^https:\/\//i.test(c.databaseURL)&&c.projectId&&c.appId);}
+function populateConfig(c={}){const map={apiKey:'fbApiKey',authDomain:'fbAuthDomain',databaseURL:'fbDatabaseURL',projectId:'fbProjectId',appId:'fbAppId',messagingSenderId:'fbSenderId',storageBucket:'fbStorageBucket'};for(const [k,id] of Object.entries(map)){const el=MB$('#'+id);if(el)el.value=c[k]||'';}}
+function getPlayerName(){return (MB$('#profileName')?.textContent||'プレイヤー').trim().slice(0,16)||'プレイヤー';}
+function getSkinName(){return (MB$('#heroSkinLabel')?.textContent||'ネオンランナー').trim().slice(0,32);}
+function selectedMode(){const b=MB$('[data-mode].selected');return b?.dataset.mode||'solo';}
+function setModeFromRemote(mode){if(mode!=='creative')return;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.mode==='creative'));MB$('#modeTitle').textContent='クリエイティブ';MB$('#modeDesc').textContent='最大4人で自由に建築・編集できます。';}
+function roomPath(code){return 'rooms/'+code;}
+function stopRoomListeners(){if(offMeta){offMeta();offMeta=null;}if(offPlayers){offPlayers();offPlayers=null;}}
+function stopConnectionListener(){if(offConnection){offConnection();offConnection=null;}connected=false;}
+function renderRoster(players){
+ memberData=players||{};
+ const entries=Object.entries(memberData).sort((a,b)=>Number(!!b[1]?.host)-Number(!!a[1]?.host));
+ const max=Number(roomMeta?.maxPlayers||4);
+ MB$('#roomMetaText').textContent='モード：'+(modeLabels[roomMeta?.mode]||'ソロ')+'　・　参加者：'+entries.length+' / '+max;
+ const list=MB$('#fbPlayerList');list.replaceChildren();
+ for(const [uid,p] of entries){const row=document.createElement('div');row.className='fb-player';const av=document.createElement('div');av.className='mini-avatar';av.textContent=p.host?'H':'人';const nm=document.createElement('div');nm.className='mini-name';nm.textContent=p.name||'プレイヤー';const st=document.createElement('div');st.className='mini-state'+(p.ready?' ready':'');st.textContent=p.host?'ホスト':(p.ready?'準備完了':'準備中');row.append(av,nm,st);list.append(row);}
+ for(let i=entries.length;i<Math.min(4,max);i++){const row=document.createElement('div');row.className='fb-player';row.style.opacity='.5';const av=document.createElement('div');av.className='mini-avatar';av.textContent='＋';const nm=document.createElement('div');nm.className='mini-name';nm.textContent='参加待ち';row.append(av,nm);list.append(row);}
+ const partySlots=MB$('.party-slots');
+ if(partySlots){partySlots.replaceChildren();for(let i=0;i<4;i++){const row=document.createElement('div');row.className='party-slot';if(entries[i]){const icon=document.createElement('div');icon.className='slot-icon';icon.textContent=entries[i][1]?.host?'H':'人';const wrap=document.createElement('div');const name=document.createElement('div');name.className='slot-name';name.textContent=entries[i][1]?.name||'プレイヤー';const state=document.createElement('div');state.className='slot-status';state.textContent=entries[i][1]?.host?'パーティーリーダー':(entries[i][1]?.ready?'準備完了':'準備中');wrap.append(name,state);row.append(icon,wrap);}else{const icon=document.createElement('div');icon.className='slot-icon';icon.textContent='＋';const wrap=document.createElement('div');const name=document.createElement('div');name.className='slot-name';name.textContent='空きスロット';const state=document.createElement('div');state.className='slot-status';state.textContent='参加待ち';wrap.append(name,state);row.append(icon,wrap);}partySlots.append(row);}const head=MB$('.party-head span');if(head)head.textContent='パーティー　'+entries.length+' / 4';}
+ const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebaseオンライン・パーティー同期中':'Firebase再接続中';
+ ready=!!memberData[user?.uid]?.ready;MB$('#readyBtn').textContent=ready?'準備を取り消す':'準備完了にする';
+ MB$('#hostHint').textContent=isHost?'あなたがホストです。全員が準備完了になったらプレイを開始できます。':'ホストがモードを選択します。準備ができたら「準備完了」を押してください。';
+}
+function waitForAuthState(authInstance){return new Promise(resolve=>{const unsub=onAuthStateChanged(authInstance,u=>{unsub();resolve(u);},()=>{unsub();resolve(null);});});}
+async function connectFirebase(config){
+ if(connectingPromise)return connectingPromise;
+ connectingPromise=(async()=>{
+  if(!configValid(config))throw new Error('Firebase設定の必須項目が不足しています。');
+  setStatus('connecting','Firebaseへ接続中...');error('');stopRoomListeners();stopConnectionListener();
+  if(app){try{await deleteApp(app);}catch{}app=null;auth=null;db=null;user=null;}
+  app=initializeApp(config,'MangoBattle');auth=getAuth(app);db=getDatabase(app,config.databaseURL);
+  await setPersistence(auth,browserLocalPersistence);
+  user=await waitForAuthState(auth);
+  if(!user){const credential=await signInAnonymously(auth);user=credential.user;}
+  updateGoogleLoginUI();
+  localStorage.setItem(LS_KEY,JSON.stringify(config));
+  setStatus('connecting','匿名認証済み・データベース接続確認中...');
+  offConnection=onValue(ref(db,'.info/connected'),snap=>{
+   connected=snap.val()===true;
+   setStatus(connected?'connected':'connecting',connected?'Firebase接続済み':'Firebase再接続中...');
+   const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebaseオンライン・パーティー同期中':'Firebase再接続中';
+   if(connected)toastMB('Firebaseデータベースに接続しました');
+  },err=>{connected=false;setStatus('error','データベース接続エラー');error(friendlyError(err));});
+  toastMB('Firebase匿名認証に成功しました');
+ })();
+ try{await connectingPromise;}finally{connectingPromise=null;}
+}
+function requireConnection(){if(!db||!user||!connected){error('Firebaseへの接続が完了していません。接続状態を確認してください。');return false;}return true;}
+function randomCode(){const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const bytes=new Uint8Array(6);crypto.getRandomValues(bytes);return [...bytes].map(b=>alphabet[b%alphabet.length]).join('');}
+async function makePlayer(hostFlag){return {name:getPlayerName(),ready:false,host:!!hostFlag,skin:getSkinName(),joinedAt:serverTimestamp()};}
+async function attachRoom(code,hostFlag){
+ currentRoom=code;isHost=hostFlag;ready=false;roomMeta=null;
+ const metaRef=ref(db,roomPath(code)+'/meta'),playersRef=ref(db,roomPath(code)+'/players'),myRef=ref(db,roomPath(code)+'/players/'+user.uid);
+ try{await onDisconnect(myRef).remove();if(hostFlag)await onDisconnect(metaRef).remove();}catch(e){console.warn('onDisconnect registration failed',e);}
+ MB$('#activeRoomPanel').hidden=false;MB$('#roomCodeValue').textContent=code;MB$('#roomStatePill').querySelector('span').textContent='接続中';
+ stopRoomListeners();
+ offMeta=onValue(metaRef,snap=>{if(!snap.exists()){if(currentRoom===code){toastMB('ホストがパーティーを終了しました');resetLocalRoom();}return;}roomMeta=snap.val();if(roomMeta.mode)setModeFromRemote(roomMeta.mode);if(roomMeta.status==='starting'){startCreativeIsland();}},err=>error('ルーム情報を読み込めません：'+friendlyError(err)));
+ offPlayers=onValue(playersRef,snap=>renderRoster(snap.val()||{}),err=>error('参加者一覧を読み込めません：'+friendlyError(err)));
+}
+function resetLocalRoom(){stopRoomListeners();currentRoom=null;isHost=false;ready=false;roomMeta=null;memberData={};MB$('#activeRoomPanel').hidden=true;MB$('#roomCodeValue').textContent='------';const list=MB$('#fbPlayerList');if(list)list.replaceChildren();const head=MB$('.party-head span');if(head)head.textContent='パーティー　1 / 4';const social=MB$('.social-status span');if(social)social.textContent=connected?'Firebase接続済み・部屋未参加':'Firebase再接続中';}
+async function createParty(){
+ error('');if(!requireConnection())return;if(currentRoom){error('すでにパーティーに参加しています。先に退出してください。');return;}
+ const mode=selectedMode(),metaBase={hostUid:user.uid,hostName:getPlayerName(),roomName:getPlayerName()+'のパーティー',mode,maxPlayers:4,status:'lobby',createdAt:Date.now()};let code='';
+ try{
+  for(let i=0;i<12;i++){const candidate=randomCode();const metaRef=ref(db,roomPath(candidate)+'/meta');const result=await runTransaction(metaRef,current=>current===null?metaBase:undefined,{applyLocally:false});if(result.committed){code=candidate;break;}}
+  if(!code)throw new Error('空いている部屋コードを発行できませんでした。もう一度お試しください。');
+  try{await set(ref(db,roomPath(code)+'/players/'+user.uid),await makePlayer(true));}
+  catch(e){await remove(ref(db,roomPath(code)+'/meta')).catch(()=>{});throw e;}
+  await attachRoom(code,true);toastMB('パーティーを作成しました：'+code);
+ }catch(e){console.error(e);error('部屋を作成できませんでした：'+friendlyError(e));}
+}
+async function joinParty(){
+ error('');if(!requireConnection())return;if(currentRoom){error('すでにパーティーに参加しています。先に退出してください。');return;}
+ const code=MB$('#roomCodeInput').value.trim().toUpperCase();if(!/^[A-HJ-NP-Z2-9]{6}$/.test(code)){error('6文字の参加コードを入力してください。');return;}
+ try{
+  const metaRef=ref(db,roomPath(code)+'/meta'),metaSnap=await get(metaRef);if(!metaSnap.exists())throw new Error('部屋が見つかりません。コードを確認してください。');
+  const meta=metaSnap.val();if(meta.status!=='lobby')throw new Error('このパーティーは参加を締め切っています。');
+  const playersSnap=await get(ref(db,roomPath(code)+'/players'));const players=playersSnap.val()||{};
+  if(!players[user.uid]&&Object.keys(players).length>=Number(meta.maxPlayers||4))throw new Error('このパーティーは満員です。');
+  await set(ref(db,roomPath(code)+'/players/'+user.uid),await makePlayer(false));await attachRoom(code,false);MB$('#roomCodeInput').value='';toastMB('パーティーに参加しました');
+ }catch(e){console.error(e);error('参加できませんでした：'+friendlyError(e));}
+}
+function friendlyError(e){
+ const code=e?.code||'';
+ if(code.includes('permission-denied'))return 'アクセスが拒否されました。Realtime Databaseに同梱のセキュリティルールを公開してください。';
+ if(code.includes('auth/operation-not-allowed'))return 'Firebase ConsoleのAuthenticationで使用するログイン方式（匿名認証またはGoogle）を有効にしてください。';
+ if(code.includes('auth/unauthorized-domain')){const launch=getMangoLaunchLocation();return 'Firebase Authenticationが認証元を許可していません。MangoOS内で起動している場合は親ページのドメインを使います。検出した起動元：'+(launch.hostname||'取得できません')+'（'+(launch.origin||'origin不明')+'）。GitHub Pagesなら「mangouser1.github.io」を登録します。MangoOSから起動した場合も、ゲームは同じGitHub Pages上のMangoBattle.htmlとして開きます。現在のページ：'+(launch.href||location.href)+'。ゲーム v0.13.6 を確認してください。';}
+ if(code.includes('auth/popup-blocked'))return 'Googleログインのポップアップがブロックされました。Chromeでポップアップを許可してください。';
+ if(code.includes('auth/popup-closed-by-user'))return 'Googleログイン画面が閉じられました。もう一度お試しください。';
+ if(code.includes('auth/credential-already-in-use'))return 'このGoogleアカウントは別のゲームアカウントに連携済みです。既存アカウントでログインします。';
+ if(code.includes('auth/invalid-api-key'))return 'APIキーが正しくありません。Firebase Webアプリ設定を確認してください。';
+ if(code.includes('network')||code.includes('unavailable'))return 'ネットワークに接続できません。インターネットとRealtime DatabaseのURLを確認してください。';
+ return e?.message||'不明なエラー';
+}
+async function leaveParty(){if(!currentRoom||!user)return;stopCreativeRoomSync();const code=currentRoom,host=isHost;try{await remove(ref(db,roomPath(code)+'/players/'+user.uid));if(host)await remove(ref(db,roomPath(code)+'/meta'));}catch(e){error('退出処理でエラーが発生しました：'+friendlyError(e));}resetLocalRoom();toastMB('パーティーから退出しました');}
+async function toggleReady(){if(!currentRoom||!user)return;try{const next=!ready;await update(ref(db,roomPath(currentRoom)+'/players/'+user.uid),{ready:next,name:getPlayerName(),skin:getSkinName()});ready=next;MB$('#readyBtn').textContent=ready?'準備を取り消す':'準備完了にする';}catch(e){error('準備状態を更新できません：'+friendlyError(e));}}
+async function copyRoomCode(){if(!currentRoom)return;try{await navigator.clipboard.writeText(currentRoom);toastMB('参加コードをコピーしました');}catch{MB$('#roomCodeInput').value=currentRoom;MB$('#roomCodeInput').select();error('コードを選択しました。コピーしてください。');}}
+async function updateHostMode(mode){if(!currentRoom||!isHost||!connected)return;try{await update(ref(db,roomPath(currentRoom)+'/meta'),{mode,maxPlayers:4});}catch(e){error('モードを同期できません：'+friendlyError(e));}}
+async function refreshMyData(){if(!currentRoom||!user)return;try{await update(ref(db,roomPath(currentRoom)+'/players/'+user.uid),{name:getPlayerName(),skin:getSkinName()});}catch(e){console.warn('自分のプロフィール同期に失敗',e);}}
+
+function isGoogleLinked(u=user){return !!u&&!u.isAnonymous&&Array.isArray(u.providerData)&&u.providerData.some(p=>p.providerId==='google.com');}
+function updateGoogleLoginUI(){
+ const status=MB$('#googleAuthStatus'),button=MB$('#googleLoginBtn'),message=MB$('#googleAuthMessage');
+ if(!status||!button)return;
+ if(isGoogleLinked()){
+  const label=user.displayName||user.email||'Googleアカウント';
+  status.textContent='ログイン済み：'+label;
+  button.innerHTML='<span class="google-g-mark">G</span><span>Google連携済み</span>';
+  button.disabled=true;
+ }else if(user?.isAnonymous){
+  status.textContent='現在はゲストとしてプレイ中。Googleアカウントを連携すると、同じアカウントでログインできます。';
+  button.innerHTML='<span class="google-g-mark">G</span><span>Googleアカウントを連携</span>';
+  button.disabled=false;
+ }else if(auth&&user){
+  status.textContent='Googleアカウントでログインして、ゲームのアカウントを利用できます。';
+  button.innerHTML='<span class="google-g-mark">G</span><span>Googleでログイン</span>';
+  button.disabled=false;
+ }else{
+  status.textContent=connectingPromise?'Firebaseへ接続中です。接続完了後にログインできます。':'Firebaseに未接続です。ボタンから再接続できます。';
+  button.innerHTML='<span class="google-g-mark">G</span><span>接続を確認</span>';
+  button.disabled=false;
+ }
+ if(message&&!message.dataset.keep)message.textContent='';
+}
+async function loginWithGoogle(event){
+ event?.preventDefault?.();
+ event?.stopPropagation?.();
+ const button=MB$('#googleLoginBtn'),message=MB$('#googleAuthMessage');
+ if(currentRoom){if(message)message.textContent='Googleログインを切り替える前に、パーティーから退出してください。';return;}
+ const launchLocation=getMangoLaunchLocation();
+ if((location.protocol==='file:'||location.origin==='null')&&(!launchLocation.hostname||!launchLocation.origin||launchLocation.origin==='null')){
+  if(message)message.textContent='HTMLを file:// から直接開くとGoogleログインできません。GitHub PagesまたはHTTPSで公開したMangoOSから起動してください。';
+  return;
+ }
+ if(!auth||!user){
+  // Do not await Firebase initialization and then open a popup in the same click.
+  // Chrome requires the popup to be opened directly from a fresh user gesture.
+  if(button){button.disabled=true;button.innerHTML='<span class="google-g-mark">G</span><span>接続中...</span>';}
+  if(message){message.dataset.keep='1';message.textContent='Firebaseへ接続しています。接続が完了したら、もう一度Googleログインを押してください。';}
+  try{
+   await connectFirebase(DEFAULT_FIREBASE_CONFIG);
+   if(message)message.textContent='接続できました。もう一度「Googleアカウントを連携」を押してください。';
+  }catch(e){
+   console.error('Firebase connection before Google login failed',e);
+   if(message)message.textContent=friendlyError(e);
+  }finally{
+   if(button){button.disabled=false;button.innerHTML='<span class="google-g-mark">G</span><span>Googleでログイン</span>';}
+   const statusEl=MB$('#googleAuthStatus');if(statusEl)statusEl.textContent=auth&&user?'Googleログインの準備ができました。':'Firebaseに接続できません。設定とネットワークを確認してください。';
+  }
+  return;
+ }
+ if(button){button.disabled=true;button.innerHTML='<span class="google-g-mark">G</span><span>Googleログイン画面を開いています...</span>';}
+ if(message){message.dataset.keep='1';message.textContent='Googleのログイン画面を開いています。別ウィンドウが表示されたらアカウントを選択してください。';}
+ try{
+  const provider=new GoogleAuthProvider();
+  provider.setCustomParameters({prompt:'select_account'});
+  // Call the popup API immediately in the trusted button-click stack, before any await.
+  const popupPromise=user.isAnonymous?linkWithPopup(user,provider):signInWithPopup(auth,provider);
+  let result;
+  try{
+   result=await popupPromise;
+  }catch(linkError){
+   if(user?.isAnonymous&&(linkError?.code==='auth/credential-already-in-use'||linkError?.code==='auth/email-already-in-use')){
+    // Reuse the OAuth credential returned by the first popup; do not open a second popup
+    // after an await, which Chrome would normally block.
+    const credential=GoogleAuthProvider.credentialFromError(linkError);
+    if(!credential)throw linkError;
+    await signOut(auth);
+    result=await signInWithCredential(auth,credential);
+   }else throw linkError;
+  }
+  user=result.user;
+  updateGoogleLoginUI();
+  if(message){message.dataset.keep='1';message.textContent='Googleアカウントでログインしました。';}
+  toastMB('Googleログインに成功しました');
+ }catch(e){
+  console.error('Google sign-in failed',e);
+  if(auth&&!auth.currentUser){try{const guest=await signInAnonymously(auth);user=guest.user;}catch(recoveryError){console.warn('Guest session restore failed',recoveryError);}}
+  updateGoogleLoginUI();
+  const msg=friendlyError(e);
+  if(message){message.dataset.keep='1';message.textContent=msg+' ログイン画面は閉じずに残しています。';}
+  if(button){button.disabled=false;button.innerHTML='<span class="google-g-mark">G</span><span>もう一度ログイン</span>';}
+ }finally{
+  if(button&&!isGoogleLinked())button.disabled=false;
+ }
+}
+MB$('#googleLoginBtn').addEventListener('click',loginWithGoogle);
+MB$('#saveFirebaseBtn').addEventListener('click',async()=>{const c=getConfigFromForm();if(!configValid(c)){error('APIキー、Authドメイン、Database URL、プロジェクトID、アプリIDを確認してください。');return;}if(currentRoom){error('Firebase設定を変更する前に、現在のパーティーから退出してください。');return;}try{await connectFirebase(c);}catch(e){console.error(e);setStatus('error','接続できません');error(friendlyError(e));}});
+MB$('#clearFirebaseBtn').addEventListener('click',async()=>{if(currentRoom)await leaveParty();stopRoomListeners();stopConnectionListener();if(app){try{await deleteApp(app);}catch{}app=null;auth=null;db=null;user=null;}localStorage.removeItem(LS_KEY);populateConfig({});setStatus('','Firebase未設定');error('保存したFirebase設定を削除しました。');});
+MB$('#createPartyBtn').addEventListener('click',createParty);MB$('#joinPartyBtn').addEventListener('click',joinParty);MB$('#readyBtn').addEventListener('click',toggleReady);MB$('#leavePartyBtn').addEventListener('click',leaveParty);MB$('#copyRoomCodeBtn').addEventListener('click',copyRoomCode);
+MB$('#roomCodeInput').addEventListener('input',e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,'').slice(0,6)});
+MB$('#playButton').onclick=async()=>{
+ error('');
+ if(!currentRoom){startCreativeIsland();return;}
+ if(!isHost){MB$('#matchText').textContent='ホストが島を開始するまで待機しています。';MB$('#matchOverlay').classList.add('open');return;}
+ try{
+  const entries=Object.values(memberData);
+  if(!entries.length)throw new Error('参加者情報を確認できません。');
+  const notReady=entries.filter(p=>!p.ready);
+  if(notReady.length){MB$('#matchText').textContent='参加者全員が「準備完了」になると開始できます。現在 '+(entries.length-notReady.length)+' / '+entries.length+' 人が準備完了です。';MB$('#matchOverlay').classList.add('open');return;}
+  await update(ref(db,roomPath(currentRoom)+'/meta'),{status:'starting'});
+  startCreativeIsland();
+ }catch(e){error('クリエイティブを開始できません：'+friendlyError(e));}
+}
+// Synchronize host-selected mode and profile changes.
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{if(currentRoom){if(isHost)updateHostMode(b.dataset.mode);else{setTimeout(()=>setModeFromRemote(roomMeta?.mode||'solo'),0);error('このアプリはクリエイティブ専用です。');}}}));
+MB$('#saveName').addEventListener('click',()=>setTimeout(refreshMyData,0));
+const skinObserver=new MutationObserver(()=>refreshMyData());if(MB$('#heroSkinLabel'))skinObserver.observe(MB$('#heroSkinLabel'),{childList:true,characterData:true,subtree:true});
+// Use the Firebase project configuration supplied for MangoBattle and connect on startup.
+(async()=>{
+ const saved=(()=>{try{return JSON.parse(localStorage.getItem(LS_KEY)||'null')}catch{return null}})();
+ const initial=(saved&&saved.projectId===DEFAULT_FIREBASE_CONFIG.projectId)?{...DEFAULT_FIREBASE_CONFIG,...saved}:DEFAULT_FIREBASE_CONFIG;
+ populateConfig(initial);
+ try{await connectFirebase(initial);}catch(e){console.error('Firebase auto-connect failed',e);setStatus('error','Firebaseに接続できません');error(friendlyError(e));MB$('#fbConfigDetails').open=true;}finally{updateGoogleLoginUI();}
+})();
+window.addEventListener('beforeunload',()=>{if(currentRoom&&user&&db){remove(ref(db,roomPath(currentRoom)+'/players/'+user.uid)).catch(()=>{});if(isHost)remove(ref(db,roomPath(currentRoom)+'/meta')).catch(()=>{});}});
+
+
+// ===== Creative-only free-build island (4 players, Firebase RTDB sync) =====
+let creativeActive=false,creativeRenderer=null,creativeScene=null,creativeCamera=null,creativeClock=null,creativeAnim=0;
+let creativePlayer=null,creativePlayerShadow=null,creativeRemotePlayers=new Map(),creativeBuildObjects=new Map();
+let creativeKeys=new Set(),creativeBuildType='wall',creativeBuildMode=true,creativeEditMode=false,creativeRotation=0,creativeSelected=null;
+let creativeMouse={x:0,y:0},creativeYaw=0,creativeVelocityY=0,creativeGrounded=true,creativeLastSync=0;
+let offCreativePlayers=null,offCreativeBuilds=null,creativeSendTimer=null,creativeGroundPlane=null,creativeRaycaster=null,creativePlaneHit=THREE?new THREE.Vector3():null;
+let creativeLocalPlayerId='local';
+const creativeTempV=THREE?new THREE.Vector3():null;
+function creativeToast(text){const el=MB$('#creativeStatus');if(!el)return;el.textContent=text;el.classList.add('show');clearTimeout(el._timer);el._timer=setTimeout(()=>el.classList.remove('show'),2100);}
+function creativeSetCount(){const count=1+creativeRemotePlayers.size;const el=MB$('#creativePlayerCount');if(el)el.textContent='プレイヤー '+Math.min(count,4)+' / 4';}
+function createCreativePiece(data,owner){
+ const root=new THREE.Group();
+ const main=new THREE.MeshStandardMaterial({color:0xb9c8d1,roughness:.58,metalness:.08});
+ const trim=new THREE.MeshStandardMaterial({color:0x647988,roughness:.5,metalness:.12});
+ const bright=new THREE.MeshStandardMaterial({color:0xe5d27c,roughness:.48,metalness:.05});
+ const add=(w,h,d,x,y,z,mat=main)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;root.add(m);return m;};
+ const type=data.type||'wall',variant=data.variant||'full';
+ if(type==='wall'){
+  if(variant==='door'){
+   add(.22,3.2,.18,-1.89,1.6,0,trim);add(.22,3.2,.18,1.89,1.6,0,trim);add(3.78,.32,.18,0,3.34,0,main);
+   add(.12,.85,.20,.93,1.1,.04,bright);
+  }else if(variant==='window'){
+   add(.52,3.5,.18,-1.74,1.75,0,trim);add(.52,3.5,.18,1.74,1.75,0,trim);add(2.95,.65,.18,0,3.18,0,main);add(2.95,.62,.18,0,.31,0,main);add(.12,2.2,.22,0,1.75,0,bright);
+  }else{
+   add(4,3.5,.2,0,1.75,0,main);add(.07,3.5,.22,-1.96,1.75,.02,trim);add(.07,3.5,.22,1.96,1.75,.02,trim);add(4,.08,.22,0,3.48,.02,bright);
+  }
+ }else if(type==='floor'){
+  add(4,.18,4,0,.12,0,main);for(let i=-1;i<=1;i++)add(.07,.2,4,i*1.32,.14,0,trim);for(let i=-1;i<=1;i++)add(4,.2,.07,0,.14,i*1.32,trim);
+ }else if(type==='stair'){
+  for(let i=0;i<8;i++){const h=(i+1)*.22;add(4,.22,.55,0,h/2-.02,1.72-i*.48,main);add(4,.08,.12,0,h-.04,1.98-i*.48,bright);}
+  add(.12,1.9,.12,-1.92,.95,0,trim);add(.12,1.9,.12,1.92,.95,0,trim);
+ }else if(type==='roof'){
+  const slab=add(4,.18,4,0,2.35,0,main);slab.rotation.x=-.48;
+  add(4,.11,.12,0,2.5,1.75,bright);add(4,.11,.12,0,2.5,-1.75,bright);
+ }
+ root.position.set(Number(data.x)||0,Number(data.y)||0,Number(data.z)||0);root.rotation.y=Number(data.rot)||0;
+ root.userData={creativeBuild:true,owner,id:data.id||'',type,variant,buildData:{...data},owner};
+ root.traverse(o=>{if(o.isMesh){o.userData.creativeRoot=root;}});
+ return root;
+}
+function addCreativeBuild(data,owner='local'){
+ if(!creativeScene)return;
+ const id=data.id||('b'+Math.random().toString(36).slice(2));const key=owner+'/'+id;
+ const old=creativeBuildObjects.get(key);
+ if(old){creativeScene.remove(old);creativeBuildObjects.delete(key);}
+ const group=createCreativePiece({...data,id},owner);creativeScene.add(group);creativeBuildObjects.set(key,group);
+ return group;
+}
+function removeCreativeBuild(key){const obj=creativeBuildObjects.get(key);if(obj&&creativeScene)creativeScene.remove(obj);creativeBuildObjects.delete(key);if(creativeSelected===key)creativeSelected=null;}
+function snapCreative(v){return Math.round(v/4)*4;}
+function creativeTargetPoint(){
+ if(!creativePlayer)return {x:0,z:8};
+ creativeRaycaster.setFromCamera(new THREE.Vector2(creativeMouse.x,creativeMouse.y),creativeCamera);
+ const hit=creativeRaycaster.ray.intersectPlane(creativeGroundPlane,creativePlaneHit);
+ if(hit)return {x:snapCreative(hit.x),z:snapCreative(hit.z)};
+ return {x:snapCreative(creativePlayer.position.x+Math.sin(creativeYaw)*6),z:snapCreative(creativePlayer.position.z+Math.cos(creativeYaw)*6)};
+}
+function persistCreativeBuild(data){
+ if(!currentRoom||!user||!db||!connected)return;
+ const path=roomPath(currentRoom)+'/creative/builds/'+user.uid+'/'+data.id;
+ set(ref(db,path),data).catch(e=>{console.warn('Creative build sync failed',e);creativeToast('建築の同期に失敗しました：'+friendlyError(e));});
+}
+function placeCreativeBuild(){
+ if(!creativeBuildMode||!creativePlayer||!creativeScene)return;
+ const p=creativeTargetPoint();const uid=user?.uid||'local';const id=(crypto.randomUUID?crypto.randomUUID():('b'+Date.now()+Math.random().toString(36).slice(2,7)));
+ const data={id,type:creativeBuildType,x:p.x,y:0,z:p.z,rot:creativeRotation,variant:'full',owner:uid,createdAt:Date.now()};
+ const group=addCreativeBuild(data,uid);creativeSelected=uid+'/'+id;
+ if(group)group.traverse(o=>{if(o.isMesh&&o.material){o.material=o.material.clone();o.material.emissive=new THREE.Color(0x18384a);o.material.emissiveIntensity=.04;}});
+ persistCreativeBuild(data);creativeToast(({wall:'壁',floor:'床',stair:'階段',roof:'屋根'})[creativeBuildType]+'を設置しました');
+}
+function selectCreativeBuildAtPointer(){
+ if(!creativeRaycaster||!creativeCamera)return;
+ creativeRaycaster.setFromCamera(new THREE.Vector2(creativeMouse.x,creativeMouse.y),creativeCamera);
+ const meshes=[];for(const g of creativeBuildObjects.values())g.traverse(o=>{if(o.isMesh)meshes.push(o)});
+ const hit=creativeRaycaster.intersectObjects(meshes,false)[0];
+ if(!hit){creativeSelected=null;updateCreativeEditPanel();return;}
+ const root=hit.object.userData.creativeRoot;if(!root)return;
+ creativeSelected=root.userData.owner+'/'+root.userData.id;updateCreativeEditPanel();creativeToast('建築物を選択しました');
+}
+function getSelectedCreativeBuild(){return creativeSelected?creativeBuildObjects.get(creativeSelected):null;}
+function replaceSelectedCreativeBuild(patch){
+ const root=getSelectedCreativeBuild();if(!root)return;
+ const old={...root.userData.buildData,...patch,id:root.userData.id};const owner=root.userData.owner;
+ removeCreativeBuild(creativeSelected);const next=addCreativeBuild(old,owner);creativeSelected=owner+'/'+old.id;
+ if(currentRoom&&user&&db){set(ref(db,roomPath(currentRoom)+'/creative/builds/'+owner+'/'+old.id),old).catch(e=>creativeToast('編集を同期できませんでした'));}
+ updateCreativeEditPanel();
+}
+function deleteSelectedCreativeBuild(){
+ const root=getSelectedCreativeBuild();if(!root)return;
+ const owner=root.userData.owner,id=root.userData.id,key=creativeSelected;removeCreativeBuild(key);
+ if(currentRoom&&user&&db)remove(ref(db,roomPath(currentRoom)+'/creative/builds/'+owner+'/'+id)).catch(e=>creativeToast('削除を同期できませんでした'));
+ updateCreativeEditPanel();creativeToast('建築物を削除しました');
+}
+function updateCreativeEditPanel(){
+ const panel=MB$('#creativeEditPanel'),hint=MB$('#creativeEditHint');if(!panel||!hint)return;
+ panel.classList.toggle('show',creativeEditMode);
+ const item=getSelectedCreativeBuild();hint.textContent=item?'選択中：'+({wall:'壁',floor:'床',stair:'階段',roof:'屋根'}[item.userData.type]||'建築物')+'。形を変更できます。':'編集する建築物をクリックして選択してください。';
+}
+function setCreativeBuildType(type){if(!['wall','floor','stair','roof'].includes(type))return;creativeBuildType=type;document.querySelectorAll('[data-creative-build]').forEach(b=>b.classList.toggle('active',b.dataset.creativeBuild===type));const names={wall:'壁',floor:'床',stair:'階段',roof:'屋根'};MB$('#creativeModePill').textContent=(creativeEditMode?'編集モード':'建築モード')+' ・ '+names[type];}
+function toggleCreativeBuildMode(){creativeBuildMode=!creativeBuildMode;if(creativeBuildMode)creativeEditMode=false;MB$('#creativeBuildToggle').classList.toggle('active',creativeBuildMode);MB$('#creativeBuildToggle').textContent='建築 '+(creativeBuildMode?'ON':'OFF');MB$('#creativeEditToggle').classList.toggle('active',creativeEditMode);MB$('#creativeEditToggle').textContent='編集 '+(creativeEditMode?'ON':'OFF');updateCreativeEditPanel();}
+function toggleCreativeEditMode(){creativeEditMode=!creativeEditMode;if(creativeEditMode)creativeBuildMode=false;MB$('#creativeEditToggle').classList.toggle('active',creativeEditMode);MB$('#creativeEditToggle').textContent='編集 '+(creativeEditMode?'ON':'OFF');MB$('#creativeBuildToggle').classList.toggle('active',creativeBuildMode);MB$('#creativeBuildToggle').textContent='建築 '+(creativeBuildMode?'ON':'OFF');updateCreativeEditPanel();MB$('#creativeModePill').textContent=creativeEditMode?'編集モード':'建築モード';}
+function rotateCreative(){if(creativeEditMode&&creativeSelected){const root=getSelectedCreativeBuild();if(root){replaceSelectedCreativeBuild({rot:((root.userData.buildData.rot||0)+Math.PI/2)%(Math.PI*2)});return;}}creativeRotation=(creativeRotation+Math.PI/2)%(Math.PI*2);creativeToast('設置方向を90度回転しました');}
+function updateCreativePlayers(snapshot){
+ const data=snapshot||{};let active=0;
+ for(const [uid,p] of Object.entries(data)){
+  if(uid===user?.uid)continue;active++;
+  let obj=creativeRemotePlayers.get(uid);
+  if(!obj){obj=buildStylizedSkin(SKINS[p.skin]?p.skin:'urban');creativeScene.add(obj);creativeRemotePlayers.set(uid,obj);}
+  obj.position.set(Number(p.x)||0,Number(p.y)||0,Number(p.z)||0);obj.rotation.y=Number(p.yaw)||0;
+ }
+ for(const [uid,obj] of [...creativeRemotePlayers])if(!data[uid]){creativeScene.remove(obj);creativeRemotePlayers.delete(uid);}
+ creativeSetCount();
+}
+function updateCreativeBuildSnapshot(snapshot){
+ const desired=new Set();
+ for(const [uid,items] of Object.entries(snapshot||{}))for(const [id,data] of Object.entries(items||{})){
+  const key=uid+'/'+id;desired.add(key);const old=creativeBuildObjects.get(key);
+  const serial=JSON.stringify(data);
+  if(!old||old.userData.serial!==serial){if(old)removeCreativeBuild(key);const obj=addCreativeBuild({...data,id},uid);if(obj)obj.userData.serial=serial;}
+ }
+ for(const key of [...creativeBuildObjects.keys()])if(!desired.has(key))removeCreativeBuild(key);
+}
+function stopCreativeRoomSync(){
+ if(offCreativePlayers){offCreativePlayers();offCreativePlayers=null;}if(offCreativeBuilds){offCreativeBuilds();offCreativeBuilds=null;}
+ if(creativeSendTimer){clearInterval(creativeSendTimer);creativeSendTimer=null;}
+ if(currentRoom&&user&&db)remove(ref(db,roomPath(currentRoom)+'/creative/players/'+user.uid)).catch(()=>{});
+ for(const [uid,obj] of creativeRemotePlayers){if(creativeScene)creativeScene.remove(obj);}creativeRemotePlayers.clear();
+}
+function startCreativeRoomSync(){
+ stopCreativeRoomSync();if(!currentRoom||!user||!db||!connected){creativeSetCount();return;}
+ const playersRef=ref(db,roomPath(currentRoom)+'/creative/players');
+ const buildsRef=ref(db,roomPath(currentRoom)+'/creative/builds');
+ const myRef=ref(db,roomPath(currentRoom)+'/creative/players/'+user.uid);
+ onDisconnect(myRef).remove().catch(()=>{});
+ offCreativePlayers=onValue(playersRef,s=>updateCreativePlayers(s.val()||{}),e=>creativeToast('プレイヤー同期エラー：'+friendlyError(e)));
+ offCreativeBuilds=onValue(buildsRef,s=>updateCreativeBuildSnapshot(s.val()||{}),e=>creativeToast('建築同期エラー：'+friendlyError(e)));
+ creativeSendTimer=setInterval(()=>{
+  if(!creativeActive||!creativePlayer||!currentRoom||!user||!db||!connected)return;
+  update(myRef,{name:getPlayerName(),skin:activeSkin,x:Number(creativePlayer.position.x.toFixed(2)),y:Number(creativePlayer.position.y.toFixed(2)),z:Number(creativePlayer.position.z.toFixed(2)),yaw:Number(creativeYaw.toFixed(3)),updatedAt:Date.now()}).catch(()=>{});
+ },220);
+}
+function ensureCreativeRenderer(){
+ if(creativeRenderer){creativeResize();return;}
+ const canvas=MB$('#creativeCanvas');
+ creativeRenderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+ creativeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,1.35));creativeRenderer.outputColorSpace=THREE.SRGBColorSpace;creativeRenderer.shadowMap.enabled=true;creativeRenderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ creativeScene=new THREE.Scene();creativeScene.background=new THREE.Color(0x83c5ec);creativeScene.fog=new THREE.Fog(0x83c5ec,95,230);
+ creativeCamera=new THREE.PerspectiveCamera(62,1,.1,400);
+ creativeClock=new THREE.Clock();creativeRaycaster=new THREE.Raycaster();creativeGroundPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+ creativeScene.add(new THREE.HemisphereLight(0xdaf1ff,0x4e623f,2.1));
+ const sun=new THREE.DirectionalLight(0xffe3bd,2.25);sun.position.set(-35,65,28);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);creativeScene.add(sun);
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(220,220),new THREE.MeshStandardMaterial({color:0x6ea653,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.06;ground.receiveShadow=true;creativeScene.add(ground);
+ const grid=new THREE.GridHelper(220,55,0xd9e7b0,0xc3d5ab);grid.position.y=-.035;grid.material.transparent=true;grid.material.opacity=.16;creativeScene.add(grid);
+ const edgeMat=new THREE.MeshStandardMaterial({color:0x457d9a,roughness:.9});
+ for(let i=-1;i<=1;i+=2){const ridge=new THREE.Mesh(new THREE.BoxGeometry(220,1,1.5),edgeMat);ridge.position.set(0,-.7,i*111);creativeScene.add(ridge);const side=new THREE.Mesh(new THREE.BoxGeometry(1.5,1,220),edgeMat);side.position.set(i*111,-.7,0);creativeScene.add(side);}
+ creativePlayer=buildStylizedSkin(activeSkin);creativePlayer.position.set(0,0,0);creativeScene.add(creativePlayer);
+ creativePlayerShadow=new THREE.Mesh(new THREE.CircleGeometry(.62,24),new THREE.MeshBasicMaterial({color:0x183522,transparent:true,opacity:.28}));creativePlayerShadow.rotation.x=-Math.PI/2;creativePlayerShadow.position.y=.015;creativeScene.add(creativePlayerShadow);
+ creativeYaw=0;creativeCamera.position.set(0,4.8,-7.6);creativeCamera.lookAt(0,1.4,2.1);creativeResize();
+ canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();creativeMouse.x=((e.clientX-r.left)/r.width)*2-1;creativeMouse.y=-(((e.clientY-r.top)/r.height)*2-1);});
+ canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();if(creativeEditMode)selectCreativeBuildAtPointer();else placeCreativeBuild();});
+ canvas.addEventListener('contextmenu',e=>e.preventDefault());
+ window.addEventListener('resize',creativeResize);
+}
+function creativeResize(){if(!creativeRenderer||!creativeCamera)return;const el=MB$('#creativeScreen'),w=Math.max(1,el.clientWidth),h=Math.max(1,el.clientHeight);creativeCamera.aspect=w/h;creativeCamera.updateProjectionMatrix();creativeRenderer.setSize(w,h,false);}
+function animateCreative(){if(!creativeActive||!creativeRenderer)return;creativeAnim=requestAnimationFrame(animateCreative);const dt=Math.min(creativeClock.getDelta(),.05);
+ if(!pauseIsOpen()){
+  let dx=0,dz=0;if(creativeKeys.has('KeyW'))dz+=1;if(creativeKeys.has('KeyS'))dz-=1;if(creativeKeys.has('KeyA'))dx-=1;if(creativeKeys.has('KeyD'))dx+=1;
+  const len=Math.hypot(dx,dz)||1;dx/=len;dz/=len;const speed=creativeKeys.has('ShiftLeft')||creativeKeys.has('ShiftRight')?10:6;
+  const sin=Math.sin(creativeYaw),cos=Math.cos(creativeYaw);creativePlayer.position.x+=(dx*cos+dz*sin)*speed*dt;creativePlayer.position.z+=(-dx*sin+dz*cos)*speed*dt;
+  if(creativeKeys.has('Space')&&creativeGrounded){creativeVelocityY=8.2;creativeGrounded=false;}
+  creativeVelocityY-=22*dt;creativePlayer.position.y+=creativeVelocityY*dt;if(creativePlayer.position.y<=0){creativePlayer.position.y=0;creativeVelocityY=0;creativeGrounded=true;}
+  if(dx||dz)creativePlayer.rotation.y=creativeYaw+Math.atan2(dx,dz);
+  creativePlayerShadow.position.set(creativePlayer.position.x,.015,creativePlayer.position.z);
+ }
+ const behind=new THREE.Vector3(-Math.sin(creativeYaw)*7,4.7,-Math.cos(creativeYaw)*7).add(creativePlayer.position);
+ creativeCamera.position.lerp(behind,.12);const look=new THREE.Vector3(creativePlayer.position.x+Math.sin(creativeYaw)*1.3,creativePlayer.position.y+1.45,creativePlayer.position.z+Math.cos(creativeYaw)*1.3);creativeCamera.lookAt(look);
+ creativeRenderer.render(creativeScene,creativeCamera);
+}
+function pauseIsOpen(){return MB$('#creativePauseSidebar')?.classList.contains('open')||false;}
+function startCreativeIsland(){
+ if(creativeActive)return;
+ if(!THREE){creativeToast('3Dライブラリを読み込めませんでした。インターネット接続を確認して再読み込みしてください。');return;}
+ try{ensureCreativeRenderer();}catch(e){console.error(e);creativeToast('3D島を開始できませんでした。WebGL対応を確認してください。');return;}
+ creativeActive=true;window.__MangoBattleSceneMode='creative';MB$('#boot').classList.remove('show');MB$('#lobby').classList.remove('show');MB$('#creativeScreen').classList.add('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');
+ creativeKeys.clear();creativeBuildMode=true;creativeEditMode=false;creativeSelected=null;setCreativeBuildType('wall');updateCreativeEditPanel();creativeSetCount();creativeClock.start();animateCreative();startCreativeRoomSync();creativeToast(currentRoom?'フレンドと共有するクリエイティブ島に参加しました':'クリエイティブ島に入りました。自由に建築できます');
+}
+function stopCreativeIsland(){
+ if(!creativeActive)return;creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
+}
+function openPauseSidebar(tab='party'){
+ const sidebar=MB$('#creativePauseSidebar');if(!sidebar)return;sidebar.classList.add('open');sidebar.setAttribute('aria-hidden','false');renderCreativePauseTab(tab);
+}
+function closePauseSidebar(){const sidebar=MB$('#creativePauseSidebar');if(!sidebar)return;sidebar.classList.remove('open');sidebar.setAttribute('aria-hidden','true');}
+function togglePauseSidebar(){if(pauseIsOpen())closePauseSidebar();else openPauseSidebar('party');}
+function pauseRow(title,detail,right=''){return `<div class="creative-pause-row"><div><b>${title}</b>${detail?`<small>${detail}</small>`:''}</div>${right}</div>`;}
+function renderCreativePauseTab(tab){
+ document.querySelectorAll('[data-pause-tab]').forEach(b=>b.classList.toggle('active',b.dataset.pauseTab===tab));
+ const title=MB$('#creativePauseTitle'),sub=MB$('#creativePauseSubtitle'),body=MB$('#creativePauseBody');if(!body)return;
+ const roster=Object.entries(memberData||{}).sort((a,b)=>Number(!!b[1]?.host)-Number(!!a[1]?.host));
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const pages={
+  profile:['プロフィール','プレイヤー情報',`<div class="creative-pause-card">${pauseRow(esc(getPlayerName()),isGoogleLinked(user)?'Googleアカウントでログイン済み':'ゲスト・ローカルプロフィール', '<span class="creative-ready-dot"></span>オンライン')}</div><button class="creative-pause-button" id="pauseProfileEdit">プレイヤー名を変更</button>`],
+  party:['パーティー','最大4人のクリエイティブパーティー',`<div class="creative-pause-card">${pauseRow('参加コード',currentRoom||'未作成','<b>'+ (currentRoom?'参加中':'ソロ')+'</b>')}${roster.length?roster.map(([uid,p])=>pauseRow(esc(p.name||'プレイヤー'),p.host?'パーティーリーダー':(p.ready?'準備完了':'準備中'),'<span class="creative-ready-dot"></span>')).join(''):pauseRow(esc(getPlayerName()),'この端末のプレイヤー','<span class="creative-ready-dot"></span>')}</div><button class="creative-pause-button" id="pauseInvite">フレンドを招待・コードを表示</button><button class="creative-pause-button" id="pauseReady">準備状態を切り替える</button>`],
+  friends:['フレンドを追加','参加コードでフレンドと合流',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">Firebaseのパーティーコードをフレンドに共有して、同じ島へ参加してもらえます。</p>${pauseRow('パーティー人数','最大4人')}</div><button class="creative-pause-button" id="pauseInvite2">招待コードを開く</button>`],
+  looking:['パーティー参加希望','フレンドと一緒に遊ぶ',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">参加コードを持っている場合は、ここからパーティーに参加できます。</p></div><button class="creative-pause-button" id="pauseJoin">コードで参加</button>`],
+  voice:['ボイスチャット','ボイス機能の状態',`<div class="creative-pause-card">${pauseRow('音声チャンネル','この試作版では音声通話は未実装')}${pauseRow('マイク','未接続','—')}${pauseRow('スピーカー','未接続','—')}</div><p style="font-size:10px;color:#b9c9d8">ボイスチャットは今後の追加機能です。現在は参加者一覧と建築同期を利用できます。</p>`],
+  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('移動','W A S D')}${pauseRow('ジャンプ','Space')}${pauseRow('建築モード','B')}${pauseRow('編集モード','G')}${pauseRow('建築物の回転','R')}</div><button class="creative-pause-button" id="pauseQuality">ロビーの描画品質設定を開く</button>`],
+  game:['ゲームメニュー','島の設定',`<div class="creative-pause-card">${pauseRow('島の種類','平坦なフリービルド島')}${pauseRow('建築素材','無制限')}${pauseRow('最大プレイヤー','4人')}</div><button class="creative-pause-button" id="pauseReturnHub">島をリセット（建築は残す）</button>`],
+  exit:['終了','島・パーティーの退出',`<button class="creative-pause-button" id="pauseReturnLobby">ロビーへ戻る</button><button class="creative-pause-button danger" id="pauseCloseApp">MangoBattleを終了</button><p style="font-size:10px;color:#bac9d8;line-height:1.6;margin-top:10px">終了するとこの島でのプレイを中断します。パーティーから退出する操作は別に選べます。</p>`]
+ };
+ const page=pages[tab]||pages.party;title.textContent=page[0];sub.textContent=page[1];body.innerHTML=page[2];
+ const byId=id=>MB$('#'+id);
+ byId('pauseInvite')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('partyOverlay')});byId('pauseInvite2')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('partyOverlay')});byId('pauseJoin')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('partyOverlay');setTimeout(()=>MB$('#roomCodeInput')?.focus(),100)});
+ byId('pauseReady')?.addEventListener('click',()=>toggleReady().then(()=>renderCreativePauseTab('party')));
+ byId('pauseProfileEdit')?.addEventListener('click',()=>{closePauseSidebar();MB$('#nameInput').value=getPlayerName();showOverlay('profileOverlay')});
+ byId('pauseQuality')?.addEventListener('click',()=>{closePauseSidebar();showOverlay('settingsOverlay')});
+ byId('pauseReturnHub')?.addEventListener('click',()=>{for(const [key] of creativeBuildObjects)if(key.startsWith((user?.uid||'local')+'/'))removeCreativeBuild(key);if(currentRoom&&user&&db)remove(ref(db,roomPath(currentRoom)+'/creative/builds/'+user.uid)).catch(()=>{});creativeSelected=null;creativeToast('自分の建築物をリセットしました');renderCreativePauseTab('game')});
+ byId('pauseReturnLobby')?.addEventListener('click',()=>stopCreativeIsland());
+ byId('pauseCloseApp')?.addEventListener('click',()=>{if(window.parent!==window)window.parent.postMessage({type:'MANGOOS_CLOSE_ACTIVE_APP',app:'mangobattle'},location.origin==='null'?'*':location.origin);else{stopCreativeIsland();window.__MangoBattleSceneMode='boot';MB$('#lobby').classList.remove('show');MB$('#boot').classList.add('show');}});
+}
+// The classic key handler below calls this function. Keeping the handler separate
+// from the Firebase module prevents a CDN/import failure from disabling Escape.
+window.__MangoBattleHandleEscape=function(){
+ const activeOverlay=document.querySelector('.overlay.open');
+ if(activeOverlay){activeOverlay.classList.remove('open');return;}
+ const sidebar=MB$('#creativePauseSidebar');
+ if(!sidebar)return;
+ if(sidebar.classList.contains('open')){closePauseSidebar();return;}
+ const lobbyVisible=!!MB$('#lobby')?.classList.contains('show');
+ const creativeVisible=!!MB$('#creativeScreen')?.classList.contains('show');
+ if(lobbyVisible||creativeVisible||creativeActive){
+  creativeKeys.clear();
+  openPauseSidebar('party');
+ }
+};
+window.addEventListener('keyup',e=>{creativeKeys.delete(e.code)},true);
+window.addEventListener('blur',()=>creativeKeys.clear());
+MB$('#creativePauseButton').addEventListener('click',togglePauseSidebar);
+MB$('#creativeExit').addEventListener('click',()=>{openPauseSidebar('exit')});
+MB$('#creativeBuildToggle').addEventListener('click',toggleCreativeBuildMode);
+MB$('#creativeEditToggle').addEventListener('click',toggleCreativeEditMode);
+MB$('#creativeRotate').addEventListener('click',rotateCreative);
+MB$('#creativeDelete').addEventListener('click',deleteSelectedCreativeBuild);
+MB$('#creativeEditRotate').addEventListener('click',rotateCreative);
+MB$('#creativeEditDelete').addEventListener('click',deleteSelectedCreativeBuild);
+document.querySelectorAll('[data-creative-build]').forEach(b=>b.addEventListener('click',()=>setCreativeBuildType(b.dataset.creativeBuild)));
+document.querySelectorAll('[data-wall-variant]').forEach(b=>b.addEventListener('click',()=>{const root=getSelectedCreativeBuild();if(!root){creativeToast('先に編集する壁を選択してください');return;}if(root.userData.type!=='wall'){creativeToast('ドアと窓の編集は壁で使えます');return;}replaceSelectedCreativeBuild({variant:b.dataset.wallVariant});creativeToast('壁の形を編集しました');}));
+document.querySelectorAll('[data-pause-tab]').forEach(b=>b.addEventListener('click',()=>renderCreativePauseTab(b.dataset.pauseTab)));
+document.querySelectorAll('[data-pause-close]').forEach(b=>b.addEventListener('click',closePauseSidebar));
+// MangoOS manages the browser/fullscreen presentation; the game does not request it.
+// Keep Creative presence synced if a party is already open when the game starts.
+window.__MangoBattleCreative={start:startCreativeIsland,stop:stopCreativeIsland,isActive:()=>creativeActive,buildCount:()=>creativeBuildObjects.size};
+
+</script>
+
+<script id="mangobattle-escape-independent">
+(function(){
+ 'use strict';
+ function fallbackEscapeMenu(){
+  const openOverlay=document.querySelector('.overlay.open');
+  if(openOverlay){openOverlay.classList.remove('open');return;}
+  const sidebar=document.getElementById('creativePauseSidebar');
+  if(!sidebar)return;
+  if(sidebar.classList.contains('open')){
+   sidebar.classList.remove('open');sidebar.setAttribute('aria-hidden','true');return;
+  }
+  const lobby=document.getElementById('lobby');
+  const creative=document.getElementById('creativeScreen');
+  if(!lobby?.classList.contains('show')&&!creative?.classList.contains('show'))return;
+  const title=document.getElementById('creativePauseTitle');
+  const subtitle=document.getElementById('creativePauseSubtitle');
+  const body=document.getElementById('creativePauseBody');
+  if(title)title.textContent='ゲームメニュー';
+  if(subtitle)subtitle.textContent='MangoBattle';
+  if(body)body.innerHTML='<div class="creative-pause-card"><p>ゲームメニューを開いています。</p><p>プロフィール、パーティー、フレンド、設定などを利用できます。</p><button class="creative-pause-button" id="mbEscapeFallbackSettings">設定</button><button class="creative-pause-button" id="mbEscapeFallbackLobby">ロビーに戻る</button><button class="creative-pause-button" id="mbEscapeFallbackClose">閉じる</button></div>';
+  sidebar.classList.add('open');sidebar.setAttribute('aria-hidden','false');
+  document.getElementById('mbEscapeFallbackSettings')?.addEventListener('click',()=>{sidebar.classList.remove('open');sidebar.setAttribute('aria-hidden','true');document.getElementById('settingsOverlay')?.classList.add('open');});
+  document.getElementById('mbEscapeFallbackLobby')?.addEventListener('click',()=>{sidebar.classList.remove('open');sidebar.setAttribute('aria-hidden','true');if(creative){creative.classList.remove('show');}if(lobby)lobby.classList.add('show');window.__MangoBattleSceneMode='lobby';});
+  document.getElementById('mbEscapeFallbackClose')?.addEventListener('click',()=>{sidebar.classList.remove('open');sidebar.setAttribute('aria-hidden','true');});
+ }
+ document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  if(e.repeat)return;
+  if(typeof window.__MangoBattleHandleEscape==='function')window.__MangoBattleHandleEscape();
+  else fallbackEscapeMenu();
+ },true);
+})();
+</script>
+
+</body></html>
