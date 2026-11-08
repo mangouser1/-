@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#14263c">
-<meta name="mangobattle-version" content="0.14.0">
+<meta name="mangobattle-version" content="0.14.1">
 <meta name="mangoos-app" content="mangobattle">
 <script id="mango-auth-origin-normalizer">
 /* MangoOS may display stored HTML apps through iframe.srcdoc. In that context
@@ -623,6 +623,12 @@ function buildStylizedSkin(id){
  for(const x of [-.28,.28])box(.16,.18,.12,id==='explorer'?accent:dark,x,1.05,.25);
  g.position.set(4.1,0,0);g.userData.skinId=id;return g;
 }
+// Shared bridge: the lobby and creative renderer live in separate ES modules.
+// Without this bridge the Creative module cannot access SKINS/activeSkin or
+// buildStylizedSkin, so renderer setup stops before adding the player avatar.
+window.__MBBuildStylizedSkin=(id)=>buildStylizedSkin(id);
+window.__MBGetActiveSkin=()=>activeSkin;
+window.__MBHasSkin=(id)=>Object.prototype.hasOwnProperty.call(SKINS,id);
 function init3D(){
  scene=new THREE.Scene();
  camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);camera.position.set(2.1,2.65,10.8);camera.lookAt(4.1,1.55,0);
@@ -1131,7 +1137,7 @@ function updateCreativePlayers(snapshot){
  for(const [uid,p] of Object.entries(data)){
   if(uid===user?.uid)continue;active++;
   let obj=creativeRemotePlayers.get(uid);
-  if(!obj){obj=buildStylizedSkin(SKINS[p.skin]?p.skin:'urban');creativeScene.add(obj);creativeRemotePlayers.set(uid,obj);}
+  if(!obj){obj=window.__MBBuildStylizedSkin(window.__MBHasSkin(p.skin)?p.skin:'urban');creativeScene.add(obj);creativeRemotePlayers.set(uid,obj);}
   obj.position.set(Number(p.x)||0,Number(p.y)||0,Number(p.z)||0);obj.rotation.y=Number(p.yaw)||0;
  }
  for(const [uid,obj] of [...creativeRemotePlayers])if(!data[uid]){creativeScene.remove(obj);creativeRemotePlayers.delete(uid);}
@@ -1162,7 +1168,7 @@ function startCreativeRoomSync(){
  offCreativeBuilds=onValue(buildsRef,s=>updateCreativeBuildSnapshot(s.val()||{}),e=>creativeToast('建築同期エラー：'+friendlyError(e)));
  creativeSendTimer=setInterval(()=>{
   if(!creativeActive||!creativePlayer||!currentRoom||!user||!db||!connected)return;
-  update(myRef,{name:getPlayerName(),skin:activeSkin,x:Number(creativePlayer.position.x.toFixed(2)),y:Number(creativePlayer.position.y.toFixed(2)),z:Number(creativePlayer.position.z.toFixed(2)),yaw:Number(creativeYaw.toFixed(3)),updatedAt:Date.now()}).catch(()=>{});
+  update(myRef,{name:getPlayerName(),skin:window.__MBGetActiveSkin(),x:Number(creativePlayer.position.x.toFixed(2)),y:Number(creativePlayer.position.y.toFixed(2)),z:Number(creativePlayer.position.z.toFixed(2)),yaw:Number(creativeYaw.toFixed(3)),updatedAt:Date.now()}).catch(()=>{});
  },220);
 }
 function ensureCreativeRenderer(){
@@ -1203,7 +1209,7 @@ function ensureCreativeRenderer(){
  }
  // Simple practice structure at the edge of the starting area.
  const pad=new THREE.Mesh(new THREE.BoxGeometry(12,.24,12),new THREE.MeshStandardMaterial({color:0x89969a,roughness:.8}));pad.position.set(0,.08,17);pad.receiveShadow=true;creativeScene.add(pad);
- creativePlayer=buildStylizedSkin(activeSkin);creativePlayer.position.set(0,0,0);creativeScene.add(creativePlayer);
+ creativePlayer=window.__MBBuildStylizedSkin(window.__MBGetActiveSkin());creativePlayer.position.set(0,0,0);creativeScene.add(creativePlayer);creativePlayer.visible=true;creativePlayer.traverse(o=>{if(o.isMesh){o.visible=true;o.castShadow=true;o.frustumCulled=false;}});
  creativePlayerShadow=new THREE.Mesh(new THREE.CircleGeometry(.62,24),new THREE.MeshBasicMaterial({color:0x183522,transparent:true,opacity:.28}));creativePlayerShadow.rotation.x=-Math.PI/2;creativePlayerShadow.position.y=.015;creativeScene.add(creativePlayerShadow);
  creativeYaw=0;creativeCamera.position.set(0,4.8,-7.6);creativeCamera.lookAt(0,1.4,2.1);creativeResize();
  canvas.addEventListener('pointermove',e=>{
@@ -1284,9 +1290,9 @@ function animateCreative(){if(!creativeActive||!creativeRenderer)return;creative
   if(dx||dz)creativePlayer.rotation.y=creativeYaw+Math.atan2(dx,dz);
   creativePlayerShadow.position.set(creativePlayer.position.x,.015,creativePlayer.position.z);
  }
- const distance=7.6,horizontal=Math.cos(creativePitch)*distance,height=1.1+Math.sin(creativePitch)*distance;
+ const distance=6.25,horizontal=Math.cos(creativePitch)*distance,height=1.05+Math.sin(creativePitch)*distance;
  const behind=new THREE.Vector3(-Math.sin(creativeYaw)*horizontal,height,-Math.cos(creativeYaw)*horizontal).add(creativePlayer.position);
- creativeCamera.position.lerp(behind,.16);const look=new THREE.Vector3(creativePlayer.position.x+Math.sin(creativeYaw)*1.0,creativePlayer.position.y+1.45,creativePlayer.position.z+Math.cos(creativeYaw)*1.0);creativeCamera.lookAt(look);
+ creativeCamera.position.lerp(behind,.16);const look=new THREE.Vector3(creativePlayer.position.x+Math.sin(creativeYaw)*.75,creativePlayer.position.y+1.42,creativePlayer.position.z+Math.cos(creativeYaw)*.75);creativeCamera.lookAt(look);
  creativeRenderer.render(creativeScene,creativeCamera);
  if(!creativeFrameDiagnosticDone&&creativeRenderer.info?.render?.calls>0){creativeFrameDiagnosticDone=true;creativeToast('3D島の描画を開始しました');}
  }catch(err){
@@ -1302,6 +1308,8 @@ function startCreativeIsland(){
  // IMPORTANT: .screen is display:none before play. Reveal it before measuring the
  // canvas; otherwise Three.js receives a 1x1 drawing buffer and only sky color appears.
  MB$('#boot').classList.remove('show');MB$('#lobby').classList.remove('show');MB$('#creativeScreen').classList.add('show');
+ // Wait for the newly-visible creative view to receive layout before creating WebGL.
+ const visibleRect=MB$('#creativeScreen').getBoundingClientRect();if(visibleRect.width<80||visibleRect.height<80){MB$('#creativeScreen').style.display='block';}
  try{ensureCreativeRenderer();creativeResize();}catch(e){console.error(e);MB$('#creativeScreen').classList.remove('show');MB$('#lobby').classList.add('show');creativeToast('3D島を開始できませんでした：'+(e?.message||'WebGL対応を確認してください'));return;}
  if(!currentRoom){removeNonSoloBuilds();loadSoloCreativeBuilds();}
  if(currentRoom&&creativePlayer){const roster=Object.keys(memberData||{}).sort();const idx=Math.max(0,roster.indexOf(user?.uid));const angle=idx*Math.PI/2;creativePlayer.position.set(Math.cos(angle)*7,0,Math.sin(angle)*7);creativeYaw=angle+Math.PI;}
@@ -1309,7 +1317,7 @@ function startCreativeIsland(){
  creativeKeys.clear();creativeJumpQueued=false;creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeBuildMode=true;creativeEditMode=false;creativeSelected=null;creativeLastFrameTime=0;creativeFrameDiagnosticDone=false;creativePitch=.56;setCreativeBuildType('wall');updateCreativeEditPanel();creativeSetCount();creativeClock.start();
  // MangoOS window transitions may still be settling; resize after each paint frame.
  requestAnimationFrame(()=>requestAnimationFrame(()=>{creativeResize();if(creativeRenderer&&creativeScene&&creativeCamera)creativeRenderer.render(creativeScene,creativeCamera);}));
- MB$('#creativeCanvas')?.focus?.();animateCreative();startCreativeRoomSync();creativeToast(currentRoom?'フレンドと共有するクリエイティブ島に参加しました':'ソロのクリエイティブ島に入りました。自由に建築できます');
+ MB$('#creativeCanvas')?.focus?.();animateCreative();startCreativeRoomSync();creativeToast('三人称キャラクターを表示しました。'+(currentRoom?'フレンドと共有する島に参加しました':'ソロ島に入りました'));
 }
 function stopCreativeIsland(){
  if(!creativeActive)return;if(!currentRoom)saveSoloCreativeBuilds();creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();creativeJumpQueued=false;creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeLookDrag=null;stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
@@ -1331,7 +1339,7 @@ function renderCreativePauseTab(tab){
   friends:['フレンドを追加','参加コードでフレンドと合流',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">Firebaseのパーティーコードをフレンドに共有して、同じ島へ参加してもらえます。</p>${pauseRow('パーティー人数','最大4人')}</div><button class="creative-pause-button" id="pauseInvite2">招待コードを開く</button>`],
   looking:['パーティー参加希望','フレンドと一緒に遊ぶ',`<div class="creative-pause-card"><p style="font-size:11px;line-height:1.7;color:#c7d5e4">参加コードを持っている場合は、ここからパーティーに参加できます。</p></div><button class="creative-pause-button" id="pauseJoin">コードで参加</button>`],
   voice:['ボイスチャット','ボイス機能の状態',`<div class="creative-pause-card">${pauseRow('音声チャンネル','この試作版では音声通話は未実装')}${pauseRow('マイク','未接続','—')}${pauseRow('スピーカー','未接続','—')}</div><p style="font-size:10px;color:#b9c9d8">ボイスチャットは今後の追加機能です。現在は参加者一覧と建築同期を利用できます。</p>`],
-  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('視点','三人称カメラ。PCはマウス、スマホは右側スワイプ')}${pauseRow('移動','PC：W A S D／スマホ：左スティック')}${pauseRow('ジャンプ・ダッシュ・しゃがみ','Space・Shift・Ctrl')}${pauseRow('建築ピース','Q 壁／X 床／C 階段／V 屋根（数字1～4も可）')}${pauseRow('編集・回転','G または F／R')}</div><button class="creative-pause-button" id="pauseQuality">グラフィック設定を開く</button>`],
+  settings:['設定','クリエイティブ操作',`<div class="creative-pause-card">${pauseRow('視点','三人称視点。キャラクターの背後をカメラが追従。PCはマウス、スマホは右側スワイプ')}${pauseRow('移動','PC：W A S D／スマホ：左スティック')}${pauseRow('ジャンプ・ダッシュ・しゃがみ','Space・Shift・Ctrl')}${pauseRow('建築ピース','Q 壁／X 床／C 階段／V 屋根（数字1～4も可）')}${pauseRow('編集・回転','G または F／R')}</div><button class="creative-pause-button" id="pauseQuality">グラフィック設定を開く</button>`],
   game:['ゲームメニュー','島の設定',`<div class="creative-pause-card">${pauseRow('島の種類','平坦なフリービルド島')}${pauseRow('建築素材','無制限')}${pauseRow('最大プレイヤー','4人')}</div><button class="creative-pause-button" id="pauseReturnHub">島をリセット（建築は残す）</button>`],
   exit:['終了','島・パーティーの退出',`<button class="creative-pause-button" id="pauseReturnLobby">ロビーへ戻る</button><button class="creative-pause-button danger" id="pauseCloseApp">MangoBattleを終了</button><p style="font-size:10px;color:#bac9d8;line-height:1.6;margin-top:10px">終了するとこの島でのプレイを中断します。パーティーから退出する操作は別に選べます。</p>`]
  };
