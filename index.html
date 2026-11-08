@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#f3f6fc" />
 <meta name="mangoos-version" content="1.27.0" />
-<title>MangoOS 1.29.0</title>
+<title>MangoOS 1.30.0</title>
 <style>
 :root{--accent:#4b86e8;--accent2:#78a9f5;--taskbar-h:44px;--panel-bg:rgba(248,250,255,.88);--surface:#fff;--surface2:#f4f6fa;--ink:#20232b;--muted:#687080;--line:rgba(30,40,60,.12);--shadow:0 16px 48px rgba(20,30,55,.22);--radius:12px;color-scheme:light}
 *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:"Segoe UI","Yu Gothic UI",Meiryo,system-ui,sans-serif;color:var(--ink);user-select:none}button,input,textarea{font:inherit}button{color:inherit}#desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;overflow:hidden;background:radial-gradient(ellipse at 72% 25%,rgba(116,170,255,.38),transparent 35%),radial-gradient(ellipse at 25% 75%,rgba(150,188,255,.25),transparent 40%),linear-gradient(135deg,#172b52 0%,#244a7e 44%,#10243f 100%)}
@@ -357,6 +357,10 @@ function setHtmlAppFrameSource(frame,html,appId,version=''){
    const hosted=new URL(hostedSource);
    if(hosted.protocol!=='https:'||hosted.hostname!=='mangouser1.github.io'||hosted.pathname!=='/-/MangoBattle.html')throw new Error('許可されていないアプリ配布元です。');
    frame.dataset.mangoSource='github-pages-live';
+   // Cache-bust the hosted Creative game whenever its version changes.
+   if(appKey.includes('mangobattle')||appId===MANGOBATTLE_STORE_ID){
+    hosted.searchParams.set('mangoosAppVersion','0.14.1');
+   }
    frame.src=hosted.href;
    return;
   }catch(err){console.warn('Hosted MangoBattle URL rejected',err);frame.srcdoc='<main style="font:14px sans-serif;padding:24px"><h2>MangoBattleを開けません</h2><p>公開URLを確認してください。</p></main>';return}
@@ -615,7 +619,7 @@ function renderSettingsPage(area,key){
  } else if(key==='privacy'){
   extra=`<div class="settings-banner"><strong>プライバシーとアクセス許可</strong><p>以下はMangoOS内でのアプリ機能の許可設定です。Chromeのサイト権限やWindowsのプライバシー設定を直接変更するものではありません。</p></div><div class="settings-card">${settingsSwitch('permCamera','カメラアクセス','MangoOS HTMLアプリからのカメラ利用を許可する設定',false)}${settingsSwitch('permMicrophone','マイクアクセス','MangoOS HTMLアプリからのマイク利用を許可する設定',false)}${settingsSwitch('permLocation','位置情報アクセス','MangoOS HTMLアプリからの位置情報利用を許可する設定',false)}${settingsSwitch('permNotifications','通知アクセス','MangoOSからの通知を許可します。',true)}${settingsSwitch('diagnosticData','診断データ','MangoOSの診断情報をこの端末内で記録する設定',false)}${settingsSwitch('personalizedSuggestions','パーソナライズされたおすすめ','MangoOS内のおすすめ表示を許可します。',true)}</div><h2 class="settings-section-title">セキュリティ</h2><div class="settings-card">${settingsInfo('アプリの実行','HTML sandbox','登録したHTMLは分離されたフレームで開きます。')}${settingsButton('保存データの確認','MangoOSが保存しているアプリと設定を確認します。','storage-info','確認')}</div>`;
  } else if(key==='update'){
-  extra=`<div class="settings-banner" id="mangoos-update-banner"><strong id="mangoos-update-heading">更新を確認できます</strong><p id="mangoos-update-detail">現在のバージョンは MangoOS 1.29.0 です。インターネット経由で更新を確認します。</p></div><div class="settings-card">${settingsInfo('現在のバージョン','MangoOS 1.29.0')}${settingsInfo('更新チャネル','安定版')}${settingsSwitch('autoUpdateMango','起動時に更新を自動確認','MangoOSの起動時に新しいバージョンを確認します。',false)}${settingsButton('更新プログラムの確認','公開されている最新版を確認して、この画面から更新します。','check-update','更新プログラムの確認')}</div><div id="mangoos-update-status" class="settings-note" role="status">最終確認：まだ確認していません。</div><div class="settings-note">MangoOS本体の更新です。Windows本体・ドライバーの更新は行いません。GitHub Pagesに公開した更新マニフェストを確認します。</div>`;
+  extra=`<div class="settings-banner" id="mangoos-update-banner"><strong id="mangoos-update-heading">更新を確認できます</strong><p id="mangoos-update-detail">現在のバージョンは MangoOS 1.30.0 です。インターネット経由で更新を確認します。</p></div><div class="settings-card">${settingsInfo('現在のバージョン','MangoOS 1.30.0')}${settingsInfo('更新チャネル','安定版')}${settingsSwitch('autoUpdateMango','起動時に更新を自動確認','MangoOSの起動時に新しいバージョンを確認します。',false)}${settingsButton('更新プログラムの確認','公開されている最新版を確認して、この画面から更新します。','check-update','更新プログラムの確認')}</div><div id="mangoos-update-status" class="settings-note" role="status">最終確認：まだ確認していません。</div><div class="settings-note">MangoOS本体の更新です。Windows本体・ドライバーの更新は行いません。GitHub Pagesに公開した更新マニフェストを確認します。</div>`;
  } else if(key==='about'){
   extra=`<div class="settings-banner"><strong>MangoOS</strong><p>Windows 11風の操作画面を持つ、ブラウザー上で動作するデスクトップ環境です。</p></div><div class="settings-card">${settingsInfo('エディション','MangoOS Desktop')}${settingsInfo('バージョン','1.27.0')}${settingsInfo('システムの種類','Webベース 64-bit UI')}${settingsInfo('ブラウザー',navigator.userAgent)}${settingsInfo('画面解像度',`${screen.width} × ${screen.height}`)}${settingsInfo('登録HTMLアプリ',`${apps.length} 個`)}</div><div class="settings-note">WindowsのライセンスやWindowsシステムファイルを使用するものではありません。</div>`;
  }
