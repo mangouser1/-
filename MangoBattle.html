@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#14263c">
-<meta name="mangobattle-version" content="0.14.4">
+<meta name="mangobattle-version" content="0.14.5">
 <meta name="mangoos-app" content="mangobattle">
 <script id="mango-auth-origin-normalizer">
 /* MangoOS may display stored HTML apps through iframe.srcdoc. In that context
@@ -30,7 +30,7 @@
   }
 })();
 </script>
-<title>マンゴーバトル — v0.14.4</title>
+<title>マンゴーバトル — v0.14.5</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
 :root{--white:#fff;--muted:#d7e2eb;--blue:#1677e8;--blue2:#075fc4;--gold:#ffe91f;--panel:rgba(11,17,28,.82);--panel2:rgba(22,31,44,.72);--line:rgba(255,255,255,.22);--shadow:0 10px 35px rgba(0,0,0,.36)}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#14263c;color:var(--white);font-family:'Noto Sans JP',system-ui,sans-serif}button,input,select{font:inherit}button{color:#fff;border:0;cursor:pointer}button:focus-visible{outline:2px solid white;outline-offset:2px}
@@ -315,6 +315,7 @@ body.three-ready .avatar-fallback{display:none}
 
 
 /* v0.14.4: Fortnite-style full settings shell, navigation, and responsive pages */
+/* v0.14.5: non-blocking startup, lazy GLTF loader, and boot recovery */
 .mb-settings-overlay{padding:0;background:rgba(5,9,17,.82);backdrop-filter:blur(12px);z-index:80}
 .mb-settings-window{width:min(1160px,96vw);height:min(850px,94vh);display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(145deg,#18293b,#0b1421 68%);border:1px solid #8294a766;box-shadow:0 24px 90px #000b;border-radius:5px;color:#f5f8fc}
 .mb-settings-header{height:78px;flex:0 0 78px;display:grid;grid-template-columns:160px 1fr 190px;align-items:center;padding:0 24px;border-bottom:1px solid #ffffff22;background:linear-gradient(90deg,#1d3045,#111d2c)}
@@ -335,7 +336,15 @@ body.mb-reduce-motion *,body.mb-reduce-motion *:before,body.mb-reduce-motion *:a
 
 </style>
 <script>
-window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disabled){b.disabled=false;const st=document.getElementById('bootStatus');if(st)st.textContent='3D表示を開始できません。簡易表示で起動できます。';const bar=document.getElementById('bootProgress');if(bar)bar.style.width='100%';}},12000);
+window.setTimeout(()=>{
+ const b=document.getElementById('startBtn');
+ if(b&&b.disabled&&!window.__MB_BOOT_MODULE_READY){
+  b.disabled=false;b.textContent='ロビーを開く（簡易起動）';
+  const st=document.getElementById('bootStatus');if(st)st.textContent='読み込みに時間がかかっています。簡易起動できます。';
+  const bar=document.getElementById('bootProgress');if(bar)bar.style.width='100%';
+  window.__MB_BOOT_RECOVERY_ACTIVE=true;
+ }
+},10000);
 </script>
 </head>
 
@@ -364,8 +373,23 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
     <div class="boot-status" id="bootStatus">ゲームデータを準備しています...</div>
     <button id="startBtn" class="start-button" disabled>タップして開始</button>
   </div>
-  <div class="boot-foot"><span>マンゴーバトルロイヤル</span><span>バージョン 0.13.3 ・ クリエイティブ</span></div>
+  <div class="boot-foot"><span>マンゴーバトルロイヤル</span><span>バージョン 0.14.5 ・ クリエイティブ</span></div>
 </section>
+<script id="mangobattle-boot-recovery">
+(function(){
+ const button=document.getElementById('startBtn');
+ if(!button)return;
+ button.addEventListener('click',function(e){
+  if(!window.__MB_BOOT_RECOVERY_ACTIVE||window.__MB_BOOT_MODULE_READY)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  document.getElementById('boot')?.classList.remove('show');
+  document.getElementById('lobby')?.classList.add('show');
+  window.__MangoBattleSceneMode='lobby';
+  const status=document.getElementById('fbStatusText');
+  if(status)status.textContent='簡易起動中：3Dライブラリの読み込み状態を確認してください';
+ },true);
+})();
+</script>
 <section id="lobby" class="screen">
   <header class="topbar">
     <div class="brand-small">マンゴーバトル</div>
@@ -591,9 +615,19 @@ window.setTimeout(()=>{const b=document.getElementById('startBtn');if(b&&b.disab
 <div id="toast" class="toast"></div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
-let THREE, GLTFLoader, threeImportError=null;
-try { THREE=await import('three'); GLTFLoader=(await import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js')).GLTFLoader; }
-catch(err){ threeImportError=err; console.warn('3Dライブラリを読み込めません。簡易表示で起動します。',err); GLTFLoader=class{load(url,onLoad,onProgress,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}parse(data,path,onLoad,onError){onError?.(threeImportError||new Error('GLTFLoader unavailable'))}}; }
+let THREE=null, GLTFLoader=null, threeImportError=null;
+const MB_THREE_FALLBACK_URL='https://unpkg.com/three@0.160.0/build/three.module.js';
+const MB_GLTF_FALLBACK_URL='https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+function mbRaceTimeout(promise,ms,label){
+ return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+'の読み込みがタイムアウトしました')),ms))]);
+}
+async function mbLoadThree(){
+ return mbRaceTimeout(Promise.any([import('three'),import(MB_THREE_FALLBACK_URL)]),9000,'Three.js');
+}
+// Three.js is needed for the lobby and island. GLTFLoader is only needed when
+// the user imports a custom outfit, so it must not delay normal game startup.
+try { THREE=await mbLoadThree(); }
+catch(err){ threeImportError=err; console.warn('3Dライブラリを読み込めません。簡易表示で起動します。',err); }
 const $=s=>document.querySelector(s); const sceneHost=$('#scene');
 let renderer,scene,camera,clock,hero,mixer,heroBaseY=0,heroActions={},sceneMode='boot',loaded=0,totalAssets=1,assetFailures=0,quality='high',frame=0;
 const MB_CONTROLS_KEY='mb_fortnite_style_controls_v1';
@@ -655,7 +689,18 @@ const SKINS={
  pilot:{name:'スカイパイロット',label:'赤白のフライトジャケット',coat:0xc84e3f,pants:0x263b5d,accent:0xf5d46b,skin:0xe8b78e,hair:0xd5ae5c,style:'pilot'}
 };
 let activeSkin='urban';
-const loader=new GLTFLoader(); let localHeroUrl=null;
+const loader={parse(data,path,onLoad,onError){
+ (async()=>{
+  try{
+   if(!THREE)throw threeImportError||new Error('Three.jsが読み込まれていません');
+   const module=await mbRaceTimeout(Promise.any([
+    import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'),
+    import(MB_GLTF_FALLBACK_URL)
+   ]),9000,'GLTFLoader');
+   const Loader=module.GLTFLoader;new Loader().parse(data,path,onLoad,onError);
+  }catch(err){console.error('GLTFLoader load failed',err);onError?.(err);}
+ })();
+}}; let localHeroUrl=null;
 
 function buildStylizedSkin(id){
  const cfg=SKINS[id]||SKINS.urban;
@@ -905,12 +950,18 @@ window.addEventListener('contextmenu',e=>e.preventDefault());
 // Stagger boot progress while 3D assets stream in.
 let fake=0;const prog=setInterval(()=>{fake=Math.min(fake+Math.random()*10+3,86);const real=loaded/totalAssets*100;$('#bootProgress').style.width=Math.max(fake,real)+'%';if($('#bootStatus').textContent==='ゲームデータを準備しています...')$('#bootStatus').textContent='ロビーの表示を準備しています...';if(fake>=86)clearInterval(prog)},240);
 try{init3D()}catch(e){console.error(e);$('#bootStatus').textContent='3D表示を開始できません。簡易表示で起動できます。';$('#sceneStatus').textContent='簡易キャラクターで表示中';$('#startBtn').disabled=false;$('#startBtn').textContent='ロビーを開く（簡易表示）'}
+window.__MB_BOOT_MODULE_READY=true;
 </script>
 
 <script type="module">
 import {initializeApp,deleteApp,getApps} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
 let THREE=null;
-try{THREE=await import('three');}
+try{
+ THREE=await Promise.race([
+  Promise.any([import('three'),import('https://unpkg.com/three@0.160.0/build/three.module.js')]),
+  new Promise((_,reject)=>setTimeout(()=>reject(new Error('Three.jsの読み込みがタイムアウトしました')),9000))
+ ]);
+}
 catch(threeError){console.warn('3Dライブラリを読み込めません。ロビーとログインは引き続き利用できます。',threeError);}
 import {getAuth,setPersistence,browserLocalPersistence,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithPopup,signInWithCredential,signOut} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
 import {getDatabase,ref,set,get,update,remove,onValue,onDisconnect,serverTimestamp,runTransaction} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js';
@@ -1678,4 +1729,5 @@ window.__MangoBattleCreative={start:startCreativeIsland,stop:stopCreativeIsland,
 })();
 </script>
 
+<!-- MangoBattle v0.14.5: startup recovery and lazy asset loader -->
 </body></html>
