@@ -1,14 +1,14 @@
 {
   "product": "MangoOS",
-  "latestVersion": "1.44.0",
-  "htmlUrl": "https://mangouser1.github.io/-/MangoOS_v1.44.0.html",
-  "sha256": "322af758fb8ad28917f914f592e292021e9f4bee44114c58ed749dc9133f0383",
+  "latestVersion": "1.45.0",
+  "htmlUrl": "https://mangouser1.github.io/-/index.html",
+  "sha256": "7875802d2a8b28c508bc74958bf827eb442f1713b1797f5c6a81c105408f952d",
   "releaseDate": "2026-11-10",
   "releaseNotes": [
-    "コミュニティストアのHTML保存先をFirebase StorageからRealtime Databaseへ変更（Sparkプラン対応）",
-    "HTMLを48KB単位で分割保存し、各ブロックの保存完了に応じて実測進捗％を表示",
-    "投稿中の作品は公開一覧に表示せず、全ブロック保存後に公開",
-    "HTML投稿サイズ上限を1MBに設定し、通信停止・保存タイムアウト時は途中データを削除",
-    "コミュニティ作品のプレイとHTML保存をRealtime Databaseの分割データに対応"
+    "コミュニティストア作品をダウンロードしてMangoOS内へ保存し、保存済み作品だけをプレイできるように変更",
+    "ダウンロードした作品はIndexedDBへ保存され、ページ再読み込み後もプレイ可能",
+    "プレイ時はFirebaseから再取得せず、ダウンロード済みのローカル作品を起動",
+    "投稿エラーに拒否された段階（投稿情報・HTMLブロック・公開処理）を表示",
+    "コミュニティ投稿ルールのGoogle表示名クレーム照合を撤去し、認証UIDと表示名の形式を検証"
   ]
 }
