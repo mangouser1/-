@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#14263c">
-<meta name="mangobattle-version" content="0.14.5">
+<meta name="mangobattle-version" content="0.14.11">
 <meta name="mangoos-app" content="mangobattle">
 <script id="mango-auth-origin-normalizer">
 /* MangoOS may display stored HTML apps through iframe.srcdoc. In that context
@@ -30,7 +30,7 @@
   }
 })();
 </script>
-<title>マンゴーバトル — v0.14.5</title>
+<title>マンゴーバトル — v0.14.11</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
 :root{--white:#fff;--muted:#d7e2eb;--blue:#1677e8;--blue2:#075fc4;--gold:#ffe91f;--panel:rgba(11,17,28,.82);--panel2:rgba(22,31,44,.72);--line:rgba(255,255,255,.22);--shadow:0 10px 35px rgba(0,0,0,.36)}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#14263c;color:var(--white);font-family:'Noto Sans JP',system-ui,sans-serif}button,input,select{font:inherit}button{color:#fff;border:0;cursor:pointer}button:focus-visible{outline:2px solid white;outline-offset:2px}
@@ -315,7 +315,7 @@ body.three-ready .avatar-fallback{display:none}
 
 
 /* v0.14.4: Fortnite-style full settings shell, navigation, and responsive pages */
-/* v0.14.5: non-blocking startup, lazy GLTF loader, and boot recovery */
+/* v0.14.7: non-blocking startup, lazy GLTF loader, and boot recovery */
 .mb-settings-overlay{padding:0;background:rgba(5,9,17,.82);backdrop-filter:blur(12px);z-index:80}
 .mb-settings-window{width:min(1160px,96vw);height:min(850px,94vh);display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(145deg,#18293b,#0b1421 68%);border:1px solid #8294a766;box-shadow:0 24px 90px #000b;border-radius:5px;color:#f5f8fc}
 .mb-settings-header{height:78px;flex:0 0 78px;display:grid;grid-template-columns:160px 1fr 190px;align-items:center;padding:0 24px;border-bottom:1px solid #ffffff22;background:linear-gradient(90deg,#1d3045,#111d2c)}
@@ -334,18 +334,33 @@ body.mb-high-contrast .mb-settings-window{border-color:#fff;background:#07101d}b
 body.mb-reduce-motion *,body.mb-reduce-motion *:before,body.mb-reduce-motion *:after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 @media(max-width:700px){.mb-settings-overlay{padding:0}.mb-settings-window{width:100vw;height:100dvh;max-height:none;border-radius:0;border:0}.mb-settings-header{height:62px;flex-basis:62px;grid-template-columns:88px 1fr 90px;padding:0 10px}.mb-settings-back{font-size:10px;padding:8px 7px}.mb-settings-heading h2{font-size:21px}.mb-settings-header-actions span{display:none}.mb-settings-close{width:34px;height:34px}.mb-settings-tabs{padding:6px 6px 0}.mb-settings-tabs button{min-width:82px;padding:7px 6px 9px;font-size:9px}.mb-settings-tabs button i{font-size:16px}.mb-settings-main{padding:16px 12px 20px}.mb-settings-page-title h3{font-size:21px}.mb-settings-page-title>span{display:none}.mb-settings-footer{min-height:55px;padding:8px 10px;gap:6px}.mb-settings-footer span{font-size:8px}.mb-settings-footer button{padding:9px 8px;font-size:9px}.mb-settings-window .graphic-settings-grid,.mb-settings-window .graphic-toggle-list{grid-template-columns:1fr}}
 
+.mb-maintenance-notice{display:inline-flex;align-items:center;justify-content:center;margin:14px auto 0;padding:9px 15px;border:1px solid rgba(255,205,92,.55);border-radius:9px;background:rgba(110,62,8,.42);color:#ffe4a0;font-weight:800;font-size:clamp(12px,2vw,15px);letter-spacing:.02em;box-shadow:0 6px 22px rgba(0,0,0,.18)}
 </style>
 <script>
 window.setTimeout(()=>{
  const b=document.getElementById('startBtn');
  if(b&&b.disabled&&!window.__MB_BOOT_MODULE_READY){
-  b.disabled=false;b.textContent='ロビーを開く（簡易起動）';
-  const st=document.getElementById('bootStatus');if(st)st.textContent='読み込みに時間がかかっています。簡易起動できます。';
+  b.disabled=false;b.textContent='ロビーを開く';
+  const st=document.getElementById('bootStatus');if(st)st.textContent='ロビーへ進めます（3D表示はバックグラウンドで準備中）';
   const bar=document.getElementById('bootProgress');if(bar)bar.style.width='100%';
   window.__MB_BOOT_RECOVERY_ACTIVE=true;
  }
-},10000);
+},1800);
 </script>
+<style id="mb-entry-loading-style">
+#mbGameLoading{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 35%,rgba(31,81,116,.94),rgba(5,13,25,.985) 72%);color:#f5f9ff;font-family:inherit;opacity:0;transition:opacity .22s ease;pointer-events:none}
+#mbGameLoading.show{display:flex;opacity:1;pointer-events:auto}
+#mbGameLoading .mb-loading-card{width:min(440px,92vw);padding:28px 26px 24px;border:1px solid rgba(255,255,255,.18);border-radius:16px;background:rgba(7,18,32,.78);box-shadow:0 24px 80px rgba(0,0,0,.38);text-align:center;backdrop-filter:blur(14px)}
+#mbGameLoading .mb-loading-mark{width:52px;height:52px;margin:0 auto 16px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#28b9de,#1675af);font-size:24px;font-weight:900;box-shadow:0 8px 28px #168ac855}
+#mbGameLoading h2{margin:0 0 8px;font-size:20px;font-weight:800;letter-spacing:.04em}
+#mbGameLoading p{margin:0;color:#b9c9d9;font-size:12px;line-height:1.6}
+#mbGameLoading .mb-loading-track{height:7px;margin:22px 0 10px;border-radius:99px;background:rgba(255,255,255,.13);overflow:hidden}
+#mbGameLoading .mb-loading-track i{display:block;width:4%;height:100%;border-radius:99px;background:linear-gradient(90deg,#49d8e8,#75aaff);box-shadow:0 0 16px #58c9ed;transition:width .24s ease}
+#mbGameLoading .mb-loading-meta{display:flex;justify-content:space-between;gap:12px;color:#8fa8c0;font-size:10px}
+#mbGameLoading .mb-loading-spinner{width:15px;height:15px;display:inline-block;margin-right:7px;vertical-align:-3px;border:2px solid #ffffff35;border-top-color:#67d8f0;border-radius:50%;animation:mbLoadingSpin .75s linear infinite}
+@keyframes mbLoadingSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#mbGameLoading,#mbGameLoading .mb-loading-track i{transition:none}#mbGameLoading .mb-loading-spinner{animation:none}}
+</style>
 </head>
 
 <script>
@@ -368,12 +383,12 @@ window.setTimeout(()=>{
   <div class="bootbox">
     <div class="studio">マンゴースタジオ制作</div>
     <div class="logo"><span class="mango">マンゴー</span><br>バトル</div>
-    <div class="tagline">島へ降り立ち、仲間と挑み、自分たちの島を作ろう。</div>
+    <div class="tagline">島へ降り立ち、仲間と挑み、自分たちの島を作ろう。</div><div class="mb-maintenance-notice">Fortnite現在メンテナンス中です</div>
     <div class="bootline"><i id="bootProgress"></i></div>
     <div class="boot-status" id="bootStatus">ゲームデータを準備しています...</div>
     <button id="startBtn" class="start-button" disabled>タップして開始</button>
   </div>
-  <div class="boot-foot"><span>マンゴーバトルロイヤル</span><span>バージョン 0.14.5 ・ クリエイティブ</span></div>
+  <div class="boot-foot"><span>マンゴーバトルロイヤル</span><span>バージョン 0.14.11 ・ クリエイティブ</span></div>
 </section>
 <script id="mangobattle-boot-recovery">
 (function(){
@@ -386,7 +401,8 @@ window.setTimeout(()=>{
   document.getElementById('lobby')?.classList.add('show');
   window.__MangoBattleSceneMode='lobby';
   const status=document.getElementById('fbStatusText');
-  if(status)status.textContent='簡易起動中：3Dライブラリの読み込み状態を確認してください';
+  if(status)status.textContent='ロビーを表示しました。3D表示は読み込み完了後に反映されます。';
+  window.__MBSetSceneMode?.('lobby');
  },true);
 })();
 </script>
@@ -490,9 +506,9 @@ window.setTimeout(()=>{
    <div class="graphic-settings-grid">
     <div class="graphic-setting"><label for="qualitySelect">全体の画質</label><select id="qualitySelect" class="input"><option value="verylow">最低</option><option value="low">低</option><option value="medium">中</option><option value="high">高</option><option value="ultra">最高</option><option value="custom">カスタム</option></select></div>
     <div class="graphic-setting"><label for="renderScaleSelect">3D描画解像度</label><select id="renderScaleSelect" class="input"><option value="60">60%</option><option value="75">75%</option><option value="85">85%</option><option value="100">100%</option><option value="115">115%</option><option value="130">130%</option><option value="150">150%</option></select></div>
-    <div class="graphic-setting"><label for="shadowQualitySelect">影の品質</label><select id="shadowQualitySelect" class="input"><option value="off">オフ</option><option value="low">低（512）</option><option value="medium">中（1024）</option><option value="high">高（2048）</option></select></div>
+    <div class="graphic-setting"><label for="shadowQualitySelect">影の品質</label><select id="shadowQualitySelect" class="input"><option value="off">オフ</option><option value="low">低（256）</option><option value="medium">中（512）</option><option value="high">高（1024）</option></select></div>
     <div class="graphic-setting"><label for="viewDistanceSelect">描画距離</label><select id="viewDistanceSelect" class="input"><option value="80">近い</option><option value="130">標準</option><option value="190">遠い</option><option value="280">とても遠い</option><option value="380">最大</option></select></div>
-    <div class="graphic-setting"><label for="fpsLimitSelect">フレームレート上限</label><select id="fpsLimitSelect" class="input"><option value="30">30 FPS</option><option value="60">60 FPS</option><option value="90">90 FPS</option><option value="120">120 FPS</option><option value="0">上限なし</option></select></div>
+    <div class="graphic-setting"><label for="fpsLimitSelect">フレームレート上限</label><select id="fpsLimitSelect" class="input"><option value="30">30 FPS</option><option value="45">45 FPS</option><option value="60">60 FPS</option><option value="0">自動（最大60 FPS）</option></select></div>
    </div>
    <div class="graphic-toggle-list"><label class="graphic-toggle"><span><b>フォグ（遠景の霞）</b><small>遠くの景色を自然に表示します。</small></span><input id="fogToggle" type="checkbox"></label><label class="graphic-toggle"><span><b>建築グリッド</b><small>建築位置の目安となる格子を表示します。</small></span><input id="gridToggle" type="checkbox"></label></div>
    <div class="graphics-separator"></div><h4 class="graphics-section-title">キャラクター素材</h4><label for="modelFile">3Dキャラクター素材（GLB形式）</label><input id="modelFile" class="input" type="file" accept=".glb,model/gltf-binary"><small class="graphics-help">アップロードした3D素材はロビーのキャラクターに適用されます。</small>
@@ -624,10 +640,8 @@ function mbRaceTimeout(promise,ms,label){
 async function mbLoadThree(){
  return mbRaceTimeout(Promise.any([import('three'),import(MB_THREE_FALLBACK_URL)]),9000,'Three.js');
 }
-// Three.js is needed for the lobby and island. GLTFLoader is only needed when
-// the user imports a custom outfit, so it must not delay normal game startup.
-try { THREE=await mbLoadThree(); }
-catch(err){ threeImportError=err; console.warn('3Dライブラリを読み込めません。簡易表示で起動します。',err); }
+// IMPORTANT: Do not top-level-await Three.js here. A blocked CDN must never
+// prevent the title/start button and lobby UI from becoming interactive.
 const $=s=>document.querySelector(s); const sceneHost=$('#scene');
 let renderer,scene,camera,clock,hero,mixer,heroBaseY=0,heroActions={},sceneMode='boot',loaded=0,totalAssets=1,assetFailures=0,quality='high',frame=0;
 const MB_CONTROLS_KEY='mb_fortnite_style_controls_v1';
@@ -653,21 +667,21 @@ function mbControlActionForCode(code){return Object.keys(mbControls).find(action
 function mbActionForMouseButton(button){const code=button===3?'Mouse4':button===4?'Mouse5':null;if(!code)return null;return Object.keys(mbControls).find(action=>(mbControls[action]||[]).includes(code))||null;}
 
 const MB_GRAPHICS_KEY='mb_graphics_settings_v1';
-const MB_GRAPHICS_DEFAULTS={preset:'high',renderScale:100,shadowQuality:'high',viewDistance:190,fpsLimit:60,cameraSensitivity:1,fog:true,grid:true};
+const MB_GRAPHICS_DEFAULTS={preset:'medium',renderScale:85,shadowQuality:'medium',viewDistance:160,fpsLimit:60,cameraSensitivity:1,fog:true,grid:true};
 const MB_GRAPHICS_PRESETS={
  verylow:{renderScale:60,shadowQuality:'off',viewDistance:80,fpsLimit:30,fog:false,grid:false},
  low:{renderScale:75,shadowQuality:'low',viewDistance:130,fpsLimit:30,fog:true,grid:false},
  medium:{renderScale:85,shadowQuality:'medium',viewDistance:190,fpsLimit:60,fog:true,grid:true},
  high:{renderScale:100,shadowQuality:'high',viewDistance:280,fpsLimit:60,fog:true,grid:true},
- ultra:{renderScale:130,shadowQuality:'high',viewDistance:380,fpsLimit:120,fog:true,grid:true}
+ ultra:{renderScale:115,shadowQuality:'high',viewDistance:320,fpsLimit:60,fog:true,grid:true}
 };
 function loadMBGraphics(){try{return {...MB_GRAPHICS_DEFAULTS,...JSON.parse(localStorage.getItem(MB_GRAPHICS_KEY)||'{}')}}catch{return {...MB_GRAPHICS_DEFAULTS}}}
 let mbGraphics=loadMBGraphics();quality=mbGraphics.preset||'high';
 function applyLobbyGraphics(){
  if(!renderer)return;
- const ratio=Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(mbGraphics.renderScale||100)/100));
+ const pixelCap=innerWidth<=760?1:1.25;const ratio=Math.max(.6,Math.min(pixelCap,(devicePixelRatio||1)*Number(mbGraphics.renderScale||100)/100));
  renderer.setPixelRatio(ratio);renderer.shadowMap.enabled=mbGraphics.shadowQuality!=='off';
- const mapSize=mbGraphics.shadowQuality==='high'?2048:mbGraphics.shadowQuality==='medium'?1024:512;
+ const mapSize=mbGraphics.shadowQuality==='high'?1024:mbGraphics.shadowQuality==='medium'?512:mbGraphics.shadowQuality==='low'?256:256;
  if(scene)scene.traverse(o=>{if(o.isDirectionalLight){o.castShadow=mbGraphics.shadowQuality!=='off';if(o.castShadow&&o.shadow){o.shadow.mapSize.set(mapSize,mapSize);o.shadow.needsUpdate=true;}}});
  renderer.setSize(innerWidth,innerHeight);
 }
@@ -805,9 +819,9 @@ window.__MBHasSkin=(id)=>Object.prototype.hasOwnProperty.call(SKINS,id);
 function init3D(){
  scene=new THREE.Scene();
  camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);camera.position.set(2.1,2.65,10.8);camera.lookAt(4.1,1.55,0);
- renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});renderer.setClearColor(0x000000,0);renderer.setPixelRatio(Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(mbGraphics.renderScale||100)/100)));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.shadowMap.enabled=mbGraphics.shadowQuality!=='off';renderer.shadowMap.type=THREE.PCFSoftShadowMap;sceneHost.appendChild(renderer.domElement);
+ renderer=new THREE.WebGLRenderer({antialias:innerWidth>760,alpha:true,powerPreference:'default'});renderer.setClearColor(0x000000,0);const lobbyPixelCap=innerWidth<=760?1:1.25;renderer.setPixelRatio(Math.max(.6,Math.min(lobbyPixelCap,(devicePixelRatio||1)*Number(mbGraphics.renderScale||100)/100)));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.shadowMap.enabled=mbGraphics.shadowQuality!=='off';renderer.shadowMap.type=THREE.PCFSoftShadowMap;sceneHost.appendChild(renderer.domElement);
  scene.add(new THREE.HemisphereLight(0xeaf6ff,0x506177,2.1));
- const key=new THREE.DirectionalLight(0xffe3bb,2.5);key.position.set(-4,9,8);key.castShadow=mbGraphics.shadowQuality!=='off';const lobbyShadowSize=mbGraphics.shadowQuality==='high'?2048:mbGraphics.shadowQuality==='medium'?1024:512;key.shadow.mapSize.set(lobbyShadowSize,lobbyShadowSize);scene.add(key);
+ const key=new THREE.DirectionalLight(0xffe3bb,2.5);key.position.set(-4,9,8);key.castShadow=mbGraphics.shadowQuality!=='off';const lobbyShadowSize=mbGraphics.shadowQuality==='high'?1024:mbGraphics.shadowQuality==='medium'?512:mbGraphics.shadowQuality==='low'?256:256;key.shadow.mapSize.set(lobbyShadowSize,lobbyShadowSize);scene.add(key);
  const rim=new THREE.DirectionalLight(0x6fd7ff,1.45);rim.position.set(5,5,-6);scene.add(rim);
  const padMat=new THREE.MeshStandardMaterial({color:0x17384c,metalness:.48,roughness:.3});
  const pad=new THREE.Mesh(new THREE.CylinderGeometry(1.65,1.78,.22,64),padMat);pad.position.set(4.1,-.18,0);pad.receiveShadow=true;scene.add(pad);
@@ -817,10 +831,26 @@ function init3D(){
  try{const saved=localStorage.getItem('mb_v070_skin');if(saved&&SKINS[saved])activeSkin=saved;else{const old=localStorage.getItem('mb_v060_skin');const map={street:'urban',traveler:'explorer',student:'pop',festival:'pilot'};if(map[old])activeSkin=map[old];}}catch(e){}
  hero=buildStylizedSkin(activeSkin);heroBaseY=hero.position.y;scene.add(hero);document.body.classList.add('three-ready');$('#avatarFallback').dataset.skin=activeSkin;$('#heroSkinLabel').textContent=SKINS[activeSkin].name;
  loaded=1;totalAssets=1;$('#bootProgress').style.width='100%';$('#bootStatus').textContent='ロビーの準備ができました';$('#sceneStatus').textContent='オリジナル3Dキャラクターを表示中';$('#startBtn').disabled=false;
- clock=new THREE.Clock();animate();
+ clock=new THREE.Clock();startLobbyAnimation();
 }
 window.changeLobbySkin=(name)=>{if(!SKINS[name]||name===activeSkin)return;if(!THREE){activeSkin=name;$('#avatarFallback').dataset.skin=name;$('#heroSkinLabel').textContent=SKINS[name].name;try{localStorage.setItem('mb_v070_skin',name)}catch(e){}toast(`${SKINS[name].name}に変更しました`);return}const next=buildStylizedSkin(name);if(hero)scene.remove(hero);hero=next;heroBaseY=hero.position.y;scene.add(hero);document.body.classList.add('three-ready');$('#avatarFallback').dataset.skin=name;activeSkin=name;$('#heroSkinLabel').textContent=SKINS[name].name;try{localStorage.setItem('mb_v070_skin',name)}catch(e){}toast(`${SKINS[name].name}に変更しました`)};
-function animate(){requestAnimationFrame(animate);if(!renderer)return;const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;if(mixer)mixer.update(dt);if(hero){hero.position.y=heroBaseY+Math.sin(t*1.25)*.025;hero.rotation.y=Math.sin(t*.34)*.06;}camera.position.x+=(2.1+Math.sin(t*.16)*.12-camera.position.x)*.012;camera.lookAt(4.1,1.55,0);renderer.render(scene,camera)}
+let lobbyAnimationFrame=0,lobbyLastFrameTime=0;
+function lobbyScreenVisible(){return !!($('#boot')?.classList.contains('show')||$('#lobby')?.classList.contains('show'));}
+function stopLobbyAnimation(){if(lobbyAnimationFrame){cancelAnimationFrame(lobbyAnimationFrame);lobbyAnimationFrame=0;}}
+function startLobbyAnimation(){if(!lobbyAnimationFrame&&!document.hidden&&renderer&&lobbyScreenVisible())lobbyAnimationFrame=requestAnimationFrame(animate);}
+function setMangoBattleSceneMode(mode){sceneMode=mode;window.__MangoBattleSceneMode=mode;if(mode==='boot'||mode==='lobby')startLobbyAnimation();else stopLobbyAnimation();}
+window.__MBSetSceneMode=setMangoBattleSceneMode;
+function animate(){
+ lobbyAnimationFrame=0;
+ if(!renderer||document.hidden||!lobbyScreenVisible())return;
+ lobbyAnimationFrame=requestAnimationFrame(animate);
+ const now=performance.now();if(now-lobbyLastFrameTime<1000/30)return;lobbyLastFrameTime=now;
+ const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;
+ if(mixer)mixer.update(dt);
+ if(hero){hero.position.y=heroBaseY+Math.sin(t*1.25)*.025;hero.rotation.y=Math.sin(t*.34)*.06;}
+ camera.position.x+=(2.1+Math.sin(t*.16)*.12-camera.position.x)*.012;camera.lookAt(4.1,1.55,0);renderer.render(scene,camera);
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopLobbyAnimation();else startLobbyAnimation();});
 function resize(){if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();applyLobbyGraphics()}window.addEventListener('resize',resize);
 function toast(text){const el=$('#toast');el.textContent=text;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2400)}
 function showOverlay(id){$('#'+id).classList.add('open')}function closeOverlay(id){$('#'+id).classList.remove('open')}
@@ -944,25 +974,61 @@ $('#playButton').onclick=()=>{if(window.__MBPlayCreative)window.__MBPlayCreative
 $('#onlinePlayButton').onclick=()=>showOverlay('partyOverlay');
 $('#modelFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const buf=await file.arrayBuffer();loader.parse(buf,'',g=>{const newHero=g.scene;newHero.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(newHero),s=b.getSize(new THREE.Vector3());newHero.scale.setScalar(2.75/(s.y||1));newHero.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(newHero);newHero.position.set(4.1,-b2.min.y,0);heroBaseY=newHero.position.y;mixer=null;newHero.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});if(hero)scene.remove(hero);hero=newHero;if(g.animations?.length){mixer=new THREE.AnimationMixer(hero);const idle=g.animations.find(a=>/idle/i.test(a.name))||g.animations[0];mixer.clipAction(idle).play()}scene.add(hero);document.body.classList.add('three-ready');$('#heroSkinLabel').textContent='追加した衣装';toast('3Dキャラクターを変更しました');closeMBSettings()},err=>{console.error(err);toast('GLBを読み込めませんでした')})}catch(err){console.error(err);toast('ファイルを読み込めませんでした')}});
 $('#exitLobbyBtn').onclick=()=>{sceneMode='boot';window.__MangoBattleSceneMode='boot';goLobbyPage('play');$('#lobby').classList.remove('show');$('#boot').classList.add('show');$('#startBtn').disabled=false};
-async function startExperience(){goLobbyPage('play');sceneMode='lobby';window.__MangoBattleSceneMode='lobby';$('#boot').classList.remove('show');$('#lobby').classList.add('show')}
+async function startExperience(){goLobbyPage('play');$('#boot').classList.remove('show');$('#lobby').classList.add('show');setMangoBattleSceneMode('lobby');startLobbyAnimation()}
 $('#startBtn').onclick=startExperience;
 window.addEventListener('contextmenu',e=>e.preventDefault());
+// If the game/Firebase module failed to initialize, explain the problem instead of
+// silently leaving the Play button with no working handler.
+document.addEventListener('click',function(e){
+ const play=e.target?.closest?.('#playButton');
+ if(!play||typeof window.__MBPlayCreative==='function')return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ const msg='ゲーム機能の読み込みに失敗しました。ページを再読み込みしてください。';
+ const status=document.getElementById('fbError');if(status)status.textContent=msg;
+ const toast=document.getElementById('toast');if(toast){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3500);}
+},true);
 // Stagger boot progress while 3D assets stream in.
-let fake=0;const prog=setInterval(()=>{fake=Math.min(fake+Math.random()*10+3,86);const real=loaded/totalAssets*100;$('#bootProgress').style.width=Math.max(fake,real)+'%';if($('#bootStatus').textContent==='ゲームデータを準備しています...')$('#bootStatus').textContent='ロビーの表示を準備しています...';if(fake>=86)clearInterval(prog)},240);
-try{init3D()}catch(e){console.error(e);$('#bootStatus').textContent='3D表示を開始できません。簡易表示で起動できます。';$('#sceneStatus').textContent='簡易キャラクターで表示中';$('#startBtn').disabled=false;$('#startBtn').textContent='ロビーを開く（簡易表示）'}
+let fake=0;const prog=setInterval(()=>{if(window.__MB_BOOT_MODULE_READY){clearInterval(prog);return;}fake=Math.min(fake+Math.random()*7+2,86);const real=loaded/Math.max(1,totalAssets)*100;$('#bootProgress').style.width=Math.max(fake,Math.min(100,real))+'%';if($('#bootStatus').textContent==='ゲームデータを準備しています...')$('#bootStatus').textContent='3D表示とロビーを準備しています...';if(fake>=86)clearInterval(prog)},320);
+// UI and navigation are ready independently of the 3D CDN. The player can
+// enter the lobby immediately; the 3D stage is attached when Three.js arrives.
 window.__MB_BOOT_MODULE_READY=true;
+const bootButton=$('#startBtn'),bootStatus=$('#bootStatus');
+if(bootButton){bootButton.disabled=false;bootButton.textContent='タップして開始';}
+const bootProgressBar=$('#bootProgress');if(bootProgressBar)bootProgressBar.style.width='100%';
+if(bootStatus)bootStatus.textContent='ロビーを開けます。3D背景はバックグラウンドで読み込み中…';
+// Load Three.js only once and share the same promise/module with the game module.
+// The title and Firebase UI must never wait for this network request.
+const sharedThreePromise=mbLoadThree();
+window.__MBThreePromise=sharedThreePromise;
+sharedThreePromise.then(mod=>{
+ THREE=mod;window.__MBThreeModule=mod;threeImportError=null;
+ try{
+  init3D();
+  if(bootStatus&&document.getElementById('boot')?.classList.contains('show'))bootStatus.textContent='ロビーの準備ができました';
+  if(bootButton){bootButton.disabled=false;bootButton.textContent='タップして開始';}
+ }catch(e){
+  threeImportError=e;console.error('Lobby 3D initialization failed:',e);
+  if(bootStatus)bootStatus.textContent='3D背景を表示できません。ロビーはそのまま利用できます。';
+  const sceneStatus=$('#sceneStatus');if(sceneStatus)sceneStatus.textContent='簡易表示で起動中';
+  if(bootButton){bootButton.disabled=false;bootButton.textContent='ロビーを開く';}
+ }
+}).catch(e=>{
+ threeImportError=e;console.warn('Three.js unavailable; continue in lightweight mode.',e);
+ if(bootStatus)bootStatus.textContent='3D背景を読み込めませんでした。ロビーは起動できます。';
+ const sceneStatus=$('#sceneStatus');if(sceneStatus)sceneStatus.textContent='簡易表示で起動中';
+ if(bootButton){bootButton.disabled=false;bootButton.textContent='ロビーを開く';}
+});
 </script>
 
 <script type="module">
 import {initializeApp,deleteApp,getApps} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
-let THREE=null;
-try{
- THREE=await Promise.race([
-  Promise.any([import('three'),import('https://unpkg.com/three@0.160.0/build/three.module.js')]),
-  new Promise((_,reject)=>setTimeout(()=>reject(new Error('Three.jsの読み込みがタイムアウトしました')),9000))
- ]);
+// Reuse the module loaded by the lobby. Do not top-level-await Three.js here:
+// that previously delayed Firebase setup and could leave startup appearing frozen.
+let THREE=window.__MBThreeModule||null;
+if(!THREE&&window.__MBThreePromise){
+ window.__MBThreePromise.then(mod=>{THREE=mod;window.__MBThreeModule=mod;})
+  .catch(threeError=>console.warn('Three.js unavailable; solo/online UI remains responsive.',threeError));
 }
-catch(threeError){console.warn('3Dライブラリを読み込めません。ロビーとログインは引き続き利用できます。',threeError);}
 import {getAuth,setPersistence,browserLocalPersistence,signInAnonymously,onAuthStateChanged,GoogleAuthProvider,linkWithPopup,signInWithPopup,signInWithCredential,signOut} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
 import {getDatabase,ref,set,get,update,remove,onValue,onDisconnect,serverTimestamp,runTransaction} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js';
 
@@ -1257,14 +1323,14 @@ function loadSoloCreativeBuilds(){
  try{const list=JSON.parse(localStorage.getItem(SOLO_CREATIVE_KEY)||'[]');if(!Array.isArray(list))return;for(const data of list.slice(0,600)){if(data&&data.id&&!creativeBuildObjects.has('local/'+data.id))addCreativeBuild(data,'local');}}catch(e){console.warn('Solo build load failed',e);}
 }
 function removeNonSoloBuilds(){for(const [key,obj] of [...creativeBuildObjects])if(obj?.userData?.owner!=='local')removeCreativeBuild(key);}
-function creativeGraphics(){return window.__MBGetGraphicsSettings?.()||{renderScale:100,shadowQuality:'high',viewDistance:190,fpsLimit:60,fog:true,grid:true,cameraSensitivity:1};}
+function creativeGraphics(){return window.__MBGetGraphicsSettings?.()||{preset:'medium',renderScale:85,shadowQuality:'medium',viewDistance:160,fpsLimit:60,fog:true,grid:true,cameraSensitivity:1};}
 function applyCreativeGraphics(){
  if(!creativeRenderer||!creativeScene)return;
  const g=creativeGraphics();
- const ratio=Math.max(.5,Math.min(2,(devicePixelRatio||1)*Number(g.renderScale||100)/100));
+ const pixelCap=innerWidth<=760?1:1.25;const ratio=Math.max(.6,Math.min(pixelCap,(devicePixelRatio||1)*Number(g.renderScale||100)/100));
  creativeRenderer.setPixelRatio(ratio);
  creativeRenderer.shadowMap.enabled=g.shadowQuality!=='off';
- if(creativeSun){const size=g.shadowQuality==='high'?2048:g.shadowQuality==='medium'?1024:g.shadowQuality==='low'?512:512;creativeSun.castShadow=g.shadowQuality!=='off';creativeSun.shadow.mapSize.set(size,size);creativeSun.shadow.needsUpdate=true;}
+ if(creativeSun){const size=g.shadowQuality==='high'?1024:g.shadowQuality==='medium'?512:g.shadowQuality==='low'?256:256;creativeSun.castShadow=g.shadowQuality!=='off';creativeSun.shadow.mapSize.set(size,size);creativeSun.shadow.needsUpdate=true;}
  if(creativeGround)creativeGround.receiveShadow=g.shadowQuality!=='off';
  if(creativeGrid)creativeGrid.visible=!!g.grid;
  creativeScene.fog=g.fog?new THREE.Fog(0x83c5ec,Math.max(35,Number(g.viewDistance||190)*.22),Math.max(70,Number(g.viewDistance||190))):null;
@@ -1411,15 +1477,15 @@ function ensureCreativeRenderer(){
  const canvas=MB$('#creativeCanvas');
  if(!canvas)throw new Error('クリエイティブ用キャンバスが見つかりません');
  const g=creativeGraphics();
- creativeRenderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance',stencil:false,depth:true});
- creativeRenderer.setPixelRatio(Math.max(.5,Math.min(1.75,(devicePixelRatio||1)*Number(g.renderScale||100)/100)));creativeRenderer.outputColorSpace=THREE.SRGBColorSpace;creativeRenderer.shadowMap.enabled=g.shadowQuality!=='off';creativeRenderer.shadowMap.type=THREE.PCFSoftShadowMap;
- canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();creativeToast('3D描画が一時停止しました。ブラウザーを再読み込みしてください。');});
+ creativeRenderer=new THREE.WebGLRenderer({canvas,antialias:innerWidth>760&&(g.preset==='high'||g.preset==='ultra'),alpha:false,powerPreference:'default',stencil:false,depth:true});
+ const creativePixelCap=innerWidth<=760?1:1.25;creativeRenderer.setPixelRatio(Math.max(.6,Math.min(creativePixelCap,(devicePixelRatio||1)*Number(g.renderScale||100)/100)));creativeRenderer.outputColorSpace=THREE.SRGBColorSpace;creativeRenderer.shadowMap.enabled=g.shadowQuality!=='off';creativeRenderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();mbRecoverCreativeRenderFailure(new Error('WebGLコンテキストが失われました。ブラウザーの3D描画機能を確認してください。'));});
  canvas.addEventListener('webglcontextrestored',()=>{if(creativeRenderer){applyCreativeGraphics();creativeToast('3D描画を再開しました');}});
  creativeScene=new THREE.Scene();creativeScene.background=new THREE.Color(0x83c5ec);creativeScene.fog=g.fog?new THREE.Fog(0x83c5ec,Math.max(35,Number(g.viewDistance||190)*.22),Math.max(70,Number(g.viewDistance||190))):null;
  creativeCamera=new THREE.PerspectiveCamera(62,1,.1,Math.max(100,Math.min(600,Number(g.viewDistance||190)*1.6)));
  creativeClock=new THREE.Clock();creativeRaycaster=new THREE.Raycaster();creativeGroundPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
  creativeScene.add(new THREE.HemisphereLight(0xdaf1ff,0x4e623f,2.1));
- creativeSun=new THREE.DirectionalLight(0xffe3bd,2.25);creativeSun.position.set(-35,65,28);creativeSun.castShadow=g.shadowQuality!=='off';const shadowSize=g.shadowQuality==='high'?2048:g.shadowQuality==='medium'?1024:g.shadowQuality==='low'?512:512;creativeSun.shadow.mapSize.set(shadowSize,shadowSize);creativeScene.add(creativeSun);
+ creativeSun=new THREE.DirectionalLight(0xffe3bd,2.25);creativeSun.position.set(-35,65,28);creativeSun.castShadow=g.shadowQuality!=='off';const shadowSize=g.shadowQuality==='high'?1024:g.shadowQuality==='medium'?512:g.shadowQuality==='low'?256:256;creativeSun.shadow.mapSize.set(shadowSize,shadowSize);creativeScene.add(creativeSun);
  // Visible free-build island: grass field, surrounding water, perimeter cliffs and simple 3D props.
  const water=new THREE.Mesh(new THREE.PlaneGeometry(520,520),new THREE.MeshStandardMaterial({color:0x277da6,roughness:.34,metalness:.12}));water.rotation.x=-Math.PI/2;water.position.y=-3.6;creativeScene.add(water);
  creativeGround=new THREE.Mesh(new THREE.PlaneGeometry(220,220),new THREE.MeshStandardMaterial({color:0x6ea653,roughness:1,emissive:0x1b3210,emissiveIntensity:.12}));creativeGround.rotation.x=-Math.PI/2;creativeGround.position.y=-.06;creativeGround.receiveShadow=g.shadowQuality!=='off';creativeScene.add(creativeGround);
@@ -1532,7 +1598,23 @@ function updateCreativeGamepad(dt){
  if(edge(7)){creativeMouse.x=0;creativeMouse.y=0;if(creativeEditMode)selectCreativeBuildAtPointer();else if(creativeBuildMode)placeCreativeBuild();}
  if(edge(9))togglePauseSidebar();
 }
-function animateCreative(){if(!creativeActive||!creativeRenderer)return;creativeAnim=requestAnimationFrame(animateCreative);const g=creativeGraphics(),limit=Number(g.fpsLimit)||0,now=performance.now();if(limit>0&&now-creativeLastFrameTime<1000/limit)return;creativeLastFrameTime=now;const dt=Math.min(creativeClock.getDelta(),.05);
+function mbRecoverCreativeRenderFailure(err){
+ const detail=String(err?.message||err||'不明なエラー').slice(0,240);
+ console.error('MangoBattle: creative rendering stopped; returning to lobby:',err);
+ creativeActive=false;creativeLoading=false;
+ if(creativeAnim){cancelAnimationFrame(creativeAnim);creativeAnim=0;}
+ try{if(document.pointerLockElement===MB$('#creativeCanvas'))document.exitPointerLock();}catch{}
+ try{creativeKeys?.clear();creativeMouseButtons?.clear();creativeJumpQueued=false;}catch{}
+ creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeLookDrag=null;
+ const island=MB$('#creativeScreen');if(island){island.classList.remove('show');island.style.display='';}
+ const sidebar=MB$('#creativePauseSidebar');if(sidebar){sidebar.classList.remove('open');sidebar.setAttribute('aria-hidden','true');}
+ MB$('#boot')?.classList.remove('show');MB$('#lobby')?.classList.add('show');
+ window.__MangoBattleSceneMode='lobby';window.__MBSetSceneMode?.('lobby');
+ mbHideGameLoading();
+ const message='クリエイティブの3D描画を続けられないためロビーに戻りました：'+detail;
+ error(message);toastMB('3D描画エラー：ロビーに戻りました');
+}
+function animateCreative(){if(!creativeActive||!creativeRenderer)return;if(document.hidden){creativeAnim=0;return;}creativeAnim=requestAnimationFrame(animateCreative);const g=creativeGraphics(),rawLimit=Number(g.fpsLimit)||60,limit=Math.max(20,Math.min(60,rawLimit)),now=performance.now();if(now-creativeLastFrameTime<1000/limit)return;creativeLastFrameTime=now;const dt=Math.min(creativeClock.getDelta(),.05);
  try{
  if(!pauseIsOpen()){
   updateCreativeGamepad(dt);
@@ -1555,13 +1637,15 @@ function animateCreative(){if(!creativeActive||!creativeRenderer)return;creative
  creativeRenderer.render(creativeScene,creativeCamera);
  if(!creativeFrameDiagnosticDone&&creativeRenderer.info?.render?.calls>0){creativeFrameDiagnosticDone=true;creativeToast('3D島の描画を開始しました');}
  }catch(err){
-  console.error('MangoBattle Creative render failed',err);
-  const status=MB$('#creativeStatus');if(status){status.textContent='3D描画エラー：'+(err?.message||'不明なエラー');status.classList.add('show');}
-  creativeActive=false;cancelAnimationFrame(creativeAnim);
+  mbRecoverCreativeRenderFailure(err);
  }
 }
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){if(creativeAnim)cancelAnimationFrame(creativeAnim);creativeAnim=0;}
+ else if(creativeActive&&!creativeAnim){creativeLastFrameTime=0;creativeClock?.start();animateCreative();}
+});
 function pauseIsOpen(){return MB$('#creativePauseSidebar')?.classList.contains('open')||false;}
-function startCreativeIsland(){
+function startCreativeIslandCore(){
  if(creativeActive)return;
  if(!THREE){creativeToast('3Dライブラリを読み込めませんでした。インターネット接続を確認して再読み込みしてください。');return;}
  // IMPORTANT: .screen is display:none before play. Reveal it before measuring the
@@ -1569,17 +1653,74 @@ function startCreativeIsland(){
  MB$('#boot').classList.remove('show');MB$('#lobby').classList.remove('show');MB$('#creativeScreen').classList.add('show');
  // Wait for the newly-visible creative view to receive layout before creating WebGL.
  const visibleRect=MB$('#creativeScreen').getBoundingClientRect();if(visibleRect.width<80||visibleRect.height<80){MB$('#creativeScreen').style.display='block';}
- try{ensureCreativeRenderer();creativeResize();}catch(e){console.error(e);MB$('#creativeScreen').classList.remove('show');MB$('#lobby').classList.add('show');creativeToast('3D島を開始できませんでした：'+(e?.message||'WebGL対応を確認してください'));return;}
+ try{ensureCreativeRenderer();creativeResize();}catch(e){console.error(e);MB$('#creativeScreen').classList.remove('show');MB$('#creativeScreen').style.display='';MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';window.__MBSetSceneMode?.('lobby');toastMB('3D島を開始できませんでした：'+(e?.message||'WebGL対応を確認してください'));error('3D島を開始できませんでした：'+(e?.message||'WebGL対応を確認してください'));return;}
  if(!currentRoom){removeNonSoloBuilds();loadSoloCreativeBuilds();}
  if(currentRoom&&creativePlayer){const roster=Object.keys(memberData||{}).sort();const idx=Math.max(0,roster.indexOf(user?.uid));const angle=idx*Math.PI/2;creativePlayer.position.set(Math.cos(angle)*7,0,Math.sin(angle)*7);creativeYaw=angle+Math.PI;}
- creativeActive=true;window.__MangoBattleSceneMode='creative';creativeRenderer.setClearColor(0x83c5ec,1);creativeResize();MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');
+ creativeActive=true;window.__MBSetSceneMode?.('creative');window.__MangoBattleSceneMode='creative';creativeRenderer.setClearColor(0x83c5ec,1);creativeResize();MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');
  creativeKeys.clear();creativeJumpQueued=false;creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeBuildMode=true;creativeEditMode=false;creativeSelected=null;creativeLastFrameTime=0;creativeFrameDiagnosticDone=false;creativePitch=.56;setCreativeBuildType('wall');updateCreativeEditPanel();creativeSetCount();creativeClock.start();
  // MangoOS window transitions may still be settling; resize after each paint frame.
  requestAnimationFrame(()=>requestAnimationFrame(()=>{creativeResize();if(creativeRenderer&&creativeScene&&creativeCamera)creativeRenderer.render(creativeScene,creativeCamera);}));
  MB$('#creativeCanvas')?.focus?.();applyTouchHudSettings();animateCreative();startCreativeRoomSync();creativeToast('三人称キャラクターを表示しました。'+(currentRoom?'フレンドと共有する島に参加しました':'ソロ島に入りました'));
 }
+let creativeLoading=false;
+function mbSetGameLoading(stage,percent){
+ const root=document.getElementById('mbGameLoading');
+ const label=document.getElementById('mbGameLoadingStatus');
+ const bar=document.getElementById('mbGameLoadingBar');
+ const pct=document.getElementById('mbGameLoadingPercent');
+ if(label)label.innerHTML='<span class="mb-loading-spinner"></span>'+stage;
+ if(bar)bar.style.width=Math.max(0,Math.min(100,percent))+'%';
+ if(pct)pct.textContent=Math.round(Math.max(0,Math.min(100,percent)))+'%';
+ if(root){root.classList.add('show');root.setAttribute('aria-hidden','false');}
+}
+function mbHideGameLoading(){
+ const root=document.getElementById('mbGameLoading');
+ if(!root)return;
+ root.classList.remove('show');root.setAttribute('aria-hidden','true');
+}
+function mbWaitForPaint(){return new Promise(resolve=>requestAnimationFrame(()=>resolve()));}
+async function startCreativeIsland(){
+ if(creativeActive||creativeLoading)return;
+ creativeLoading=true;
+ try{
+  mbSetGameLoading('ゲームエンジンを確認しています…',8);
+  await mbWaitForPaint();await mbWaitForPaint();
+  if(!THREE){
+   const threePromise=window.__MBThreePromise;
+   if(!threePromise)throw new Error('3Dエンジンの読み込み処理を開始できませんでした。');
+   mbSetGameLoading('3Dエンジンを読み込んでいます…',14);
+   THREE=await threePromise;
+   window.__MBThreeModule=THREE;
+  }
+  if(!THREE)throw new Error('3Dエンジンを読み込めませんでした。');
+  mbSetGameLoading('島の地形を読み込んでいます…',28);
+  await mbWaitForPaint();
+  startCreativeIslandCore();
+  if(!creativeActive)throw new Error('島の初期化に失敗しました。WebGLとグラフィック設定を確認してください。');
+  mbSetGameLoading('プレイヤーと建築を準備しています…',72);
+  await mbWaitForPaint();
+  creativeResize();
+  if(!creativeRenderer||!creativeScene||!creativeCamera)throw new Error('3Dシーンを作成できませんでした。');
+  creativeRenderer.render(creativeScene,creativeCamera);
+  mbSetGameLoading('島に接続しています…',92);
+  await mbWaitForPaint();
+  mbSetGameLoading('準備完了！',100);
+  await new Promise(resolve=>setTimeout(resolve,180));
+  mbHideGameLoading();
+ }catch(err){
+  console.error('Creative island entry failed:',err);
+  creativeActive=false;
+  if(creativeAnim)cancelAnimationFrame(creativeAnim);creativeAnim=0;
+  const island=MB$('#creativeScreen');if(island){island.classList.remove('show');island.style.display='';}
+  MB$('#lobby')?.classList.add('show');
+  window.__MangoBattleSceneMode='lobby';window.__MBSetSceneMode?.('lobby');
+  mbHideGameLoading();
+  const message='島に入れませんでした：'+(err?.message||'不明なエラー');
+  error(message);toastMB(message);
+ }finally{creativeLoading=false;}
+}
 function stopCreativeIsland(){
- if(!creativeActive)return;if(!currentRoom)saveSoloCreativeBuilds();creativeActive=false;cancelAnimationFrame(creativeAnim);creativeKeys.clear();creativeMouseButtons.clear();creativeJumpQueued=false;try{if(document.pointerLockElement===MB$('#creativeCanvas'))document.exitPointerLock();}catch{}creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeLookDrag=null;stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';
+ if(!creativeActive)return;if(!currentRoom)saveSoloCreativeBuilds();creativeActive=false;cancelAnimationFrame(creativeAnim);creativeAnim=0;creativeKeys.clear();creativeMouseButtons.clear();creativeJumpQueued=false;try{if(document.pointerLockElement===MB$('#creativeCanvas'))document.exitPointerLock();}catch{}creativeTouchMove={x:0,y:0};creativeTouchLook=null;creativeTouchSprint=false;creativeTouchCrouch=false;creativeLookDrag=null;stopCreativeRoomSync();MB$('#creativeScreen').classList.remove('show');MB$('#creativePauseSidebar').classList.remove('open');MB$('#creativePauseSidebar').setAttribute('aria-hidden','true');MB$('#lobby').classList.add('show');window.__MangoBattleSceneMode='lobby';window.__MBSetSceneMode?.('lobby');
 }
 function openPauseSidebar(tab='party'){
  const sidebar=MB$('#creativePauseSidebar');if(!sidebar)return;sidebar.classList.add('open');sidebar.setAttribute('aria-hidden','false');renderCreativePauseTab(tab);
@@ -1729,5 +1870,15 @@ window.__MangoBattleCreative={start:startCreativeIsland,stop:stopCreativeIsland,
 })();
 </script>
 
-<!-- MangoBattle v0.14.5: startup recovery and lazy asset loader -->
+<!-- MangoBattle v0.14.11: shared Three.js loader and non-blocking startup -->
+
+<div id="mbGameLoading" role="status" aria-live="polite" aria-hidden="true">
+ <div class="mb-loading-card">
+  <div class="mb-loading-mark">M</div>
+  <h2>島へ移動しています</h2>
+  <p id="mbGameLoadingStatus"><span class="mb-loading-spinner"></span>島のデータを準備しています…</p>
+  <div class="mb-loading-track"><i id="mbGameLoadingBar"></i></div>
+  <div class="mb-loading-meta"><span>CREATIVE ISLAND</span><span id="mbGameLoadingPercent">0%</span></div>
+ </div>
+</div>
 </body></html>
