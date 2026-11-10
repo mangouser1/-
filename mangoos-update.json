@@ -1,0 +1,14 @@
+{
+  "product": "MangoOS",
+  "latestVersion": "1.44.0",
+  "htmlUrl": "https://mangouser1.github.io/-/MangoOS_v1.44.0.html",
+  "sha256": "322af758fb8ad28917f914f592e292021e9f4bee44114c58ed749dc9133f0383",
+  "releaseDate": "2026-11-10",
+  "releaseNotes": [
+    "コミュニティストアのHTML保存先をFirebase StorageからRealtime Databaseへ変更（Sparkプラン対応）",
+    "HTMLを48KB単位で分割保存し、各ブロックの保存完了に応じて実測進捗％を表示",
+    "投稿中の作品は公開一覧に表示せず、全ブロック保存後に公開",
+    "HTML投稿サイズ上限を1MBに設定し、通信停止・保存タイムアウト時は途中データを削除",
+    "コミュニティ作品のプレイとHTML保存をRealtime Databaseの分割データに対応"
+  ]
+}
