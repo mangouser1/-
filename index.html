@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#f3f6fc" />
-<meta name="mangoos-version" content="1.42.0" />
-<title>MangoOS 1.42.0</title>
+<meta name="mangoos-version" content="1.44.0" />
+<title>MangoOS 1.44.0</title>
 <style>
 :root{--accent:#4b86e8;--accent2:#78a9f5;--taskbar-h:44px;--panel-bg:rgba(248,250,255,.88);--surface:#fff;--surface2:#f4f6fa;--ink:#20232b;--muted:#687080;--line:rgba(30,40,60,.12);--shadow:0 16px 48px rgba(20,30,55,.22);--radius:12px;color-scheme:light}
 *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:"Segoe UI","Yu Gothic UI",Meiryo,system-ui,sans-serif;color:var(--ink);user-select:none}button,input,textarea{font:inherit}button{color:inherit}#desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;overflow:hidden;background:radial-gradient(ellipse at 72% 25%,rgba(116,170,255,.38),transparent 35%),radial-gradient(ellipse at 25% 75%,rgba(150,188,255,.25),transparent 40%),linear-gradient(135deg,#172b52 0%,#244a7e 44%,#10243f 100%)}
@@ -540,7 +540,7 @@ function openStore(){
  const content=`<div class="store-shell"><aside class="store-sidebar"><div class="store-brand">${iconHTML('store')}<strong>Mango Store</strong></div><button class="store-nav active" data-store-nav="home">${iconHTML('home')} ホーム</button><button class="store-nav" data-store-nav="apps">${iconHTML('app')} アプリ</button><button class="store-nav" data-store-nav="gaming">${iconHTML('gamepad')} ゲーム</button><button class="store-nav" data-store-nav="community">🌐 コミュニティ</button><button class="store-nav" data-store-nav="library">${iconHTML('downloads')} ライブラリ</button><div class="store-side-foot">MangoOS 公開アプリストア</div></aside><main class="store-main"><div class="store-top"><div><h1>Mango Store</h1><p>ゲーム、便利ツール、編集アプリを見つけよう。</p><div class="community-account" id="community-account-line">Googleログイン状態を確認中…</div></div><input id="store-search" placeholder="アプリを検索" /></div><section class="store-hero"><div><span class="store-eyebrow">COMMUNITY STORE</span><h2>みんなの作品を、みんなで遊ぼう。</h2><p>HTMLゲームや便利ツールを投稿・ダウンロード。作者名とジャンルも確認できます。</p></div><div class="store-hero-art">🌐</div></section><div class="store-heading"><h2 id="store-section-title">おすすめアプリ</h2><span>無料アプリ</span></div><div class="store-list" id="store-list">
  <article class="store-app-card" data-store-card="mangobattle" data-store-category="gaming"><div class="store-app-icon">${iconHTML('gamepad')}</div><div class="store-app-info"><strong>MangoBattle</strong><small>ゲーム・オンラインパーティー</small><p>3Dロビー、衣装カスタマイズ、フレンド用ルーム、Firebaseオンライン機能を備えた島のバトルゲーム。</p><div class="store-app-meta">無料　・　GitHub Pages 公開版　・　MangoOS 対応</div></div><div class="store-app-actions"><button class="primary-button" id="store-install-mangobattle">${gameState==='install'?'インストール':gameState==='update'?'更新':'起動'}</button><button class="soft-button" id="store-download-mangobattle">公開ページを開く</button></div></article>
  <article class="store-app-card" data-store-card="performance" data-store-category="apps"><div class="store-app-icon">${iconHTML('performance')}</div><div class="store-app-info"><strong>パフォーマンス</strong><small>ユーティリティ・システム</small><p>FPS、フレーム時間、平均・最低・最高FPS、メモリ、GPU情報、画面情報、ネットワーク情報を確認できます。</p><div class="store-app-meta">無料　・　MangoOS 用</div></div><div class="store-app-actions"><button class="primary-button" id="store-install-performance">${perfInstalled?'インストール済み':'インストール'}</button><button class="soft-button" id="store-download-performance">HTMLをダウンロード</button></div></article>
- </div><section id="community-store-panel" style="display:none"><div class="store-community-tools"><div class="community-account" id="community-author-status">投稿するにはGoogleログインが必要です。</div><button class="community-primary" id="community-show-form">＋ HTMLを投稿</button><button class="community-soft" id="community-refresh">更新</button></div><form class="community-form" id="community-upload-form"><h3 style="margin:0">作品をストアに投稿</h3><label>作品名<input id="community-title" maxlength="48" required placeholder="例：Mango Puzzle"></label><label>説明<textarea id="community-description" maxlength="300" placeholder="どんな作品か紹介しよう"></textarea></label><label>ジャンル<select id="community-category"><option value="game">🎮 ゲーム</option><option value="performance">📊 パフォーマンス</option><option value="utility">🧰 便利ツール</option><option value="editing">🎨 画像・動画編集</option><option value="education">📚 学習</option><option value="other">✨ その他</option></select></label><div><div style="font-weight:700;margin-bottom:7px">一覧に表示するアイコン</div><div class="community-icon-choices" id="community-icon-choices"><button type="button" class="community-icon-choice selected" data-icon="🎮">🎮</button><button type="button" class="community-icon-choice" data-icon="📊">📊</button><button type="button" class="community-icon-choice" data-icon="🧰">🧰</button><button type="button" class="community-icon-choice" data-icon="🎨">🎨</button><button type="button" class="community-icon-choice" data-icon="📚">📚</button><button type="button" class="community-icon-choice" data-icon="✨">✨</button><button type="button" class="community-icon-choice" data-icon="🌐">🌐</button></div></div><label>HTMLファイル（5MBまで）<input id="community-html-file" type="file" accept=".html,.htm,text/html" required></label><div class="community-upload-progress" id="community-upload-progress" hidden role="status" aria-live="polite"><div class="community-upload-progress-head"><span id="community-upload-progress-label">アップロード準備中…</span><strong class="community-upload-progress-percent" id="community-upload-progress-percent">0%</strong></div><div class="community-upload-progress-track" role="progressbar" aria-label="HTMLアップロード進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="community-upload-progress-track"><div class="community-upload-progress-bar" id="community-upload-progress-bar"></div></div><div class="community-upload-progress-detail"><span id="community-upload-progress-bytes">0 B / 0 B</span><span id="community-upload-progress-stage">待機中</span></div></div><div class="community-warning">投稿したHTMLは公開され、誰でもダウンロードして実行できます。個人情報・パスワード・秘密情報を含めないでください。投稿者にはGoogleの公開表示名が表示されます。</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="community-primary" type="submit" id="community-submit">投稿する</button><button class="community-soft" type="button" id="community-cancel">キャンセル</button></div></form><div id="community-app-list"><div class="community-empty">公開作品を読み込んでいます…</div></div></section><div class="store-footnote" id="store-footnote">HTMLアプリは安全のため隔離された画面で実行します。投稿者のGoogle表示名は公開されます。</div></main></div>`;
+ </div><section id="community-store-panel" style="display:none"><div class="store-community-tools"><div class="community-account" id="community-author-status">投稿するにはGoogleログインが必要です。</div><button class="community-primary" id="community-show-form">＋ HTMLを投稿</button><button class="community-soft" id="community-refresh">更新</button></div><form class="community-form" id="community-upload-form"><h3 style="margin:0">作品をストアに投稿</h3><label>作品名<input id="community-title" maxlength="48" required placeholder="例：Mango Puzzle"></label><label>説明<textarea id="community-description" maxlength="300" placeholder="どんな作品か紹介しよう"></textarea></label><label>ジャンル<select id="community-category"><option value="game">🎮 ゲーム</option><option value="performance">📊 パフォーマンス</option><option value="utility">🧰 便利ツール</option><option value="editing">🎨 画像・動画編集</option><option value="education">📚 学習</option><option value="other">✨ その他</option></select></label><div><div style="font-weight:700;margin-bottom:7px">一覧に表示するアイコン</div><div class="community-icon-choices" id="community-icon-choices"><button type="button" class="community-icon-choice selected" data-icon="🎮">🎮</button><button type="button" class="community-icon-choice" data-icon="📊">📊</button><button type="button" class="community-icon-choice" data-icon="🧰">🧰</button><button type="button" class="community-icon-choice" data-icon="🎨">🎨</button><button type="button" class="community-icon-choice" data-icon="📚">📚</button><button type="button" class="community-icon-choice" data-icon="✨">✨</button><button type="button" class="community-icon-choice" data-icon="🌐">🌐</button></div></div><label>HTMLファイル（1MBまで・データベース保存）<input id="community-html-file" type="file" accept=".html,.htm,text/html" required></label><div class="community-upload-progress" id="community-upload-progress" hidden role="status" aria-live="polite"><div class="community-upload-progress-head"><span id="community-upload-progress-label">アップロード準備中…</span><strong class="community-upload-progress-percent" id="community-upload-progress-percent">0%</strong></div><div class="community-upload-progress-track" role="progressbar" aria-label="HTMLアップロード進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="community-upload-progress-track"><div class="community-upload-progress-bar" id="community-upload-progress-bar"></div></div><div class="community-upload-progress-detail"><span id="community-upload-progress-bytes">0 B / 0 B</span><span id="community-upload-progress-stage">待機中</span></div></div><div class="community-warning">投稿したHTMLは公開され、誰でもダウンロードして実行できます。個人情報・パスワード・秘密情報を含めないでください。投稿者にはGoogleの公開表示名が表示されます。</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="community-primary" type="submit" id="community-submit">投稿する</button><button class="community-soft" type="button" id="community-cancel">キャンセル</button></div></form><div id="community-app-list"><div class="community-empty">公開作品を読み込んでいます…</div></div></section><div class="store-footnote" id="store-footnote">HTMLアプリは安全のため隔離された画面で実行します。投稿者のGoogle表示名は公開されます。</div></main></div>`;
  const w=openWindow('store','Mango Store','store',content);w.el.style.width='min(1100px,96vw)';w.el.style.height='min(720px,88vh)';w.el.style.left=Math.max(8,(innerWidth-1100)/2)+'px';w.el.style.top=Math.max(8,(innerHeight-720-44)/2)+'px';
  if(w.storeBound)return w;w.storeBound=true;
  const gameInstall=$('#store-install-mangobattle',w.area);
@@ -558,18 +558,19 @@ function openStore(){
   $$('[data-community-play]',root).forEach(btn=>btn.addEventListener('click',()=>playCommunityItem(communityItems.find(x=>x.id===btn.dataset.communityPlay))));
   $$('[data-community-download]',root).forEach(btn=>btn.addEventListener('click',()=>downloadCommunityItem(communityItems.find(x=>x.id===btn.dataset.communityDownload))));
  }
- async function playCommunityItem(item){if(!item?.downloadUrl)return toast('起動できません','作品のダウンロード先がありません。');try{const response=await fetch(item.downloadUrl);if(!response.ok)throw new Error('HTTP '+response.status);const blob=await response.blob();const url=URL.createObjectURL(blob);const gameWin=openWindow('community-'+item.id,item.title||'コミュニティ作品','browser',`<iframe class="community-play-frame" id="community-play-${escapeText(item.id)}" title="${escapeText(item.title)}" sandbox="allow-scripts allow-forms allow-pointer-lock allow-downloads"></iframe>`);const frame=$('#community-play-'+item.id,gameWin.area);frame.src=url;gameWin.el.style.width='min(1100px,96vw)';gameWin.el.style.height='min(760px,90vh)';gameWin.el.style.left='2vw';gameWin.el.style.top='4vh';}catch(e){console.error(e);toast('プレイできませんでした','作品を読み込めません。HTML保存を試してください。')}}
- async function downloadCommunityItem(item){if(!item?.downloadUrl)return toast('ダウンロードできません','作品のURLがありません。');try{const r=await fetch(item.downloadUrl);if(!r.ok)throw new Error('HTTP '+r.status);const blob=await r.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(String(item.title||'mango-app').replace(/[\\/:*?"<>|]/g,'_').slice(0,40)||'mango-app')+'.html';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}catch(e){console.error(e);window.open(item.downloadUrl,'_blank','noopener');toast('保存画面を開きました','ブラウザーからHTMLを保存してください。')}}
+ async function loadCommunityHtml(item){if(!item)throw new Error('作品が見つかりません。');if(!Number(item.chunkCount)||item.storageMode!=='rtdb-chunks')throw new Error('この作品は旧Firebase Storage形式です。現在の無料プランでは取得できないため、投稿者が元のHTMLを新方式で再投稿する必要があります。');if(!window.__MangoCommunityGetHtml)throw new Error('コミュニティストアの接続が初期化されていません。ページを再読み込みしてください。');return await window.__MangoCommunityGetHtml(item.id,Number(item.chunkCount));}
+ async function playCommunityItem(item){try{const html=await loadCommunityHtml(item);const blob=new Blob([html],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const gameWin=openWindow('community-'+item.id,item.title||'コミュニティ作品','browser',`<iframe class="community-play-frame" id="community-play-${escapeText(item.id)}" title="${escapeText(item.title)}" sandbox="allow-scripts allow-forms allow-pointer-lock allow-downloads"></iframe>`);const frame=$('#community-play-'+item.id,gameWin.area);frame.src=url;setTimeout(()=>URL.revokeObjectURL(url),60000);gameWin.el.style.width='min(1100px,96vw)';gameWin.el.style.height='min(760px,90vh)';gameWin.el.style.left='2vw';gameWin.el.style.top='4vh';}catch(e){console.error(e);toast('プレイできませんでした',e?.message||'作品を読み込めません。');}}
+ async function downloadCommunityItem(item){try{const html=await loadCommunityHtml(item);const blob=new Blob([html],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(String(item.title||'mango-app').replace(/[\\/:*?"<>|]/g,'_').slice(0,40)||'mango-app')+'.html';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}catch(e){console.error(e);toast('ダウンロードできません',e?.message||'作品を読み込めません。');}}
  $('#community-icon-choices',w.area).addEventListener('click',e=>{const btn=e.target.closest('[data-icon]');if(!btn)return;selectedIcon=btn.dataset.icon;$$('[data-icon]',w.area).forEach(x=>x.classList.toggle('selected',x===btn))});
  $('#community-show-form',w.area).addEventListener('click',()=>{if(!window.__MangoCommunityUser){toast('Googleログインが必要です','設定の「アカウント」からGoogleログインしてください。');window.__MangoCommunitySignIn?.();return}$('#community-upload-form',w.area).classList.toggle('open')});
  $('#community-cancel',w.area).addEventListener('click',()=>$('#community-upload-form',w.area).classList.remove('open'));
- $('#community-upload-form',w.area).addEventListener('submit',async e=>{e.preventDefault();const user=window.__MangoCommunityUser;if(!user){toast('ログインが必要です','Googleログインしてください。');return}const file=$('#community-html-file',w.area).files[0],title=$('#community-title',w.area).value.trim(),desc=$('#community-description',w.area).value.trim(),cat=$('#community-category',w.area).value,submit=$('#community-submit',w.area);if(!file||!title)return;if(!/\.html?$/i.test(file.name)||file.size>5*1024*1024){toast('ファイルを確認してください','HTML形式・5MB以下のファイルを選択してください。');return}
+ $('#community-upload-form',w.area).addEventListener('submit',async e=>{e.preventDefault();const user=window.__MangoCommunityUser;if(!user){toast('ログインが必要です','Googleログインしてください。');return}const file=$('#community-html-file',w.area).files[0],title=$('#community-title',w.area).value.trim(),desc=$('#community-description',w.area).value.trim(),cat=$('#community-category',w.area).value,submit=$('#community-submit',w.area);if(!file||!title)return;if(!/\.html?$/i.test(file.name)||file.size>1024*1024){toast('ファイルを確認してください','HTML形式・1MB以下のファイルを選択してください。');return}
   const progressBox=$('#community-upload-progress',w.area),progressLabel=$('#community-upload-progress-label',w.area),progressPercent=$('#community-upload-progress-percent',w.area),progressBar=$('#community-upload-progress-bar',w.area),progressTrack=$('#community-upload-progress-track',w.area),progressBytes=$('#community-upload-progress-bytes',w.area),progressStage=$('#community-upload-progress-stage',w.area);
   const formatBytes=n=>{n=Math.max(0,Number(n)||0);if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(1)+' KB';return (n/1024/1024).toFixed(2)+' MB'};
-  let lastProgress={percent:0,bytesTransferred:0,totalBytes:file.size,stage:'uploading'};const paintProgress=info=>{lastProgress={...info};const pct=Math.max(0,Math.min(100,Math.round(Number(info.percent)||0)));progressBox.hidden=false;progressPercent.textContent=pct+'%';progressBar.style.width=pct+'%';progressTrack.setAttribute('aria-valuenow',String(pct));progressBytes.textContent=formatBytes(info.bytesTransferred??0)+' / '+formatBytes(info.totalBytes??file.size);progressLabel.textContent=info.label||(info.stage==='saving'?'ファイル転送完了・投稿情報を保存中…':info.stage==='done'?'投稿完了！':info.stage==='error'?'アップロードに失敗しました':'アップロード中…');progressStage.textContent=info.stage==='saving'?'投稿情報を保存中':info.stage==='done'?'完了':info.stage==='error'?'エラー':'ファイル転送'};
-  submit.disabled=true;submit.textContent='アップロード中…';paintProgress({percent:0,bytesTransferred:0,totalBytes:file.size,stage:'uploading'});
+  let lastProgress={percent:0,bytesTransferred:0,totalBytes:file.size,stage:'reading'};const paintProgress=info=>{lastProgress={...info};const pct=Math.max(0,Math.min(100,Math.round(Number(info.percent)||0)));progressBox.hidden=false;progressPercent.textContent=pct+'%';progressBar.style.width=pct+'%';progressTrack.setAttribute('aria-valuenow',String(pct));progressBytes.textContent=formatBytes(info.bytesTransferred??0)+' / '+formatBytes(info.totalBytes??file.size);progressLabel.textContent=info.label||(info.stage==='reading'?'HTMLを読み込み中…':info.stage==='saving'?'公開情報を確定中…':info.stage==='done'?'投稿完了！':info.stage==='error'?'アップロードに失敗しました':'データベースへ保存中…');progressStage.textContent=info.stage==='reading'?'HTMLを確認中':info.stage==='saving'?'公開情報を確定中':info.stage==='done'?'完了':info.stage==='error'?'エラー':'データベースへ送信中'};
+  submit.disabled=true;submit.textContent='アップロード中…';paintProgress({percent:0,bytesTransferred:0,totalBytes:file.size,stage:'reading',label:'HTMLファイルを読み込んでいます…'});
   try{await window.__MangoCommunityUpload({file,title,description:desc,category:cat,icon:selectedIcon,onProgress:paintProgress});paintProgress({percent:100,bytesTransferred:file.size,totalBytes:file.size,stage:'done'});$('#community-upload-form',w.area).reset();selectedIcon='🎮';$$('[data-icon]',w.area).forEach((x,i)=>x.classList.toggle('selected',i===0));$('#community-upload-form',w.area).classList.remove('open');toast('投稿しました','コミュニティストアに公開しました。');}
-  catch(err){console.error(err);paintProgress({...lastProgress,stage:'error',label:'投稿に失敗しました'});progressBytes.textContent=err?.message||'通信状態やFirebase設定を確認してください。';toast('投稿に失敗しました',err?.message||'FirebaseのStorage/Database設定を確認してください。')}
+  catch(err){console.error(err);const detail=window.__MangoCommunityExplainError?.(err)||(err?.message||'通信状態やFirebase設定を確認してください。');paintProgress({...lastProgress,stage:'error',label:'投稿に失敗しました'});progressBytes.textContent=detail;toast('投稿に失敗しました',detail)}
   finally{submit.disabled=false;submit.textContent='投稿する'}
  });
  $('#community-refresh',w.area).addEventListener('click',()=>window.__MangoCommunityRefresh?.());
@@ -654,12 +655,12 @@ function renderSettingsPage(area,key){
  } else if(key==='privacy'){
   extra=`<div class="settings-banner"><strong>プライバシーとアクセス許可</strong><p>以下はMangoOS内でのアプリ機能の許可設定です。Chromeのサイト権限やWindowsのプライバシー設定を直接変更するものではありません。</p></div><div class="settings-card">${settingsSwitch('permCamera','カメラアクセス','MangoOS HTMLアプリからのカメラ利用を許可する設定',false)}${settingsSwitch('permMicrophone','マイクアクセス','MangoOS HTMLアプリからのマイク利用を許可する設定',false)}${settingsSwitch('permLocation','位置情報アクセス','MangoOS HTMLアプリからの位置情報利用を許可する設定',false)}${settingsSwitch('permNotifications','通知アクセス','MangoOSからの通知を許可します。',true)}${settingsSwitch('diagnosticData','診断データ','MangoOSの診断情報をこの端末内で記録する設定',false)}${settingsSwitch('personalizedSuggestions','パーソナライズされたおすすめ','MangoOS内のおすすめ表示を許可します。',true)}</div><h2 class="settings-section-title">セキュリティ</h2><div class="settings-card">${settingsInfo('アプリの実行','HTML sandbox','登録したHTMLは分離されたフレームで開きます。')}${settingsButton('保存データの確認','MangoOSが保存しているアプリと設定を確認します。','storage-info','確認')}</div>`;
  } else if(key==='update'){
-  extra=`<div class="settings-banner" id="mangoos-update-banner"><strong id="mangoos-update-heading">更新を確認できます</strong><p id="mangoos-update-detail">現在のバージョンは MangoOS 1.42.0 です。インターネット経由で更新を確認します。</p></div><div class="settings-card">${settingsInfo('現在のバージョン','MangoOS 1.42.0')}${settingsInfo('更新チャネル','安定版')}${settingsSwitch('autoUpdateMango','起動時に更新を自動確認','MangoOSの起動時に新しいバージョンを確認します。',false)}${settingsButton('更新プログラムの確認','公開されている最新版を確認して、この画面から更新します。','check-update','更新プログラムの確認')}</div><div id="mangoos-update-status" class="settings-note" role="status">最終確認：まだ確認していません。</div><div class="settings-note">MangoOS本体の更新です。Windows本体・ドライバーの更新は行いません。GitHub Pagesに公開した更新マニフェストを確認します。</div>`;
+  extra=`<div class="settings-banner" id="mangoos-update-banner"><strong id="mangoos-update-heading">更新を確認できます</strong><p id="mangoos-update-detail">現在のバージョンは MangoOS 1.44.0 です。インターネット経由で更新を確認します。</p></div><div class="settings-card">${settingsInfo('現在のバージョン','MangoOS 1.44.0')}${settingsInfo('更新チャネル','安定版')}${settingsSwitch('autoUpdateMango','更新を自動確認','MangoOS起動中は1分ごとに最新版を確認し、新しい更新が見つかったら通知します。',true)}${settingsInfo('自動確認の間隔','1分ごと（MangoOS起動中）')}${settingsButton('ブラウザー通知を有効にする','OS内通知に加えて、ブラウザーの通知も受け取ります。','enable-update-notifications','通知を許可')}${settingsButton('更新プログラムの確認','公開されている最新版を今すぐ確認して、この画面から更新します。','check-update','更新プログラムの確認')}</div><div id="mangoos-update-status" class="settings-note" role="status">最終確認：まだ確認していません。</div><div class="settings-note">MangoOS本体の更新です。Windows本体・ドライバーの更新は行いません。GitHub Pagesに公開した更新マニフェストを確認します。</div>`;
  } else if(key==='about'){
-  extra=`<div class="settings-banner"><strong>MangoOS</strong><p>Windows 11風の操作画面を持つ、ブラウザー上で動作するデスクトップ環境です。</p></div><div class="settings-card">${settingsInfo('エディション','MangoOS Desktop')}${settingsInfo('バージョン','1.27.0')}${settingsInfo('システムの種類','Webベース 64-bit UI')}${settingsInfo('ブラウザー',navigator.userAgent)}${settingsInfo('画面解像度',`${screen.width} × ${screen.height}`)}${settingsInfo('登録HTMLアプリ',`${apps.length} 個`)}</div><div class="settings-note">WindowsのライセンスやWindowsシステムファイルを使用するものではありません。</div>`;
+  extra=`<div class="settings-banner"><strong>MangoOS</strong><p>Windows 11風の操作画面を持つ、ブラウザー上で動作するデスクトップ環境です。</p></div><div class="settings-card">${settingsInfo('エディション','MangoOS Desktop')}${settingsInfo('バージョン','1.44.0')}${settingsInfo('システムの種類','Webベース 64-bit UI')}${settingsInfo('ブラウザー',navigator.userAgent)}${settingsInfo('画面解像度',`${screen.width} × ${screen.height}`)}${settingsInfo('登録HTMLアプリ',`${apps.length} 個`)}</div><div class="settings-note">WindowsのライセンスやWindowsシステムファイルを使用するものではありません。</div>`;
  }
  main.classList.remove('page-changing');main.innerHTML=`<h1>${escapeHTML(title)}</h1><div class="settings-lead">${escapeHTML(sub)}</div>${extra}`;void main.offsetWidth;main.classList.add('page-changing');
- main.querySelectorAll('[data-pref]').forEach(el=>el.addEventListener(el.type==='range'?'input':'change',e=>{const raw=e.target.type==='checkbox'?e.target.checked:e.target.value;setMangoPref(e.target.dataset.pref,raw);const output=main.querySelector(`[data-range-value="${CSS.escape(e.target.dataset.pref)}"]`);if(output)output.textContent=raw+(e.target.dataset.pref==='displayBrightness'||e.target.dataset.pref==='textScale'||e.target.dataset.pref==='volume'?'%':'');}));
+ main.querySelectorAll('[data-pref]').forEach(el=>el.addEventListener(el.type==='range'?'input':'change',e=>{const raw=e.target.type==='checkbox'?e.target.checked:e.target.value;setMangoPref(e.target.dataset.pref,raw);const output=main.querySelector(`[data-range-value="${CSS.escape(e.target.dataset.pref)}"]`);if(output)output.textContent=raw+(e.target.dataset.pref==='displayBrightness'||e.target.dataset.pref==='textScale'||e.target.dataset.pref==='volume'?'%':'');if(e.target.dataset.pref==='autoUpdateMango'&&raw){setTimeout(()=>checkMangoOSUpdates(document,true,true),500);}}));
  $('#accent-color',main)?.addEventListener('input',e=>{document.documentElement.style.setProperty('--accent',e.target.value);storage.setItem('mango-accent',e.target.value)});
  main.querySelectorAll('[data-setting-action]').forEach(b=>b.addEventListener('click',()=>runSettingsAction(b.dataset.settingAction,area)));
 }
@@ -689,7 +690,7 @@ function applyAllMangoPreferences(){
  const defaults={theme:getMangoPref('theme',storage.getItem('mango-theme')||'light'),displayBrightness:100,nightLight:false,volume:70,bluetoothEnabled:false,wifiEnabled:true,airplaneMode:false,taskbarAlignment:'center',transparency:true,animations:true,reduceMotion:false,reduceTransparency:false,highContrast:false,textScale:100,largePointer:false,accountName:'ユーザー',displayScale:100,gameMode:false,powerMode:'balanced',permCamera:false,permMicrophone:false,permLocation:false,startRecommendations:true,showSearchTaskbar:true,showTaskView:true,weekStart:'0',timeFormat:'24',dateFormat:'ja'};
  Object.keys(defaults).forEach(k=>applyMangoPreference(k,getMangoPref(k,defaults[k])));
 }
-const MANGOOS_BUILD_VERSION='1.42.0';
+const MANGOOS_BUILD_VERSION='1.44.0';
 const MANGOOS_UPDATE_MANIFEST_URL='https://mangouser1.github.io/-/mangoos-update.json';
 const MANGOOS_UPDATE_RAW_FALLBACK='https://raw.githubusercontent.com/mangouser1/-/main/mangoos-update.json';
 let mangoosLastUpdateManifest=null;
@@ -708,22 +709,86 @@ async function mangoosDownloadAndApply(manifest){
  const actual=await mangoosSha256(buffer);if(!manifest.sha256||actual.toLowerCase()!==String(manifest.sha256).toLowerCase())throw new Error('更新ファイルのSHA-256が一致しません。マニフェストとHTMLを同時に公開してください。');
  const text=new TextDecoder('utf-8',{fatal:true}).decode(buffer);const versionMatch=text.match(/<meta\s+name=["']mangoos-version["']\s+content=["']([^"']+)["']/i);if(!versionMatch||versionMatch[1]!==manifest.latestVersion||!/<html[\s>]/i.test(text)||!/<title[^>]*>\s*MangoOS/i.test(text))throw new Error('更新ファイルのバージョンまたはHTML形式が一致しません。');
  if(MANGO_SERVER_MODE){const saved=await fetch('/api/update-os',{method:'POST',headers:{'Content-Type':'text/html; charset=utf-8'},body:buffer,cache:'no-store'});const result=await saved.json().catch(()=>({}));if(!saved.ok||!result.ok)throw new Error(result.error||'この端末のMangoOSファイルを更新できませんでした。');toast('MangoOSの更新','v'+manifest.latestVersion+'を適用しました。再起動します。');setTimeout(()=>location.reload(),900);return}
- // For GitHub Pages or an HTML-only hosted session, replace the active document in-place.
- // This preserves the current origin, localStorage and IndexedDB while loading the new source.
- toast('MangoOSの更新','v'+manifest.latestVersion+'を適用しています。');document.open();document.write(text);document.close();
+ // For GitHub Pages, navigate to the verified versioned HTML release.
+ // This preserves the same origin (and therefore localStorage / IndexedDB) and keeps the new version on refresh.
+ toast('MangoOSの更新','v'+manifest.latestVersion+'を適用しています。');location.replace(url);
 }
-async function checkMangoOSUpdates(area,silent=false){
- const statusArea=area||document;const status=$('#mangoos-update-status',statusArea);const checkButton=$('[data-setting-action="check-update"]',statusArea);if(checkButton)checkButton.disabled=true;
+let mangoosUpdateCheckInFlight=false;
+let mangoosUpdateMonitorStarted=false;
+let mangoosLastAutoUpdateCheck=0;
+function mangoosNotifyUpdateAvailable(manifest){
+ const version=String(manifest.latestVersion||'');
+ if(!version)return false;
+ try{if(localStorage.getItem('mangoos-update-notified-version')===version)return false;localStorage.setItem('mangoos-update-notified-version',version)}catch{}
+ const message='MangoOS v'+version+' が利用できます。設定の Update から更新できます。';
+ if(document.visibilityState==='visible'){try{toast('MangoOS Update',message)}catch{}}
+ else{try{localStorage.setItem('mangoos-update-pending-notification',version)}catch{}}
+ if('Notification'in window&&Notification.permission==='granted'){
+  try{const n=new Notification('MangoOS の更新があります',{body:message,tag:'mangoos-update-'+version});n.onclick=()=>{try{window.focus();n.close()}catch{}}}catch(err){console.warn('Browser notification unavailable:',err)}
+ }
+ return true;
+}
+function startMangoOSUpdateMonitor(){
+ if(mangoosUpdateMonitorStarted)return;
+ mangoosUpdateMonitorStarted=true;
+ const run=()=>{
+  if(getMangoPref('autoUpdateMango',true)===false||!navigator.onLine)return;
+  mangoosLastAutoUpdateCheck=Date.now();
+  void checkMangoOSUpdates(document,true,true);
+ };
+ setTimeout(run,9000);
+ setInterval(run,60*1000);
+ document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+   try{const pending=localStorage.getItem('mangoos-update-pending-notification');if(pending){localStorage.removeItem('mangoos-update-pending-notification');toast('MangoOS Update','v'+pending+' が利用できます。設定の Update から更新できます。')}}catch{}
+   if(Date.now()-mangoosLastAutoUpdateCheck>60*1000)run();
+  }
+ });
+ window.addEventListener('online',()=>setTimeout(run,2500));
+}
+async function checkMangoOSUpdates(area,silent=false,fromMonitor=false){
+ if(mangoosUpdateCheckInFlight)return;
+ mangoosUpdateCheckInFlight=true;
+ const statusArea=area||document;
+ const checkButton=$('[data-setting-action="check-update"]',statusArea);
+ if(checkButton)checkButton.disabled=true;
  mangoosSetUpdateStatus(statusArea,'GitHub Pagesから更新情報を確認しています…','更新を確認しています');
  try{
-  const manifest=await mangoosFetchManifest();mangoosLastUpdateManifest=manifest;const comparison=mangoosCompareVersions(manifest.latestVersion,MANGOOS_BUILD_VERSION);const checked=new Date().toLocaleString('ja-JP');
-  if(comparison<=0){const msg='最新の状態です。現在 v'+MANGOOS_BUILD_VERSION+'（確認：'+checked+'）';mangoosSetUpdateStatus(statusArea,msg,'MangoOS は最新の状態です');if(!silent)toast('MangoOS Update','新しい更新プログラムはありません。');return}
+  const manifest=await mangoosFetchManifest();
+  mangoosLastUpdateManifest=manifest;
+  const comparison=mangoosCompareVersions(manifest.latestVersion,MANGOOS_BUILD_VERSION);
+  const checked=new Date().toLocaleString('ja-JP');
+  if(comparison<=0){
+   const msg='最新の状態です。現在 v'+MANGOOS_BUILD_VERSION+'（確認：'+checked+'）';
+   mangoosSetUpdateStatus(statusArea,msg,'MangoOS は最新の状態です');
+   if(!silent)toast('MangoOS Update','新しい更新プログラムはありません。');
+   return;
+  }
+  const versionKey='mangoos-update-notified-version';
+  let alreadyNotified=false;
+  try{alreadyNotified=localStorage.getItem(versionKey)===String(manifest.latestVersion)}catch{}
+  if(fromMonitor&&alreadyNotified){
+   mangoosSetUpdateStatus(statusArea,'新しいバージョン v'+manifest.latestVersion+' が公開されています。通知済みです。','更新プログラムがあります');
+   return;
+  }
+  if(fromMonitor)mangoosNotifyUpdateAvailable(manifest);
+  else if(!alreadyNotified){try{localStorage.setItem(versionKey,String(manifest.latestVersion))}catch{}}
   const notes=Array.isArray(manifest.releaseNotes)?manifest.releaseNotes.join('\n'):String(manifest.releaseNotes||'改善と不具合修正');
   mangoosSetUpdateStatus(statusArea,'新しいバージョン v'+manifest.latestVersion+' が見つかりました。','更新プログラムがあります');
   showModal(`<h2>MangoOS の更新</h2><p>新しいバージョン <strong>v${escapeHTML(manifest.latestVersion)}</strong> が見つかりました。</p><div class="settings-card" style="padding:13px;margin:12px 0"><strong>更新内容</strong><p style="white-space:pre-line;line-height:1.7">${escapeHTML(notes)}</p><small>公開日：${escapeHTML(manifest.releaseDate||'不明')}</small></div><p>現在のアプリ・設定・保存データはそのまま維持して、MangoOS本体を更新します。</p><div class="modal-actions"><button class="soft-button" id="mango-update-later">後で</button><button class="primary-button" id="mango-update-now">今すぐ更新</button></div>`);
-  $('#mango-update-later').onclick=closeModal;$('#mango-update-now').onclick=async()=>{const button=$('#mango-update-now');button.disabled=true;button.textContent='更新しています…';try{await mangoosDownloadAndApply(manifest)}catch(err){button.disabled=false;button.textContent='再試行';const p=$('.modal p');if(p)p.textContent='更新に失敗しました：'+(err?.message||err);mangoosSetUpdateStatus(statusArea,'更新に失敗しました：'+(err?.message||err),'更新できませんでした')}};
- }catch(err){const msg='更新確認に失敗しました：'+(err?.message||String(err));mangoosSetUpdateStatus(statusArea,msg,'更新情報を取得できませんでした');if(!silent)showModal(`<h2>更新を確認できませんでした</h2><p>${escapeHTML(msg)}</p><p>GitHub Pagesのリポジトリに index.html と mangoos-update.json が公開されているか確認してください。</p><div class="modal-actions"><button class="primary-button" id="modal-cancel">閉じる</button></div>`),$('#modal-cancel').onclick=closeModal;}
- finally{if(checkButton&&checkButton.isConnected)checkButton.disabled=false}
+  $('#mango-update-later').onclick=closeModal;
+  $('#mango-update-now').onclick=async()=>{
+   const button=$('#mango-update-now');button.disabled=true;button.textContent='更新しています…';
+   try{await mangoosDownloadAndApply(manifest)}catch(err){button.disabled=false;button.textContent='再試行';const p=$('.modal p');if(p)p.textContent='更新に失敗しました：'+(err?.message||err);mangoosSetUpdateStatus(statusArea,'更新に失敗しました：'+(err?.message||err),'更新できませんでした')}
+  };
+ }catch(err){
+  const msg='更新確認に失敗しました：'+(err?.message||String(err));
+  mangoosSetUpdateStatus(statusArea,msg,'更新情報を取得できませんでした');
+  if(!silent)showModal(`<h2>更新を確認できませんでした</h2><p>${escapeHTML(msg)}</p><p>GitHub Pagesのリポジトリ直下に index.html、MangoOSのバージョン別HTML、mangoos-update.json が公開されているか確認してください。</p><div class="modal-actions"><button class="primary-button" id="modal-cancel">閉じる</button></div>`),$('#modal-cancel').onclick=closeModal;
+ }finally{
+  mangoosUpdateCheckInFlight=false;
+  if(checkButton&&checkButton.isConnected)checkButton.disabled=false;
+ }
 }
 
 function runSettingsAction(action,area){
@@ -736,7 +801,8 @@ function runSettingsAction(action,area){
  if(action==='storage-info'){const used=(()=>{try{return (JSON.stringify(localStorage).length/1024).toFixed(1)+' KB (概算)'}catch{return '取得不可'}})();showModal(`<h2>ストレージ</h2><p>HTMLアプリ：${apps.length} 個<br>MangoOS設定：${used}<br>IndexedDB：${db?'利用中':'利用できない場合があります'}</p><p>ブラウザーの保存容量全体や他のサイトのデータは表示できません。</p><div class="modal-actions"><button class="primary-button" id="modal-cancel">閉じる</button></div>`);$('#modal-cancel').onclick=closeModal;return}
  if(action==='save-account'){const name=($('#account-name',area)?.value||'ユーザー').trim().slice(0,24)||'ユーザー';setMangoPref('accountName',name);const account=$('.settings-account strong',area);if(account)account.textContent=name;const chip=$('.user-chip span');if(chip)chip.textContent=name;toast('アカウント','ユーザー名を保存しました。');return}
  if(action==='speech-test'){if(!('speechSynthesis'in window)){toast('音声読み上げ','このブラウザーは音声合成に対応していません。');return}speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance('MangoOS アクセシビリティ 音声読み上げテストです。'));return}
- if(action==='check-update'){checkMangoOSUpdates(area,false);return}
+ if(action==='check-update'){checkMangoOSUpdates(area,false,false);return}
+ if(action==='enable-update-notifications'){if(!('Notification'in window)){toast('ブラウザー通知','このブラウザーは通知に対応していません。MangoOS内の通知は引き続き表示されます。');return}Notification.requestPermission().then(permission=>{if(permission==='granted')toast('通知を有効にしました','新しいMangoOS Updateをブラウザー通知でもお知らせします。');else toast('通知は未許可です','ブラウザーのサイト設定から通知を許可できます。MangoOS内の通知は利用できます。')}).catch(()=>toast('通知を設定できませんでした','ブラウザーのサイト設定を確認してください。'));return}
 }
 function setTheme(v){document.body.classList.toggle('dark',v==='dark');storage.setItem('mango-theme',v)}
 function askPassword(){showModal(`<h2 style="display:flex;align-items:center;gap:9px">${iconHTML('lock')} HTMLアプリの追加</h2><p>この機能を開くにはパスワードを入力してください。</p><input id="password-input" type="password" inputmode="numeric" autocomplete="off" placeholder="パスワード" /><div class="modal-error" id="password-error"></div><div class="modal-actions"><button class="soft-button" id="modal-cancel">キャンセル</button><button class="primary-button" id="password-ok">確認</button></div>`);const inp=$('#password-input');const check=()=>{if(inp.value.normalize('NFKC')==='1102'){closeModal();$('#html-file-input').click()}else{$('#password-error').textContent='パスワードが違います。';inp.select()}};$('#password-ok').addEventListener('click',check);inp.addEventListener('keydown',e=>{if(e.key==='Enter')check()});$('#modal-cancel').addEventListener('click',closeModal);setTimeout(()=>inp.focus(),50)}
@@ -1060,7 +1126,7 @@ async function init(){
   safeStep('preferences',()=>applyAllMangoPreferences());
   safeStep('clock',()=>{updateClock();setInterval(updateClock,1000)});
   safeStep('background tray',()=>updateBackgroundTray());
-  safeStep('automatic update check',()=>{if(getMangoPref('autoUpdateMango',false))setTimeout(()=>checkMangoOSUpdates(document,true),1800)});
+  safeStep('automatic update monitor',()=>startMangoOSUpdateMonitor());
  }catch(err){
   console.error('MangoOS startup recovered from an unexpected error:',err);
   try{if(!Array.isArray(apps))apps=[];makeDesktopItems()}catch(recoveryError){console.error('MangoOS final desktop recovery failed:',recoveryError)}
@@ -1078,19 +1144,98 @@ init();
 <script type="module">
 import {initializeApp,getApps} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
-import {getDatabase,ref as dbRef,onValue,push,set,serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js';
-import {getStorage,ref as storageRef,uploadBytesResumable,getDownloadURL} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-storage.js';
-const config={apiKey:'AIzaSyDq2pWTYv6JNdhZJLzy4HJ2RD-q2kK0iII',authDomain:'mangonite2.firebaseapp.com',databaseURL:'https://mangonite2-default-rtdb.asia-southeast1.firebasedatabase.app',projectId:'mangonite2',storageBucket:'mangonite2.firebasestorage.app',messagingSenderId:'439496116451',appId:'1:439496116451:web:70d976a593d429abc7ddd6'};
-let app,auth,db,storage,communityRows=[];
+import {getDatabase,ref as dbRef,onValue,push,set,get,remove} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js';
+const config={apiKey:'AIzaSyDq2pWTYv6JNdhZJLzy4HJ2RD-q2kK0iII',authDomain:'mangonite2.firebaseapp.com',databaseURL:'https://mangonite2-default-rtdb.asia-southeast1.firebasedatabase.app',projectId:'mangonite2',messagingSenderId:'439496116451',appId:'1:439496116451:web:70d976a593d429abc7ddd6'};
+const MAX_HTML_BYTES=1024*1024;
+const CHUNK_BYTES=48*1024;
+let app,auth,db,communityRows=[];
+const withTimeout=(promise,ms,message)=>new Promise((resolve,reject)=>{
+ let done=false;const timer=setTimeout(()=>{if(done)return;done=true;reject(Object.assign(new Error(message),{code:'mango/rtdb-timeout'}))},ms);
+ Promise.resolve(promise).then(value=>{if(done)return;done=true;clearTimeout(timer);resolve(value)},error=>{if(done)return;done=true;clearTimeout(timer);reject(error)});
+});
+function splitUtf8(text){
+ const encoder=new TextEncoder(),chunks=[];let current='',bytes=0;
+ for(const char of text){const size=encoder.encode(char).byteLength;if(current&&bytes+size>CHUNK_BYTES){chunks.push({text:current,bytes});current='';bytes=0}current+=char;bytes+=size;}
+ if(current)chunks.push({text:current,bytes});
+ return chunks;
+}
 try{
- app=getApps().find(x=>x.name==='MangoOSCommunity')||initializeApp(config,'MangoOSCommunity');auth=getAuth(app);db=getDatabase(app);storage=getStorage(app);await setPersistence(auth,browserLocalPersistence);
+ app=getApps().find(x=>x.name==='MangoOSCommunity')||initializeApp(config,'MangoOSCommunity');
+ auth=getAuth(app);db=getDatabase(app);await setPersistence(auth,browserLocalPersistence);
  window.__MangoCommunitySignIn=async()=>{try{const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await signInWithPopup(auth,provider)}catch(e){console.error(e);alert('Googleログインに失敗しました。Firebase AuthenticationのGoogleプロバイダーとAuthorized domainsを確認してください。\n'+(e?.message||''))}};
  window.__MangoCommunitySignOut=async()=>{try{await signOut(auth)}catch(e){console.error(e)}};
- window.__MangoCommunityUpload=async({file,title,description,category,icon,onProgress})=>{const user=auth.currentUser;if(!user)throw new Error('Googleログインしてください。');const itemRef=push(dbRef(db,'publicStore/apps'));const id=itemRef.key;const path=`communityApps/${user.uid}/${id}.html`;const objectRef=storageRef(storage,path);const uploadTask=uploadBytesResumable(objectRef,file,{contentType:'text/html',contentDisposition:`inline; filename="${id}.html"`,customMetadata:{ownerUid:user.uid}});await new Promise((resolve,reject)=>{uploadTask.on('state_changed',snapshot=>{const total=snapshot.totalBytes||file.size||1;const percent=Math.min(100,(snapshot.bytesTransferred/total)*100);onProgress?.({percent,bytesTransferred:snapshot.bytesTransferred,totalBytes:total,stage:'uploading'});},reject,resolve)});onProgress?.({percent:100,bytesTransferred:file.size,totalBytes:file.size,stage:'saving'});const downloadUrl=await getDownloadURL(objectRef);const profile={id,title,description,category,icon,uid:user.uid,authorName:user.displayName||'Googleユーザー',downloadUrl,storagePath:path,createdAt:Date.now()};await set(itemRef,profile);onProgress?.({percent:100,bytesTransferred:file.size,totalBytes:file.size,stage:'done'});return profile};
+ window.__MangoCommunityExplainError=(e)=>{
+  const code=String(e?.code||'');
+  if(code.includes('permission-denied')||code.includes('PERMISSION_DENIED'))return 'Realtime Databaseのルールで拒否されました。v1.44.0用の統合ルールを公開してください。';
+  if(code.includes('network')||code.includes('disconnected'))return '通信が切断されました。接続を確認してもう一度投稿してください。';
+  if(code==='mango/rtdb-timeout')return 'Realtime Databaseへの保存が時間内に完了しませんでした。通信またはデータベースのルールを確認してください。';
+  return e?.message||'Realtime Databaseへの保存に失敗しました。';
+ };
+ window.__MangoCommunityUpload=async({file,title,description,category,icon,onProgress})=>{
+  const user=auth.currentUser;
+  if(!user)throw Object.assign(new Error('Googleログインしてください。'),{code:'auth/unauthenticated'});
+  if(!(file instanceof Blob)||!file.size)throw new Error('空でないHTMLファイルを選択してください。');
+  if(file.size>MAX_HTML_BYTES)throw new Error('Realtime Database保存の上限は1MBです。HTMLファイルを1MB以下にしてください。');
+  if(!/\.html?$/i.test(file.name||''))throw new Error('拡張子が.htmlまたは.htmのファイルを選択してください。');
+  if(!navigator.onLine)throw new Error('インターネットに接続されていません。');
+  onProgress?.({percent:0,bytesTransferred:0,totalBytes:file.size,stage:'reading',label:'HTMLファイルを読み込んでいます…'});
+  const html=await file.text();
+  if(!html.trim()||!/<(?:!doctype\s+html|html|head|body|script|main|div)\b/i.test(html))throw new Error('HTMLとして読み取れないファイルです。');
+  const actualBytes=new TextEncoder().encode(html).byteLength;
+  if(actualBytes>MAX_HTML_BYTES)throw new Error('UTF-8変換後のファイルサイズが1MBを超えています。');
+  const chunks=splitUtf8(html);
+  if(!chunks.length||chunks.length>32)throw new Error('HTMLの分割数が上限を超えています。');
+  const id=push(dbRef(db,'publicStore/apps')).key;
+  const itemRef=dbRef(db,`publicStore/apps/${id}`);
+  const fileRef=dbRef(db,`publicStore/appFiles/${id}`);
+  const profile={id,title:String(title||'').trim().slice(0,48),description:String(description||'').slice(0,300),category,icon:String(icon||'🌐').slice(0,8),uid:user.uid,authorName:user.displayName||'Googleユーザー',createdAt:Date.now(),status:'uploading',storageMode:'rtdb-chunks',fileSize:actualBytes,chunkCount:chunks.length};
+  let metadataCreated=false;
+  try{
+   await withTimeout(set(itemRef,profile),25000,'投稿情報の仮登録が25秒でタイムアウトしました。');
+   metadataCreated=true;
+   let sentBytes=0;
+   for(let i=0;i<chunks.length;i++){
+    const key=String(i).padStart(5,'0');
+    await withTimeout(set(dbRef(db,`publicStore/appFiles/${id}/chunks/${key}`),chunks[i].text),25000,`HTMLの${i+1}/${chunks.length}ブロック目の保存が25秒でタイムアウトしました。`);
+    sentBytes+=chunks[i].bytes;
+    const percent=Math.min(95,5+(sentBytes/actualBytes)*90);
+    onProgress?.({percent,bytesTransferred:sentBytes,totalBytes:actualBytes,stage:'uploading',label:`データベースへ保存中… (${i+1}/${chunks.length})`});
+   }
+   onProgress?.({percent:97,bytesTransferred:actualBytes,totalBytes:actualBytes,stage:'saving',label:'全ブロックを確認して公開しています…'});
+   await withTimeout(set(dbRef(db,`publicStore/apps/${id}/status`),'published'),25000,'公開状態への切り替えが25秒でタイムアウトしました。');
+   profile.status='published';
+   onProgress?.({percent:100,bytesTransferred:actualBytes,totalBytes:actualBytes,stage:'done',label:'投稿完了！'});
+   return profile;
+  }catch(error){
+   // Remove incomplete drafts and their chunks so they do not appear in the public store.
+   try{await withTimeout(remove(fileRef),10000,'')}catch{}
+   if(metadataCreated){try{await withTimeout(remove(itemRef),10000,'')}catch{}}
+   throw error;
+  }
+ };
+ window.__MangoCommunityGetHtml=async(id,expectedChunkCount)=>{
+  if(!id||!/^[A-Za-z0-9_-]+$/.test(String(id)))throw new Error('作品IDが正しくありません。');
+  const snap=await withTimeout(get(dbRef(db,`publicStore/appFiles/${id}/chunks`)),30000,'HTMLデータの取得が30秒でタイムアウトしました。');
+  if(!snap.exists())throw new Error('HTMLデータが見つかりません。投稿者が再投稿した可能性があります。');
+  const data=snap.val(),keys=Object.keys(data).sort((a,b)=>Number(a)-Number(b));
+  if(keys.length!==expectedChunkCount)throw new Error('HTMLデータが不足しています。時間をおいて再読み込みしてください。');
+  const html=keys.map(k=>{if(typeof data[k]!=='string')throw new Error('HTMLデータが破損しています。');return data[k]}).join('');
+  if(new TextEncoder().encode(html).byteLength>MAX_HTML_BYTES)throw new Error('HTMLデータが上限サイズを超えています。');
+  return html;
+ };
  window.__MangoCommunityRefresh=()=>window.__MangoCommunityRender?.(communityRows);
- onValue(dbRef(db,'publicStore/apps'),snap=>{communityRows=[];snap.forEach(child=>{const v=child.val();if(v&&typeof v==='object')communityRows.push({...v,id:child.key})});communityRows.sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));window.__MangoCommunityRender?.(communityRows)},err=>{console.error(err);window.__MangoCommunityRender?.([])});
+ onValue(dbRef(db,'publicStore/apps'),snap=>{
+  communityRows=[];
+  snap.forEach(child=>{const v=child.val();if(v&&typeof v==='object'&&(!v.status||v.status==='published'))communityRows.push({...v,id:child.key})});
+  communityRows.sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+  window.__MangoCommunityRender?.(communityRows);
+ },err=>{console.error(err);window.__MangoCommunityRender?.([])});
  onAuthStateChanged(auth,user=>{window.__MangoCommunityUser=user?{uid:user.uid,displayName:user.displayName||'Googleユーザー'}:null;window.dispatchEvent(new Event('mango-community-auth'));const status=document.getElementById('mango-google-account-status'),name=document.getElementById('mango-google-display-name'),login=document.getElementById('mango-google-signin'),logout=document.getElementById('mango-google-signout');if(status)status.textContent=user?'Googleログイン済み':'未ログイン';if(name)name.textContent=user?.displayName||'未ログイン';if(login)login.style.display=user?'none':'';if(logout)logout.style.display=user?'':'none';});
-}catch(e){console.error('MangoOS community Firebase initialization failed',e);window.__MangoCommunityError=e;window.__MangoCommunitySignIn=async()=>alert('Firebaseの初期化に失敗しました。Firebase設定を確認してください。');}
+}catch(e){
+ console.error('MangoOS community Firebase initialization failed',e);window.__MangoCommunityError=e;
+ window.__MangoCommunitySignIn=async()=>alert('Firebaseの初期化に失敗しました。Firebase設定を確認してください。');
+ window.__MangoCommunityExplainError=(err)=>err?.message||'Firebaseの初期化に失敗しました。';
+}
 </script>
 
 </body>
